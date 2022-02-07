@@ -49,7 +49,7 @@ namespace AstroBackEnd.Migrations
                     b.ToTable("Profiles");
                 });
 
-            modelBuilder.Entity("AstroBackEnd.Models.User", b =>
+            modelBuilder.Entity("AstroBackEnd.Models.Users", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -74,12 +74,12 @@ namespace AstroBackEnd.Migrations
 
             modelBuilder.Entity("AstroBackEnd.Models.Profile", b =>
                 {
-                    b.HasOne("AstroBackEnd.Models.User", null)
+                    b.HasOne("AstroBackEnd.Models.Users", null)
                         .WithMany("Profiles")
                         .HasForeignKey("UserId");
                 });
 
-            modelBuilder.Entity("AstroBackEnd.Models.User", b =>
+            modelBuilder.Entity("AstroBackEnd.Models.Users", b =>
                 {
                     b.Navigation("Profiles");
                 });

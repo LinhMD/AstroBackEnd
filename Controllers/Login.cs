@@ -45,7 +45,7 @@ namespace AstroBackEnd.Controllers
                 JsonResult result = new JsonResult(user);
                 return result;
             }
-            return NotFound("User not found");
+            return NotFound("Users not found");
         }
 
         private string Generate(User user)
