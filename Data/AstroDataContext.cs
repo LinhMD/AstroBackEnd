@@ -25,7 +25,7 @@ namespace AstroBackEnd.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(_config["ConnectionStrings:SQLServer"]);
+            optionsBuilder.UseSqlServer(_config["ConnectionStrings:AstroBackEndContext"]);
         }
 
     }
