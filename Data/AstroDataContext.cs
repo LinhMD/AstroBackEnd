@@ -10,7 +10,7 @@ namespace AstroBackEnd.Data
 {
     public class AstroDataContext : DbContext
     {
-        private IConfiguration _config;
+        private readonly IConfiguration _config;
 
         public AstroDataContext(IConfiguration configuration)
         {
