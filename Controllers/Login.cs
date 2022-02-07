@@ -59,18 +59,19 @@ namespace AstroBackEnd.Controllers
                 new Claim(ClaimTypes.Role, user.Role),
             };
             var token = new JwtSecurityToken(_config["JwtSetting:Issuer"],
-                _config["JwtSetting:Audience"],
-                claims,
-                expires: DateTime.Now.AddSeconds(Double.Parse(_config["JwtSetting:Expirseconds"])),
-                signingCredentials: credentials);
+                                            _config["JwtSetting:Audience"],
+                                            claims,
+                                            expires: DateTime.Now.AddSeconds(Double.Parse(_config["JwtSetting:Expirseconds"])),
+                                            signingCredentials: credentials);
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
+
+        //TODO: implement login
         private User Authenticate(UserLogin userLogin)
         {
             User user = Models.User.Users.FirstOrDefault(
                             u => u.UserName.ToLower() == userLogin.UserName.ToLower()
-                            && u.Password == userLogin.Password
                         );
 
             if (user != null)
