@@ -1,4 +1,5 @@
-﻿using AstroBackEnd.Models;
+﻿using AstroBackEnd.Data;
+using AstroBackEnd.Models;
 using AstroBackEnd.ViewsModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,12 +19,14 @@ namespace AstroBackEnd.Controllers
     [ApiController]
     public class Login : ControllerBase
     {
-
+        
         private IConfiguration _config;
 
-        public Login(IConfiguration config)
+        private AstroDataContext _astroDataContext;
+        public Login(IConfiguration config, AstroDataContext dataContext)
         {
             this._config = config;
+            _astroDataContext = dataContext;
         }
 
         [HttpGet]
@@ -69,9 +72,8 @@ namespace AstroBackEnd.Controllers
         //TODO: implement login
         private User Authenticate(UserLogin userLogin)
         {
-            User user = Models.User.Users.FirstOrDefault(
-                            u => u.UserName.ToLower() == userLogin.UserName.ToLower()
-                        );
+            
+            User user = _astroDataContext.Users.FirstOrDefault(u => u.UserName == userLogin.UserName);
 
             if (user != null)
                 return user;

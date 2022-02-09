@@ -19,7 +19,6 @@ namespace AstroBackEnd.Data
 
         public DbSet<User> Users { get; set; }
 
-
         public DbSet<Profile> Profiles { get; set; }
 
         public DbSet<Zodiac> Zodiacs { get; set; }
@@ -32,7 +31,26 @@ namespace AstroBackEnd.Data
 
         public DbSet<PlanetZodiac> PlanetZodiacs { get; set; }
 
+        public DbSet<BirthChart> BirthCharts { get; set; }
+
+        public DbSet<Quote> Quotes { get; set; }
+
+        public DbSet<Horoscope> Horoscopes { get; set; }
+
         public DbSet<ZodiacHouse> ZodiacHouses { get; set; }
+
+        public DbSet<Catagory> Catagories { get; set; }
+
+        public DbSet<Product> Products { get; set; }
+
+        public DbSet<ImgLink> ImgLinks { get; set; }
+
+        public DbSet<ProductZodiac> ProductZodiacs { get; set; }
+
+        public DbSet<Order> Orders { get; set; }
+
+        public DbSet<OrderDetail> OrderDetails { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(_config["ConnectionStrings:AstroBackEndContext"]);

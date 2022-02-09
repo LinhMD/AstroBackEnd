@@ -1,4 +1,6 @@
-﻿namespace AstroBackEnd.Models
+﻿using System.Collections.Generic;
+
+namespace AstroBackEnd.Models
 {
     public class Zodiac
     {
@@ -20,6 +22,8 @@
 
         public string MainContent { get; set; }
 
+        public IList<Horoscope> Horoscopes { get; set; }
 
+        public IList<Product> Products { get; set; }
     }
 }

@@ -29,18 +29,8 @@ namespace AstroBackEnd.Models
 
         public int Status { get; set; }
 
-        public ICollection<Profile> Profiles { get; set; }
+        public IList<Profile> Profiles { get; set; }
 
-        public static List<User> Users = new()
-        {
-            new User()
-            {
-                Id = 1, UserName="admin",  Role="admin"
-            },
-            new User()
-            {
-                Id = 2, UserName="normie", Role="normie"
-            }
-        };
+        public IList<Order> Orders { get; set; }
     }
 }

@@ -19,5 +19,7 @@ namespace AstroBackEnd.Models
 
         public Zodiac Zodiac { get; set; }
 
+        public BirthChart BirthChart { get; set; }
+
     }
 }
