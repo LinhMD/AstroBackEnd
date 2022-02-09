@@ -17,25 +17,20 @@ namespace AstroBackEnd.Models
         public int Id { get; set; }
 
         [Required]
+        [MaxLength(255)]
         public string UserName { set; get; }
 
-        public string? Token { get; set; }
 
-        [Required]
+        [Required] 
         public string Role { get; set; }
 
-        public ICollection<Profile> Profiles { get; set; }
+        [RegularExpression(@"\(?\d{3}\)?-? *\d{3}-? *-?\d{4}", ErrorMessage = "Must be phone number")]
+        public string? PhoneNumber { get; set; }
 
-        public static List<User> Users = new()
-        {
-            new User()
-            {
-                Id = 1, UserName="admin",  Role="admin"
-            },
-            new User()
-            {
-                Id = 2, UserName="normie", Role="normie"
-            }
-        };
+        public int Status { get; set; }
+
+        public IList<Profile> Profiles { get; set; }
+
+        public IList<Order> Orders { get; set; }
     }
 }

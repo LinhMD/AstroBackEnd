@@ -10,7 +10,7 @@ namespace AstroBackEnd.Data
 {
     public class AstroDataContext : DbContext
     {
-        private IConfiguration _config;
+        private readonly IConfiguration _config;
 
         public AstroDataContext(IConfiguration configuration)
         {
@@ -19,9 +19,37 @@ namespace AstroBackEnd.Data
 
         public DbSet<User> Users { get; set; }
 
-
         public DbSet<Profile> Profiles { get; set; }
 
+        public DbSet<Zodiac> Zodiacs { get; set; }
+
+        public DbSet<Planet> Planets { get; set; }
+
+        public DbSet<House> Houses { get; set; }
+
+        public DbSet<PlanetHouse> PlanetHouses { get; set; }
+
+        public DbSet<PlanetZodiac> PlanetZodiacs { get; set; }
+
+        public DbSet<BirthChart> BirthCharts { get; set; }
+
+        public DbSet<Quote> Quotes { get; set; }
+
+        public DbSet<Horoscope> Horoscopes { get; set; }
+
+        public DbSet<ZodiacHouse> ZodiacHouses { get; set; }
+
+        public DbSet<Catagory> Catagories { get; set; }
+
+        public DbSet<Product> Products { get; set; }
+
+        public DbSet<ImgLink> ImgLinks { get; set; }
+
+        public DbSet<ProductZodiac> ProductZodiacs { get; set; }
+
+        public DbSet<Order> Orders { get; set; }
+
+        public DbSet<OrderDetail> OrderDetails { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
