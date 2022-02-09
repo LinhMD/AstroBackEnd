@@ -42,9 +42,7 @@ namespace AstroBackEnd.Controllers
             if (user != null)
             {
                 var token = Generate(user);
-                user.Token = token;
-                JsonResult result = new JsonResult(user);
-                return result;
+                return Ok(token);
             }
             return NotFound("Users not found");
         }

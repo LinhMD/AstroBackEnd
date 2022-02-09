@@ -17,6 +17,7 @@ namespace AstroBackEnd.Models
 
         public string ProfilePhoto { get; set; }
 
+        public Zodiac Zodiac { get; set; }
 
     }
 }

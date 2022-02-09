@@ -22,7 +22,17 @@ namespace AstroBackEnd.Data
 
         public DbSet<Profile> Profiles { get; set; }
 
+        public DbSet<Zodiac> Zodiacs { get; set; }
 
+        public DbSet<Planet> Planets { get; set; }
+
+        public DbSet<House> Houses { get; set; }
+
+        public DbSet<PlanetHouse> PlanetHouses { get; set; }
+
+        public DbSet<PlanetZodiac> PlanetZodiacs { get; set; }
+
+        public DbSet<ZodiacHouse> ZodiacHouses { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(_config["ConnectionStrings:AstroBackEndContext"]);
