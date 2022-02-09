@@ -1,0 +1,69 @@
+﻿@page
+@model AstroBackEnd.Pages.zodiac.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Zodiac</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Zodiac.Name" class="control-label"></label>
+                <input asp-for="Zodiac.Name" class="form-control" />
+                <span asp-validation-for="Zodiac.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Zodiac.ZodiacDayStart" class="control-label"></label>
+                <input asp-for="Zodiac.ZodiacDayStart" class="form-control" />
+                <span asp-validation-for="Zodiac.ZodiacDayStart" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Zodiac.ZodiacMonthStart" class="control-label"></label>
+                <input asp-for="Zodiac.ZodiacMonthStart" class="form-control" />
+                <span asp-validation-for="Zodiac.ZodiacMonthStart" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Zodiac.ZodiacDayEnd" class="control-label"></label>
+                <input asp-for="Zodiac.ZodiacDayEnd" class="form-control" />
+                <span asp-validation-for="Zodiac.ZodiacDayEnd" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Zodiac.ZodiacMonthEnd" class="control-label"></label>
+                <input asp-for="Zodiac.ZodiacMonthEnd" class="form-control" />
+                <span asp-validation-for="Zodiac.ZodiacMonthEnd" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Zodiac.Icon" class="control-label"></label>
+                <input asp-for="Zodiac.Icon" class="form-control" />
+                <span asp-validation-for="Zodiac.Icon" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Zodiac.Descreiption" class="control-label"></label>
+                <input asp-for="Zodiac.Descreiption" class="form-control" />
+                <span asp-validation-for="Zodiac.Descreiption" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Zodiac.MainContent" class="control-label"></label>
+                <input asp-for="Zodiac.MainContent" class="form-control" />
+                <span asp-validation-for="Zodiac.MainContent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -9,6 +9,7 @@ namespace AstroBackEnd.Models
     public class PlanetHouse
     {
         public int Id { get; set; }
+
         public House House { get; set; }
 
         public int HouseId { get; set; }
@@ -18,8 +19,6 @@ namespace AstroBackEnd.Models
         public int PlanetId { get; set; }
 
         public string Content { get; set; }
-
-
 
     }
 }
