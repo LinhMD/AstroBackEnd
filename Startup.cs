@@ -87,6 +87,8 @@ namespace AstroBackEnd
 
             });
 
+            AstroBackEnd.Data.AstroDataInit.Seed(app);
+
         }
     }
 }

@@ -61,7 +61,7 @@ namespace AstroBackEnd.Controllers
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, user.UserName),
-                new Claim(ClaimTypes.Role, user.Role),
+                new Claim(ClaimTypes.Role, user.Role.Name),
             };
             var token = new JwtSecurityToken(_config["JwtSetting:Issuer"],
                                             _config["JwtSetting:Audience"],
@@ -75,8 +75,8 @@ namespace AstroBackEnd.Controllers
         //TODO: implement login
         private User Authenticate(UserLogin userLogin)
         {
-            
-            User user = _astroDataContext.Users.FirstOrDefault(u => u.UserName == userLogin.UserName);
+
+            User user = _unitOfWork.Users.Get(1);
 
             if (user != null)
                 return user;

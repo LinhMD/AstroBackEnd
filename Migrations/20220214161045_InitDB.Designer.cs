@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AstroBackEnd.Migrations
 {
     [DbContext(typeof(AstroDataContext))]
-    [Migration("20220209062726_Init_DataBase")]
-    partial class Init_DataBase
+    [Migration("20220214161045_InitDB")]
+    partial class InitDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -403,6 +403,21 @@ namespace AstroBackEnd.Migrations
                     b.ToTable("Quotes");
                 });
 
+            modelBuilder.Entity("AstroBackEnd.Models.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+                });
+
             modelBuilder.Entity("AstroBackEnd.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -413,9 +428,8 @@ namespace AstroBackEnd.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("RoleId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -426,6 +440,8 @@ namespace AstroBackEnd.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Users");
                 });
@@ -657,6 +673,15 @@ namespace AstroBackEnd.Migrations
                         .HasForeignKey("HoroscopeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("AstroBackEnd.Models.User", b =>
+                {
+                    b.HasOne("AstroBackEnd.Models.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId");
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("AstroBackEnd.Models.ZodiacHouse", b =>
