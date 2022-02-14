@@ -1,5 +1,6 @@
 ﻿using AstroBackEnd.Data;
 using AstroBackEnd.Models;
+using AstroBackEnd.Repositories;
 using AstroBackEnd.ViewsModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,11 +23,11 @@ namespace AstroBackEnd.Controllers
         
         private IConfiguration _config;
 
-        private AstroDataContext _astroDataContext;
-        public Login(IConfiguration config, AstroDataContext dataContext)
+        private IUnitOfWork _unitOfWork;
+        public Login(IConfiguration config, IUnitOfWork unitOfWork)
         {
             this._config = config;
-            _astroDataContext = dataContext;
+            this._unitOfWork = unitOfWork;
         }
 
         [HttpGet]
@@ -42,10 +43,12 @@ namespace AstroBackEnd.Controllers
         {
             var user = Authenticate(userLogin);
 
+            
             if (user != null)
             {
                 var token = Generate(user);
                 return Ok(token);
+
             }
             return NotFound("Users not found");
         }

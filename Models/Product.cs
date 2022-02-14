@@ -12,7 +12,10 @@ namespace AstroBackEnd.Models
         [Key]
         public int Id { get; set; }
 
-        public Product MasterProduct { get; set; }
+        public Product? MasterProduct { get; set; }
+
+        [ForeignKey("ProductVariation")]
+        public int? MasterProductId { get; set; }
 
         public string Name { get; set; }
 

@@ -1,3 +1,5 @@
+using AstroBackEnd.Repositories;
+using AstroBackEnd.Services.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -39,6 +41,10 @@ namespace AstroBackEnd
                     };
                 });
 
+            //Dependency injection part
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddDbContext<Data.AstroDataContext>();
+
             //api and razor setup
             services.AddControllersWithViews();
             services.AddRazorPages();
@@ -48,7 +54,7 @@ namespace AstroBackEnd
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AstroBackEnd", Version = "v1" });
             });
-            services.AddDbContext<Data.AstroDataContext>();
+            
 
         }
 
