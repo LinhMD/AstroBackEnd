@@ -1,6 +1,6 @@
 ﻿
 using AstroBackEnd.Services.Core;
-using AstroBackEnd.ViewsModel;
+using AstroBackEnd.RequestModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;

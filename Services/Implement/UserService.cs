@@ -2,7 +2,7 @@
 using AstroBackEnd.Models;
 using AstroBackEnd.Repositories;
 using AstroBackEnd.Services.Core;
-using AstroBackEnd.ViewsModel;
+using AstroBackEnd.RequestModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

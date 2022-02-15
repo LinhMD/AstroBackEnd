@@ -15,8 +15,11 @@ namespace AstroBackEnd.Repositories
         {
             this._dataContext = dataContext;
             Users = new UserRepository(dataContext);
+            Roles = new RoleRepository(dataContext);
         }
         public IUserRepository Users { get; }
+
+        public IRoleRepository Roles { get; }
 
         public int Complete()
         {

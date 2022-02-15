@@ -1,6 +1,6 @@
 ﻿using AstroBackEnd.Models;
 using AstroBackEnd.Repositories;
-using AstroBackEnd.ViewsModel;
+using AstroBackEnd.RequestModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;

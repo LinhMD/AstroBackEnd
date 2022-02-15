@@ -44,7 +44,9 @@ namespace AstroBackEnd
 
             //Dependency injection part
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             services.AddScoped<IUserService, UserService>();
+
             services.AddDbContext<Data.AstroDataContext>();
 
             //api and razor setup
