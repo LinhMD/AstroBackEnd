@@ -8,5 +8,6 @@ namespace AstroBackEnd.Repositories.Core
 {
     public interface IUserRepository : IRepository<User>
     {
+        
     }
 }

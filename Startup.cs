@@ -1,5 +1,6 @@
 using AstroBackEnd.Repositories;
 using AstroBackEnd.Services.Core;
+using AstroBackEnd.Services.Implement;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -43,6 +44,7 @@ namespace AstroBackEnd
 
             //Dependency injection part
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IUserService, UserService>();
             services.AddDbContext<Data.AstroDataContext>();
 
             //api and razor setup

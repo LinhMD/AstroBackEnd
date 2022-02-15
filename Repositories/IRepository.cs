@@ -10,13 +10,13 @@ namespace AstroBackEnd.Repositories
     {
         TModel Get(int id);
 
-        IEnumerable<TModel> GetAll();
+        IEnumerable<TModel> GetAll<TOrderBy>(Func<TModel, TOrderBy> orderBy);
 
-        IEnumerable<TModel> GetAllPaging(int page = 1, int pageSize = 20);
+        IEnumerable<TModel> GetAllPaging<TOrderBy>(Func<TModel, TOrderBy> orderBy, int page = 1, int pageSize = 20);
 
-        IEnumerable<TModel> Find(Expression<Func<TModel, bool>> predicate);
+        IEnumerable<TModel> Find<TOrderBy>(Func<TModel, bool> predicate, Func<TModel, TOrderBy> orderBy);
 
-        IEnumerable<TModel> FindPaging(Expression<Func<TModel, bool>> predicate, int page = 1, int pageSize = 20);
+        IEnumerable<TModel> FindPaging<TOrderBy>(Func<TModel, bool> predicate, Func<TModel, TOrderBy> orderBy, int page = 1, int pageSize = 20);
 
         void Add(TModel model);
         void AddAll(IEnumerable<TModel> models);
