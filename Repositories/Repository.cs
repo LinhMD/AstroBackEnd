@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 namespace AstroBackEnd.Repositories
 {
@@ -49,9 +47,9 @@ namespace AstroBackEnd.Repositories
         }
 
         
-        public void Add(TModel model)
+        public TModel Add(TModel model)
         {
-            _context.Set<TModel>().Add(model);
+            return _context.Set<TModel>().Add(model).Entity;
         }
 
         public void AddAll(IEnumerable<TModel> models)

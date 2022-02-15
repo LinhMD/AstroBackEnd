@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace AstroBackEnd.Services.Implement
 {
-    public class UserService : IUserService ,IDisposable
+    public class UserService : IUserService , IDisposable
     {
 
         private readonly IUnitOfWork _work;
@@ -22,13 +22,17 @@ namespace AstroBackEnd.Services.Implement
             this._work = work;
             this._astroData = astroData;
         }
-        public void CreateUser(UserCreateRequest user)
+
+        public User CreateUser(UserCreateRequest request)
         {
-            _work.Users.Add(new User() { 
-                UserName = user.UserName,
-                PhoneNumber = user.PhoneNumber,
-                Status = 1
-            });
+            User user = new User()
+            {
+                UserName = request.UserName,
+                PhoneNumber = request.PhoneNumber,
+                Status = 1,
+                Role = _work.Roles.Get(2) // normal user
+            };
+            return _work.Users.Add(user);
         }
 
         public void DeleteUser(int id)
@@ -36,11 +40,8 @@ namespace AstroBackEnd.Services.Implement
             _work.Users.Remove(GetUser(id));
         }
 
-        
-
         public IEnumerable<User> FindUsers(FindUserRequest userRequest)
         {
-            
             Func<User, bool> filter = user =>
             {
                 bool checkUserName = true;
@@ -49,18 +50,16 @@ namespace AstroBackEnd.Services.Implement
 
                 if (!string.IsNullOrWhiteSpace(userRequest.Name))
                 {
-                    checkUserName = user.UserName.Equals(userRequest.Name);
+                    checkUserName = user.UserName.Contains(userRequest.Name);
                 }
 
                 if (!string.IsNullOrWhiteSpace(userRequest.Phone))
                 {
-                    checkPhoneNumber = user.PhoneNumber.Equals(userRequest.Phone);
+                    checkPhoneNumber = user.PhoneNumber.Contains(userRequest.Phone);
                 }
-
 
                 checkStatus = user.Status == userRequest.Status;
                 
-
                 return checkUserName && checkStatus && checkPhoneNumber;
             };
 
@@ -74,22 +73,25 @@ namespace AstroBackEnd.Services.Implement
         public User GetUser(int id)
         {
             return _work.Users.Get(id);
-                
         }
 
-        public void UpdateUser(User user)
+        public void UpdateUser(int id, UserCreateRequest request)
         {
-            throw new NotImplementedException();
+            var userUpdate = this._work.Users.Get(id);
+            if (!string.IsNullOrWhiteSpace(request.UserName))
+            {
+                userUpdate.UserName = request.UserName;
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.PhoneNumber))
+            {
+                userUpdate.PhoneNumber = request.PhoneNumber;
+            }
         }
 
         public void Dispose()
         {
             this._work.Complete();
-        }
-
-        public void CreateUser(User user)
-        {
-            throw new NotImplementedException();
         }
 
         public IEnumerable<User> GetAllUser()

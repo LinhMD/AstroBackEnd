@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/user")]
+    [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -21,12 +21,40 @@ namespace AstroBackEnd.Controllers
         {
             this._userService = userService;
         }
-        [HttpPost]
-        [Route("/")]
+
+        [HttpGet]
         public IActionResult GetAllUser()
         {
             return Ok(_userService.GetAllUser());
         }
+
+        [HttpGet("{id}")]
+        public IActionResult GetUser(int id)
+        {
+            return Ok(_userService.GetUser(id));
+        }
+
+        [HttpPost]
+        public IActionResult CreateUser([FromBody] UserCreateRequest request)
+        {
+            return Ok(_userService.CreateUser(request));
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateUser(int id,[FromBody] UserCreateRequest request)
+        {
+            _userService.UpdateUser(id, request);
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("f")]
+        public IActionResult FindUsers([FromBody]FindUserRequest request)
+        {
+            var users = _userService.FindUsers(request);
+            return Ok(users);
+        }
+
 
     }
 }

@@ -18,7 +18,7 @@ namespace AstroBackEnd.Repositories
 
         IEnumerable<TModel> FindPaging<TOrderBy>(Func<TModel, bool> predicate, Func<TModel, TOrderBy> orderBy, int page = 1, int pageSize = 20);
 
-        void Add(TModel model);
+        TModel Add(TModel model);
         void AddAll(IEnumerable<TModel> models);
 
         void Remove(TModel model);

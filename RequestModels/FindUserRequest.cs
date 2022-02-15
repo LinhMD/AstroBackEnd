@@ -8,15 +8,15 @@ namespace AstroBackEnd.RequestModels
     public class FindUserRequest
     {
 
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
-        public string Phone { get; set; }
+        public string? Phone { get; set; }
 
         public int Status { get { return _status; } set { _status = value; } }
 
         private int _status = 1;
 
-        public string SortBy { get; set; }
+        public string? SortBy { get; set; }
 
         public int Page { get { return _page; } set { _page = value; } }
 
