@@ -1,7 +1,7 @@
 ﻿using AstroBackEnd.Data;
 using AstroBackEnd.Models;
 using AstroBackEnd.Repositories;
-using AstroBackEnd.ViewsModel;
+using AstroBackEnd.RequestModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;

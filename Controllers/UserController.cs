@@ -1,5 +1,6 @@
 ﻿
-using AstroBackEnd.ViewsModel;
+using AstroBackEnd.Services.Core;
+using AstroBackEnd.RequestModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,14 +15,17 @@ namespace AstroBackEnd.Controllers
     public class UserController : ControllerBase
     {
 
-            
+        private IUserService _userService;
+
+        public UserController(IUserService userService)
+        {
+            this._userService = userService;
+        }
         [HttpPost]
         [Route("/")]
-        public IActionResult GetUser([FromBody] UserRequest request)
+        public IActionResult GetAllUser()
         {
-            
-
-            return Ok("hello there");
+            return Ok(_userService.GetAllUser());
         }
 
     }

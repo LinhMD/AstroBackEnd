@@ -22,31 +22,33 @@ namespace AstroBackEnd.Repositories
         {
             return _context.Set<TModel>().Find(id);
         }
-
-        public IEnumerable<TModel> GetAll()
+        public IEnumerable<TModel> GetAll<TOrderBy>(Func<TModel, TOrderBy> orderBy)
         {
-            return _context.Set<TModel>().ToList();
+            return _context.Set<TModel>().OrderBy(orderBy).ToList();
         }
 
-        public IEnumerable<TModel> Find(Expression<Func<TModel, bool>> predicate)
+        public IEnumerable<TModel> GetAllPaging<TOrderBy>(Func<TModel, TOrderBy> orderBy, int page = 1, int pageSize = 20)
         {
-            return _context.Set<TModel>().Where(predicate);
+            return _context.Set<TModel>()
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize + 1); // pageSize + 1 for hasNext - if have more than page size then hasNext = true
         }
-
-        public IEnumerable<TModel> FindPaging(Expression<Func<TModel, bool>> predicate, int page = 1, int pageSize = 20)
+        public IEnumerable<TModel> Find<TOrderBy>(Func<TModel, bool> predicate, Func<TModel, TOrderBy> orderBy)
         {
             return _context.Set<TModel>()
                 .Where(predicate)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize);
+                .OrderBy(orderBy);
         }
-
-        public IEnumerable<TModel> GetAllPaging(int page = 1, int pageSize = 20)
+        public IEnumerable<TModel> FindPaging<TOrderBy>(Func<TModel, bool> predicate, Func<TModel, TOrderBy> orderby , int page = 1, int pageSize = 20 )
         {
             return _context.Set<TModel>()
+                .Where(predicate)
+                .OrderBy(orderby)
                 .Skip((page - 1) * pageSize)
-                .Take(pageSize);
+                .Take(pageSize + 1); // pageSize + 1 for hasNext - if have more than page size then hasNext = true
         }
+
+        
         public void Add(TModel model)
         {
             _context.Set<TModel>().Add(model);
@@ -66,5 +68,9 @@ namespace AstroBackEnd.Repositories
         {
             _context.Set<TModel>().RemoveRange(models);
         }
+
+       
+
+        
     }
 }
