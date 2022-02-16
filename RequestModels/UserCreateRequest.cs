@@ -9,6 +9,7 @@ namespace AstroBackEnd.RequestModels
     public class UserCreateRequest
     {
         [MaxLength(255)]
+        [RegularExpression("^[a-zA-Z] * $", ErrorMessage = "invalid user name")]
         public string UserName { get; set; }
 
         [RegularExpression(@"\(?\d{3}\)?-? *\d{3}-? *-?\d{4}", ErrorMessage = "Must be phone number")]
