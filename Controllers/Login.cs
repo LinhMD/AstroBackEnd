@@ -37,6 +37,7 @@ namespace AstroBackEnd.Controllers
         {
             return new Random().Next();
         }
+
         // POST api/<Login>
         [HttpPost]
         public IActionResult Post([FromBody] UserLogin userLogin)
@@ -57,11 +58,13 @@ namespace AstroBackEnd.Controllers
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSetting:SecurityKey"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
+            Console.WriteLine(user);
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, user.UserName),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.Role, user.Role.Name),
+                new Claim(ClaimTypes.MobilePhone, user.PhoneNumber)
             };
             var token = new JwtSecurityToken(_config["JwtSetting:Issuer"],
                                             _config["JwtSetting:Audience"],
@@ -75,14 +78,10 @@ namespace AstroBackEnd.Controllers
         //TODO: implement login
         private User Authenticate(UserLogin userLogin)
         {
-
-            User user = _unitOfWork.Users.Get(1);
-
-            if (user != null)
-                return user;
-
-            return null;
-
+            User user = _unitOfWork.Users.GetAllUserData(_unitOfWork.Users.Find(u => u.UserName == userLogin.UserName, u => u.UserName).FirstOrDefault().Id);
+            return user;
         }
+
+
     }
 }

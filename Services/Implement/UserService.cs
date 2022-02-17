@@ -37,7 +37,7 @@ namespace AstroBackEnd.Services.Implement
 
         public void DeleteUser(int id)
         {
-            _work.Users.Remove(GetUser(id));
+            _work.Users.Remove(_work.Users.Get(id));
         }
 
         public IEnumerable<User> FindUsers(FindUserRequest userRequest)
@@ -65,7 +65,7 @@ namespace AstroBackEnd.Services.Implement
 
 
 
-            IEnumerable<User> users = _work.Users.FindPaging<String>(filter, u => u.UserName, userRequest.Page, userRequest.PageSize);
+            IEnumerable<User> users = _work.Users.FindPaging<String>(filter, u => u.UserName, userRequest.PagingRequest.Page, userRequest.PagingRequest.PageSize);
 
             return users;
         }
@@ -96,7 +96,7 @@ namespace AstroBackEnd.Services.Implement
 
         public IEnumerable<User> GetAllUser()
         {
-            return _work.Users.GetAll<string>(u => u.UserName);
+            return _work.Users.GetAll(u => u.UserName);
         }
     }
 }

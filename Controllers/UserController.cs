@@ -7,6 +7,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Security.Claims;
+using AstroBackEnd.Repositories;
+using AstroBackEnd.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AstroBackEnd.Controllers
 {
@@ -16,10 +20,12 @@ namespace AstroBackEnd.Controllers
     {
 
         private IUserService _userService;
+        private IUnitOfWork _work;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IUnitOfWork work)
         {
             this._userService = userService;
+            this._work = work;
         }
 
         [HttpGet]
@@ -55,6 +61,15 @@ namespace AstroBackEnd.Controllers
             return Ok(users);
         }
 
-
+        [HttpGet("current")]
+        [Authorize]
+        public IActionResult GetCurrentUser()
+        {
+            ClaimsIdentity claimsIdentity = this.User.Identity as ClaimsIdentity;
+            string userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            int id = int.Parse(userId);
+            User user = _work.Users.GetAllUserData(id);
+            return Ok(user);
+        }
     }
 }

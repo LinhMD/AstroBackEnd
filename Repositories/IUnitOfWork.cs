@@ -11,6 +11,8 @@ namespace AstroBackEnd.Repositories
         IUserRepository Users { get; }
 
         IRoleRepository Roles { get; }
+
+        IProfileRepository Profiles { get; }
         int Complete();
     }
 }
