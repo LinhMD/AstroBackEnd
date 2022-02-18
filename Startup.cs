@@ -47,6 +47,8 @@ namespace AstroBackEnd
 
             services.AddScoped<IUserService, UserService>();
 
+            services.AddScoped<INewsService, NewsService>();
+
             services.AddDbContext<Data.AstroDataContext>();
 
             //api and razor setup
