@@ -20,11 +20,7 @@ namespace AstroBackEnd.Repositories.Implement
 
         public User GetAllUserData(int id)
         {
-            var user = this.Get(id);
-
-            AstroData.Entry(user).Collection(u => u.Profiles).Load();
-            AstroData.Entry(user).Collection(u => u.Orders).Load();
-            return user;
+            return AstroData.Users.Include("Role").Include("Profiles").Include("Orders").First(u => u.Id == id);
         }
     }
 }

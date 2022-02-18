@@ -32,6 +32,10 @@ namespace AstroBackEnd.Data
                     );
                 }
 
+                context.SaveChanges();
+                context.Entry(adminRole).GetDatabaseValues();
+                context.Entry(userRole).GetDatabaseValues();
+
                 if (!context.Users.Any())
                 {
                     context.Users.AddRange(
@@ -68,6 +72,10 @@ namespace AstroBackEnd.Data
                     );
                 }
 
+                context.SaveChanges();
+                context.Entry(cata1).GetDatabaseValues();
+                context.Entry(cata2).GetDatabaseValues();
+
                 if (!context.Products.Any())
                 {
                     var master = new Product()
@@ -78,6 +86,8 @@ namespace AstroBackEnd.Data
                         Description = "nah"
                     };
                     context.Products.Add(master);
+                    context.SaveChanges();
+                    context.Entry(master).GetDatabaseValues();
 
                     var child1 = new Product()
                     {

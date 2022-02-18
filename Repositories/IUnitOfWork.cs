@@ -12,7 +12,6 @@ namespace AstroBackEnd.Repositories
 
         IRoleRepository Roles { get; }
 
-        INewsRepository News { get; }
 
         int Complete();
 
