@@ -12,7 +12,9 @@ namespace AstroBackEnd.Repositories
 
         IRoleRepository Roles { get; }
 
+        INewsRepository News { get; }
 
+        IProfileRepository Profiles { get; }
         int Complete();
 
         
