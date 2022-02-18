@@ -16,13 +16,13 @@ namespace AstroBackEnd.Repositories
             this._dataContext = dataContext;
             Users = new UserRepository(dataContext);
             Roles = new RoleRepository(dataContext);
-            Profiles = new ProfileRepository(dataContext);
+            News = new NewsRepository(dataContext);
         }
         public IUserRepository Users { get; }
 
         public IRoleRepository Roles { get; }
 
-        public IProfileRepository Profiles { get; }
+        public INewsRepository News { get; }
 
         public int Complete()
         {

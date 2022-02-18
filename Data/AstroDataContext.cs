@@ -65,5 +65,7 @@ namespace AstroBackEnd.Data
                 .HasIndex(u => u.UserName)
                 .IsUnique();
         }
+
+        public DbSet<AstroBackEnd.Models.News> News { get; set; }
     }
 }
