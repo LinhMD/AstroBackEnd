@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AstroBackEnd.Services.Implement
 {
-    public class ProfileService : IProfileService
+    public class ProfileService : IProfileService, IDisposable
     {
         private readonly IUnitOfWork _work;
 
@@ -43,6 +43,11 @@ namespace AstroBackEnd.Services.Implement
         public void DeleteProfile(int id)
         {
             _work.Profiles.Remove(_work.Profiles.Get(id));
+        }
+
+        public void Dispose()
+        {
+            this._work.Complete();
         }
 
         public IEnumerable<Profile> FindProfile(FindProfileRequest request)

@@ -386,17 +386,17 @@ namespace AstroBackEnd.Migrations
                     TotalCost = table.Column<double>(type: "float", nullable: true),
                     DeliveryAdress = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DeleveryPhone = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OrderUserId = table.Column<int>(type: "int", nullable: true)
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Orders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Orders_Users_OrderUserId",
-                        column: x => x.OrderUserId,
+                        name: "FK_Orders_Users_UserId",
+                        column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -506,9 +506,9 @@ namespace AstroBackEnd.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_OrderUserId",
+                name: "IX_Orders_UserId",
                 table: "Orders",
-                column: "OrderUserId");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PlanetHouses_HouseId",
