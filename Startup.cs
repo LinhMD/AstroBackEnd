@@ -51,10 +51,11 @@ namespace AstroBackEnd
 
             services.AddScoped<IProfileService, ProfileService>();
 
+            services.AddScoped<IProductService, ProductService>();
+
             services.AddScoped<IOrderService, OrderService>();
 
             services.AddScoped<IOrderDetailService, OrderDetailService>();
-
 
             services.AddDbContext<Data.AstroDataContext>();
 

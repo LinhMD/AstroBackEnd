@@ -21,7 +21,7 @@ namespace AstroBackEnd.Repositories
             Orders = new OrderRepository(dataContext);
             OrderDetails = new OrderDetailRepository(dataContext);
             Products = new ProductRepository(dataContext);
-
+            Catagory = new CatagoryRepository(dataContext);
         }
         public IUserRepository Users { get; }
 
@@ -37,6 +37,9 @@ namespace AstroBackEnd.Repositories
 
         public IProductRepository Products { get; }
 
+        public ICatagoryRepository Catagory { get; }
+
+        
         public int Complete()
         {
             return _dataContext.SaveChanges();
