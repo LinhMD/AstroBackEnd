@@ -18,6 +18,10 @@ namespace AstroBackEnd.Repositories
             Roles = new RoleRepository(dataContext);
             News = new NewsRepository(dataContext);
             Profiles = new ProfileRepository(dataContext);
+            Orders = new OrderRepository(dataContext);
+            OrderDetails = new OrderDetailRepository(dataContext);
+            Products = new ProductRepository(dataContext);
+
         }
         public IUserRepository Users { get; }
 
@@ -26,6 +30,12 @@ namespace AstroBackEnd.Repositories
         public INewsRepository News { get; }
 
         public IProfileRepository Profiles { get; }
+
+        public IOrderRepository Orders { get; }
+
+        public IOrderDetailRepository OrderDetails { get; }
+
+        public IProductRepository Products { get; }
 
         public int Complete()
         {

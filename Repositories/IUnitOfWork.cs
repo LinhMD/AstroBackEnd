@@ -15,6 +15,12 @@ namespace AstroBackEnd.Repositories
         INewsRepository News { get; }
 
         IProfileRepository Profiles { get; }
+
+        IOrderRepository Orders { get; }
+
+        IOrderDetailRepository OrderDetails { get; }
+
+        IProductRepository Products { get; }
         int Complete();
 
         
