@@ -51,6 +51,10 @@ namespace AstroBackEnd
 
             services.AddScoped<IProfileService, ProfileService>();
 
+            services.AddScoped<IOrderService, OrderService>();
+
+            services.AddScoped<IOrderDetailService, OrderDetailService>();
+
 
             services.AddDbContext<Data.AstroDataContext>();
 
@@ -70,12 +74,9 @@ namespace AstroBackEnd
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "AstroBackEnd v1"));
-            } 
+            app.UseDeveloperExceptionPage();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "AstroBackEnd v1"));
 
             app.UseHttpsRedirection();
 
@@ -96,7 +97,7 @@ namespace AstroBackEnd
 
             });
 
-            AstroBackEnd.Data.AstroDataInit.Seed(app);
+            Data.AstroDataInit.Seed(app);
 
         }
     }
