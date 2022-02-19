@@ -21,6 +21,9 @@ namespace AstroBackEnd.Repositories
         IOrderDetailRepository OrderDetails { get; }
 
         IProductRepository Products { get; }
+
+        ICatagoryRepository Catagory { get; }
+
         int Complete();
 
         

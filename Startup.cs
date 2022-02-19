@@ -51,6 +51,7 @@ namespace AstroBackEnd
 
             services.AddScoped<IProfileService, ProfileService>();
 
+            services.AddScoped<IProductService, ProductService>();
 
             services.AddDbContext<Data.AstroDataContext>();
 

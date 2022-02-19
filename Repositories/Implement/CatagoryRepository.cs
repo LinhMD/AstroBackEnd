@@ -9,19 +9,19 @@ using System.Threading.Tasks;
 
 namespace AstroBackEnd.Repositories.Implement
 {
-    public class ProductRepository : Repository<Product> , IProductRepository
+
+    public class CatagoryRepository : Repository<Catagory>, ICatagoryRepository
     {
-        public ProductRepository(AstroDataContext dataContext) : base(dataContext)
+        public CatagoryRepository(AstroDataContext dataContext) : base(dataContext)
         {
 
         }
+
         private AstroDataContext AstroData { get { return base._context as AstroDataContext; } }
 
-        public Product GetAllProductData(int id)
+        public Catagory GetAllCatagoryData(int id)
         {
-            return AstroData.Products.Include("MasterProduct")
-                .Include("Catagory").Include("ImgLinks").Include("Zodiacs")
-                .Include("ProductVariation").First(p => p.Id == id);
+            return AstroData.Catagories.First(u => u.Id == id);
         }
     }
 }
