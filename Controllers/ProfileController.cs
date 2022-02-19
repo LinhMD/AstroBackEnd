@@ -25,7 +25,15 @@ namespace AstroBackEnd.Controllers
         [HttpGet]
         public IActionResult GetAllProfiles()
         {
-            return Ok(_profileService.GetAllProfile());
+            try
+            {
+                return Ok(_profileService.GetAllProfile());
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            
         }
 
         [HttpGet("{id}")]
@@ -45,29 +53,62 @@ namespace AstroBackEnd.Controllers
         [HttpPost]
         public IActionResult CreateProfile(CreateProfileRequest request)
         {
-            return Ok(_profileService.CreateProfile(request));
+            try
+            {
+                return Ok(_profileService.CreateProfile(request));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            
         }
 
         [HttpPost]
         [Route("f")]
         public IActionResult FindProfile(FindProfileRequest request)
         {
-            return Ok(_profileService.FindProfile(request));
+            try
+            {
+                return Ok(_profileService.FindProfile(request));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            
         }
 
         [HttpPut("{id}")]
         public IActionResult UpdateProfile(int id, CreateProfileRequest request)
         {
-            Profile updateProfile = _profileService.UpdateProfile(id, request);
+           
 
-            return Ok(updateProfile);
+            try
+            {
+                Profile updateProfile = _profileService.UpdateProfile(id, request);
+
+                return Ok(updateProfile);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteProfile(int id)
         {
-            _profileService.DeleteProfile(id);
-            return Ok();
+            try
+            {
+                _profileService.DeleteProfile(id);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            
         }
     }
 }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AstroBackEnd.Repositories.Implement
 {
-    public class UserRepository : Repository<User>, IUserRepository
+    public class UserRepository : Repository<User>
     {
 
         public UserRepository(Data.AstroDataContext dataContext) : base(dataContext)
@@ -22,5 +22,6 @@ namespace AstroBackEnd.Repositories.Implement
         {
             return AstroData.Users.Include("Role").Include("Profiles").Include("Orders").First(u => u.Id == id);
         }
+
     }
 }

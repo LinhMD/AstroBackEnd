@@ -32,6 +32,7 @@ namespace AstroBackEnd.Services.Implement
             };
 
             var user = _work.Users.GetAllUserData(request.UserId);
+            if (user == null) throw new ArgumentException("User ID not found");
 
             user.Profiles.Add(profile);
 
@@ -42,7 +43,7 @@ namespace AstroBackEnd.Services.Implement
 
         public void DeleteProfile(int id)
         {
-            _work.Profiles.Remove(_work.Profiles.Get(id));
+            _work.Profiles.Remove(GetProfile(id));
         }
 
         public void Dispose()
@@ -80,21 +81,13 @@ namespace AstroBackEnd.Services.Implement
 
             if (request.PagingRequest != null)
             {
-                switch (request.PagingRequest.SortBy)
+                result = request.PagingRequest.SortBy switch
                 {
-                    case "Name":
-                        result = _work.Profiles.FindPaging(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
-                        break;
-                    case "BirthDate":
-                        result = _work.Profiles.FindPaging(filter, p => p.BirthDate, request.PagingRequest.Page, request.PagingRequest.PageSize);
-                        break;
-                    case "BirthPlace":
-                        result = _work.Profiles.FindPaging(filter, p => p.BirthPlace, request.PagingRequest.Page, request.PagingRequest.PageSize);
-                        break;
-                    default:
-                        result = _work.Profiles.FindPaging(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
-                        break;
-                }
+                    "Name"          => _work.Profiles.FindPaging(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize),
+                    "BirthDate"     => _work.Profiles.FindPaging(filter, p => p.BirthDate, request.PagingRequest.Page, request.PagingRequest.PageSize),
+                    "BirthPlace"    => _work.Profiles.FindPaging(filter, p => p.BirthPlace, request.PagingRequest.Page, request.PagingRequest.PageSize),
+                    _               => _work.Profiles.FindPaging(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize),
+                };
             }
             else
             {
@@ -112,12 +105,14 @@ namespace AstroBackEnd.Services.Implement
 
         public Profile GetProfile(int id)
         {
-            return _work.Profiles.Get(id);
+            Profile profile = _work.Profiles.Get(id);
+            if (profile == null) throw new ArgumentException("Profile not found");
+            return profile;
         }
 
         public Profile UpdateProfile(int id, CreateProfileRequest request)
         {
-            var profile = _work.Profiles.Get(id);
+            var profile = GetProfile(id);
 
             if (!string.IsNullOrWhiteSpace(request.Name))
             {

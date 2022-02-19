@@ -25,6 +25,11 @@ namespace AstroBackEnd.Services.Implement
 
         public User CreateUser(UserCreateRequest request)
         {
+            if (this._work.Users.Find(u => u.UserName == request.UserName, u => u.UserName).Any())
+            {
+                throw new ArgumentException("Username already exist");
+            }
+
             User user = new User()
             {
                 UserName = request.UserName,
@@ -37,7 +42,7 @@ namespace AstroBackEnd.Services.Implement
 
         public void DeleteUser(int id)
         {
-            _work.Users.Remove(_work.Users.Get(id));
+            _work.Users.Remove(GetUser(id));
         }
 
         public IEnumerable<User> FindUsers(FindUserRequest userRequest)
@@ -72,12 +77,17 @@ namespace AstroBackEnd.Services.Implement
 
         public User GetUser(int id)
         {
-            return _work.Users.Get(id);
+            User user = _work.Users.Get(id);
+
+            if (user == null) throw new ArgumentException("User Id not found");
+
+            return user;
         }
 
         public void UpdateUser(int id, UserCreateRequest request)
         {
-            var userUpdate = this._work.Users.Get(id);
+            var userUpdate = GetUser(id);
+
             if (!string.IsNullOrWhiteSpace(request.UserName))
             {
                 userUpdate.UserName = request.UserName;

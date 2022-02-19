@@ -10,6 +10,8 @@ namespace AstroBackEnd.Repositories.Core
     {
 
         public User GetAllUserData(int id);
+
+        public bool IsUserNameExist(string userName);
         
     }
 }
