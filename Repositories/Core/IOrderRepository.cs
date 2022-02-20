@@ -8,5 +8,6 @@ namespace AstroBackEnd.Repositories.Core
 {
     public interface IOrderRepository : IRepository<Order>
     {
+        public Order GetAllOrderInfo(int id);
     }
 }

@@ -124,7 +124,7 @@ namespace AstroBackEnd.Services.Implement
             order.DeliveryAdress = request.DeliveryAdress == null? order.DeliveryAdress : request.DeliveryAdress;
             order.DeleveryPhone = request.DeleveryPhone == null? order.DeleveryPhone: request.DeleveryPhone;
             order.Status = (int)request.Status;
-            order.TotalCost = order.OrderDetails.Sum(od => od.Price);
+            order.TotalCost = order.OrderDetails.Sum(od => od.TotalPrice);
 
             return order;
         }

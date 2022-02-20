@@ -78,7 +78,8 @@ namespace AstroBackEnd.Controllers
         //TODO: implement login
         private User Authenticate(UserLogin userLogin)
         {
-            User user = _unitOfWork.Users.GetAllUserData(_unitOfWork.Users.Find(u => u.UserName == userLogin.UserName, u => u.UserName).FirstOrDefault().Id);
+            User user = _unitOfWork.Users.Find(u => u.UserName == userLogin.UserName, u => u.UserName).FirstOrDefault();
+            user = _unitOfWork.Users.GetAllUserData(user.Id);
             return user;
         }
 

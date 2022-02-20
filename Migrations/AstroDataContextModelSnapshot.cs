@@ -201,13 +201,10 @@ namespace AstroBackEnd.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("OrderId")
+                    b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
-
-                    b.Property<int?>("ProductId")
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -219,11 +216,12 @@ namespace AstroBackEnd.Migrations
                     b.Property<string>("ReviewMessage")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<double>("TotalPrice")
+                        .HasColumnType("float");
+
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("OrderDetails");
                 });
@@ -599,17 +597,11 @@ namespace AstroBackEnd.Migrations
 
             modelBuilder.Entity("AstroBackEnd.Models.OrderDetail", b =>
                 {
-                    b.HasOne("AstroBackEnd.Models.Order", "Order")
+                    b.HasOne("AstroBackEnd.Models.Order", null)
                         .WithMany("OrderDetails")
-                        .HasForeignKey("OrderId");
-
-                    b.HasOne("AstroBackEnd.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId");
-
-                    b.Navigation("Order");
-
-                    b.Navigation("Product");
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("AstroBackEnd.Models.PlanetHouse", b =>
