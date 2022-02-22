@@ -1,25 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AstroBackEnd.Models
+namespace AstroBackEnd.RequestModels.OrderRequest
 {
-    public class Order
+    public class CreateOrderRequest
     {
-        public int Id { get; set; }
-
-        public int Status { get; set; }
-
         public DateTime? OrderTime { get; set; }
-
-        public double? TotalCost { get; set; }
 
         public string? DeliveryAdress { get; set; }
 
         public string? DeleveryPhone { get; set; }
 
-        public IList<OrderDetail> OrderDetails { get; set; }
+        [Required]
         public int UserId { get; set; }
+
+        private int _status = 0;
+
+        public int? Status { get { return _status; } set { _status = value == null? 0 : (int)value; } }
     }
 }

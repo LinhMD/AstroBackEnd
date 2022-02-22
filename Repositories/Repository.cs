@@ -49,7 +49,10 @@ namespace AstroBackEnd.Repositories
         
         public TModel Add(TModel model)
         {
-            return _context.Set<TModel>().Add(model).Entity;
+            _context.Set<TModel>().Add(model);
+            _context.SaveChanges();
+            _context.Entry(model).GetDatabaseValues();
+            return model;
         }
 
         public void AddAll(IEnumerable<TModel> models)
@@ -66,6 +69,8 @@ namespace AstroBackEnd.Repositories
         {
             _context.Set<TModel>().RemoveRange(models);
         }
+
+
 
        
 

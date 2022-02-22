@@ -132,6 +132,36 @@ namespace AstroBackEnd.Migrations
                     b.ToTable("ImgLinks");
                 });
 
+            modelBuilder.Entity("AstroBackEnd.Models.News", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("GeneratDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("HtmlContent")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Tag")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("News");
+                });
+
             modelBuilder.Entity("AstroBackEnd.Models.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -148,18 +178,18 @@ namespace AstroBackEnd.Migrations
                     b.Property<DateTime?>("OrderTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("OrderUserId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.Property<double?>("TotalCost")
                         .HasColumnType("float");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderUserId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Orders");
                 });
@@ -171,13 +201,10 @@ namespace AstroBackEnd.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("OrderId")
+                    b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
-
-                    b.Property<int?>("ProductId")
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -189,11 +216,12 @@ namespace AstroBackEnd.Migrations
                     b.Property<string>("ReviewMessage")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<double>("TotalPrice")
+                        .HasColumnType("float");
+
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("OrderDetails");
                 });
@@ -441,6 +469,9 @@ namespace AstroBackEnd.Migrations
 
                     b.HasIndex("RoleId");
 
+                    b.HasIndex("UserName")
+                        .IsUnique();
+
                     b.ToTable("Users");
                 });
 
@@ -557,26 +588,20 @@ namespace AstroBackEnd.Migrations
 
             modelBuilder.Entity("AstroBackEnd.Models.Order", b =>
                 {
-                    b.HasOne("AstroBackEnd.Models.User", "OrderUser")
+                    b.HasOne("AstroBackEnd.Models.User", null)
                         .WithMany("Orders")
-                        .HasForeignKey("OrderUserId");
-
-                    b.Navigation("OrderUser");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("AstroBackEnd.Models.OrderDetail", b =>
                 {
-                    b.HasOne("AstroBackEnd.Models.Order", "Order")
-                        .WithMany()
-                        .HasForeignKey("OrderId");
-
-                    b.HasOne("AstroBackEnd.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId");
-
-                    b.Navigation("Order");
-
-                    b.Navigation("Product");
+                    b.HasOne("AstroBackEnd.Models.Order", null)
+                        .WithMany("OrderDetails")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("AstroBackEnd.Models.PlanetHouse", b =>
@@ -734,6 +759,11 @@ namespace AstroBackEnd.Migrations
             modelBuilder.Entity("AstroBackEnd.Models.Horoscope", b =>
                 {
                     b.Navigation("Quotes");
+                });
+
+            modelBuilder.Entity("AstroBackEnd.Models.Order", b =>
+                {
+                    b.Navigation("OrderDetails");
                 });
 
             modelBuilder.Entity("AstroBackEnd.Models.Product", b =>

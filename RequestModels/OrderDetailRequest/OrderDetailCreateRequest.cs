@@ -3,22 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AstroBackEnd.Models
+namespace AstroBackEnd.RequestModels.OrderDetailRequest
 {
-    public class OrderDetail
+    public class OrderDetailCreateRequest
     {
-        public int Id { get; set; }
-
         public int OrderId { get; set; }
 
         public int ProductId { get; set; }
 
-        public double TotalPrice { get; set; }
-
         public int Quantity { get; set; }
 
-        public string? ReviewMessage { get; set; }
-
-        public DateTime? ReviewDate { get; set; }
     }
 }

@@ -11,6 +11,22 @@ namespace AstroBackEnd.Repositories
         IUserRepository Users { get; }
 
         IRoleRepository Roles { get; }
+
+        INewsRepository News { get; }
+
+        IProfileRepository Profiles { get; }
+
+        IOrderRepository Orders { get; }
+
+        IOrderDetailRepository OrderDetails { get; }
+
+        IProductRepository Products { get; }
+
+        ICatagoryRepository Catagory { get; }
+        IZodiacRepository Zodiacs { get; }
+
         int Complete();
+
+        
     }
 }

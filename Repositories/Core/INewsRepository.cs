@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace AstroBackEnd.Repositories.Core
 {
-    public interface IUserRepository : IRepository<User>
+    public interface INewsRepository : IRepository<News>
     {
-
-        public User GetAllUserData(int id);
-
         
     }
 }

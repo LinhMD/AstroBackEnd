@@ -25,6 +25,11 @@ namespace AstroBackEnd.Services.Implement
 
         public User CreateUser(UserCreateRequest request)
         {
+            if (this._work.Users.Find(u => u.UserName == request.UserName, u => u.UserName).Any())
+            {
+                throw new ArgumentException("Username already exist");
+            }
+
             User user = new User()
             {
                 UserName = request.UserName,
@@ -65,19 +70,24 @@ namespace AstroBackEnd.Services.Implement
 
 
 
-            IEnumerable<User> users = _work.Users.FindPaging<String>(filter, u => u.UserName, userRequest.Page, userRequest.PageSize);
+            IEnumerable<User> users = _work.Users.FindPaging<String>(filter, u => u.UserName, userRequest.PagingRequest.Page, userRequest.PagingRequest.PageSize);
 
             return users;
         }
 
         public User GetUser(int id)
         {
-            return _work.Users.Get(id);
+            User user = _work.Users.Get(id);
+
+            if (user == null) throw new ArgumentException("User Id not found");
+
+            return user;
         }
 
         public void UpdateUser(int id, UserCreateRequest request)
         {
-            var userUpdate = this._work.Users.Get(id);
+            var userUpdate = GetUser(id);
+
             if (!string.IsNullOrWhiteSpace(request.UserName))
             {
                 userUpdate.UserName = request.UserName;
@@ -96,7 +106,7 @@ namespace AstroBackEnd.Services.Implement
 
         public IEnumerable<User> GetAllUser()
         {
-            return _work.Users.GetAll<string>(u => u.UserName);
+            return _work.Users.GetAll(u => u.UserName);
         }
     }
 }
