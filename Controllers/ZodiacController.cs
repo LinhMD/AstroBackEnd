@@ -58,7 +58,7 @@ namespace AstroBackEnd.Controllers
             throw new NotImplementedException();
         }
 
-        [HttpGet("{Name}")]
+        [HttpPost]
         [Route("FindZodiac")]
         public IActionResult FindZodiac(FindZodiacRequest request)
         {

@@ -23,7 +23,7 @@ namespace AstroBackEnd.Repositories
             OrderDetails = new OrderDetailRepository(dataContext);
             Products = new ProductRepository(dataContext);
             Catagory = new CatagoryRepository(dataContext);
-            Zodiacs = new Zodiac(dataContext);
+            Zodiacs = new ZodiacRepository(dataContext);
         }
         public IUserRepository Users { get; }
 
