@@ -1,8 +1,6 @@
 using AstroBackEnd.Repositories;
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.Services.Implement;
-using FirebaseAdmin;
-using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -98,8 +96,7 @@ namespace AstroBackEnd
             app.UseCors(builder => builder
                          .AllowAnyOrigin()
                          .AllowAnyMethod()
-                         .AllowAnyHeader()
-                         .AllowCredentials());
+                         .AllowAnyHeader());
 
             app.UseAuthentication();
 
