@@ -1,4 +1,5 @@
 ﻿using AstroBackEnd.Data;
+using AstroBackEnd.Models;
 using AstroBackEnd.Repositories.Core;
 using AstroBackEnd.Repositories.Implement;
 using System;
@@ -22,6 +23,7 @@ namespace AstroBackEnd.Repositories
             OrderDetails = new OrderDetailRepository(dataContext);
             Products = new ProductRepository(dataContext);
             Catagory = new CatagoryRepository(dataContext);
+            Zodiacs = new Zodiac(dataContext);
         }
         public IUserRepository Users { get; }
 
@@ -39,7 +41,9 @@ namespace AstroBackEnd.Repositories
 
         public ICatagoryRepository Catagory { get; }
 
-        
+        public IZodiacRepository Zodiacs { get; }
+
+
         public int Complete()
         {
             return _dataContext.SaveChanges();
