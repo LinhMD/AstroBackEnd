@@ -84,7 +84,7 @@ namespace AstroBackEnd.Services.Implement
             return user;
         }
 
-        public void UpdateUser(int id, UserCreateRequest request)
+        public void UpdateUser(int id, UserUpdateRequest request)
         {
             var userUpdate = GetUser(id);
 
@@ -96,6 +96,11 @@ namespace AstroBackEnd.Services.Implement
             if (!string.IsNullOrWhiteSpace(request.PhoneNumber))
             {
                 userUpdate.PhoneNumber = request.PhoneNumber;
+            }
+
+            if(request.Status != null)
+            {
+                userUpdate.Status = request.Status.Value;
             }
         }
 

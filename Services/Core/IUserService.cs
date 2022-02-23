@@ -18,7 +18,7 @@ namespace AstroBackEnd.Services.Core
 
         public void DeleteUser(int id);
 
-        public void UpdateUser(int id, UserCreateRequest request);
+        public void UpdateUser(int id, UserUpdateRequest request);
 
         public User CreateUser(UserCreateRequest user);
 

@@ -93,10 +93,12 @@ namespace AstroBackEnd
             
             app.UseRouting();
 
-            app.UseCors(builder => builder
-                         .AllowAnyOrigin()
-                         .AllowAnyMethod()
-                         .AllowAnyHeader());
+            app.UseCors(builder =>
+            {
+                builder.AllowAnyHeader();
+                builder.AllowAnyMethod();
+                builder.AllowAnyOrigin();
+            });
 
             app.UseAuthentication();
 

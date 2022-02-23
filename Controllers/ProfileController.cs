@@ -22,20 +22,6 @@ namespace AstroBackEnd.Controllers
             _profileService = profileService;
         }
 
-        [HttpGet]
-        public IActionResult GetAllProfiles()
-        {
-            try
-            {
-                return Ok(_profileService.GetAllProfile());
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-            
-        }
-
         [HttpGet("{id}")]
         public IActionResult GetProfile(int id)
         {
@@ -64,13 +50,25 @@ namespace AstroBackEnd.Controllers
             
         }
 
-        [HttpPost]
-        [Route("f")]
-        public IActionResult FindProfile(FindProfileRequest request)
+        [HttpGet]
+        public IActionResult FindProfile(string? name, DateTime? BirthDateStart, DateTime? BirthDateEnd, string? BirthPlace, int? ZodiacId, string? sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
-                return Ok(_profileService.FindProfile(request));
+                return Ok(_profileService.FindProfile(new FindProfileRequest() 
+                { 
+                    Name = name,
+                    BirthDateStart = BirthDateStart,
+                    BirthDateEnd = BirthDateEnd,
+                    BirthPlace = BirthPlace,
+                    ZodiacId = ZodiacId,
+                    PagingRequest = new PagingRequest()
+                    {
+                        Page = page,
+                        PageSize = pageSize,
+                        SortBy = sortBy
+                    }
+                }));
             }
             catch (Exception e)
             {
