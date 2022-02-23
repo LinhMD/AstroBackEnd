@@ -32,7 +32,7 @@ namespace AstroBackEnd.Services.Implement
 
             if (product == null) throw new ArgumentException("Product ID not found");
 
-            if(product.MasterProduct != null) throw new ArgumentException("Product Must be a Product Variation");
+            if(product.MasterProduct == null) throw new ArgumentException("Product Must be a Product Variation");
 
             var detail = new OrderDetail()
             {

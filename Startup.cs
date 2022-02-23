@@ -97,8 +97,7 @@ namespace AstroBackEnd
             {
                 builder.AllowAnyHeader();
                 builder.AllowAnyMethod();
-                builder.AllowCredentials();
-                builder.WithOrigins("http://localhost:8000", "https://localhost:8000");
+                builder.AllowAnyOrigin();
             });
 
             app.UseAuthentication();
