@@ -178,18 +178,18 @@ namespace AstroBackEnd.Migrations
                     b.Property<DateTime?>("OrderTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("OrderUserId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.Property<double?>("TotalCost")
                         .HasColumnType("float");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderUserId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Orders");
                 });
@@ -590,17 +590,17 @@ namespace AstroBackEnd.Migrations
 
             modelBuilder.Entity("AstroBackEnd.Models.Order", b =>
                 {
-                    b.HasOne("AstroBackEnd.Models.User", "OrderUser")
+                    b.HasOne("AstroBackEnd.Models.User", null)
                         .WithMany("Orders")
-                        .HasForeignKey("OrderUserId");
-
-                    b.Navigation("OrderUser");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("AstroBackEnd.Models.OrderDetail", b =>
                 {
                     b.HasOne("AstroBackEnd.Models.Order", "Order")
-                        .WithMany()
+                        .WithMany("OrderDetails")
                         .HasForeignKey("OrderId");
 
                     b.HasOne("AstroBackEnd.Models.Product", "Product")
@@ -767,6 +767,11 @@ namespace AstroBackEnd.Migrations
             modelBuilder.Entity("AstroBackEnd.Models.Horoscope", b =>
                 {
                     b.Navigation("Quotes");
+                });
+
+            modelBuilder.Entity("AstroBackEnd.Models.Order", b =>
+                {
+                    b.Navigation("OrderDetails");
                 });
 
             modelBuilder.Entity("AstroBackEnd.Models.Product", b =>

@@ -70,6 +70,8 @@ namespace AstroBackEnd.Repositories
             _context.Set<TModel>().RemoveRange(models);
         }
 
+
+
        
 
         
