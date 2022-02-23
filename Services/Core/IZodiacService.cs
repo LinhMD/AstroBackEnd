@@ -11,12 +11,8 @@ namespace AstroBackEnd.Services.Core
 
         public string RemoveZodiac(int id);
 
-        public Zodiac GetZodiac(int id);
-
         public Zodiac UpdateZodiac(int id, UpdateZodiacRequest updateZodiac);
 
         public IEnumerable<Zodiac> FindZodiac(FindZodiacRequest request);
-
-        public IEnumerable<Zodiac> GetAllZodiac();
     }
 }

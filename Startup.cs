@@ -59,7 +59,13 @@ namespace AstroBackEnd
 
             services.AddScoped<IZodiacService, ZodiacService>();
 
+            services.AddScoped<IHouseService, HouseService>();
+
+            services.AddScoped<IZodiacHouseService, ZodiacHouseService>();
+
             services.AddDbContext<Data.AstroDataContext>();
+
+            
 
             //api and razor setup
             services.AddControllersWithViews();
