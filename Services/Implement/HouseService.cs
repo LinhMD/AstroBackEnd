@@ -17,6 +17,11 @@ namespace AstroBackEnd.Services.Implement
             this._work = _work;
         }
 
+        public House GetHouse(int id)
+        {
+            return _work.Houses.Get(id);
+        }
+
         public House CreateHouse(CreateHouseRequest request)
         {
             House house = new House()
@@ -136,11 +141,6 @@ namespace AstroBackEnd.Services.Implement
             }
             _work.Houses.Remove(house);
             return house;
-        }
-
-        public House GetHouse(int id)
-        {
-            return _work.Houses.Get(id);
         }
 
         public House UpdateHouse(int id, UpdateHouseRequest request)

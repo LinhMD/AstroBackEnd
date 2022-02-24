@@ -6,6 +6,7 @@ namespace AstroBackEnd.Services.Core
 {
     public interface IHouseService
     {
+        public House GetHouse(int id);
         public House CreateHouse(CreateHouseRequest request);
 
         public IEnumerable<House> FindHouse(FindHouseRequest request);

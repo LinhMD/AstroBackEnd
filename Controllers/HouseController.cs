@@ -24,14 +24,21 @@ namespace AstroBackEnd.Controllers
             this._work = _work;
         }
 
+        [HttpGet("{id}")]
+        public IActionResult GetHouse(int id)
+        {
+            return Ok(houseService.GetHouse(id));
+        }
+
         [HttpGet]
-        public IActionResult FindHouses(int id, string name, string title, string description, string tag, string mainContent, string sortBy)
+        [Route("{FindHouse}")]
+        public IActionResult FindHouses(int id, string name, string title, string description, string tag, string mainContent, string sortBy, int page, int pageSize)
         {
             PagingRequest pagingRequest = new PagingRequest()
             {
                 SortBy = sortBy,
-                Page = 1,
-                PageSize = 20,
+                Page = page,
+                PageSize = pageSize,
             };
             FindHouseRequest request = new FindHouseRequest()
             {
