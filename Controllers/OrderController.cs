@@ -83,11 +83,32 @@ namespace AstroBackEnd.Controllers
             }
         }
         [HttpPost("f")]
-        public IActionResult FindOrder(FindOrderRequest request)
+        public IActionResult FindOrder( int? Status, 
+                                        DateTime? OrderTimeStart, DateTime? OrderTimeEnd,
+                                        double? TotalCostStart, double? TotalCostEnd, 
+                                        string? DeliveryAdress, 
+                                        string? DeleveryPhone, 
+                                        int? UserId,
+                                        string? sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
-                var orders = _orderService.FindOrder(request);
+                var orders = _orderService.FindOrder(new FindOrderRequest() { 
+                    Status = Status,
+                    OrderTimeEnd = OrderTimeEnd,
+                    OrderTimeStart = OrderTimeStart,
+                    TotalCostEnd = TotalCostEnd,
+                    TotalCostStart = TotalCostStart,
+                    DeliveryAdress = DeliveryAdress,
+                    DeleveryPhone = DeleveryPhone,
+                    UserId = UserId,
+
+                    PagingRequest = new RequestModels.PagingRequest()
+                    {
+                        Page = page,
+                        PageSize = pageSize,
+                        SortBy = sortBy
+                    }                });
                 return Ok(orders);
             }
             catch (Exception e)

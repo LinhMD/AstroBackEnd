@@ -57,6 +57,8 @@ namespace AstroBackEnd
 
             services.AddScoped<IOrderDetailService, OrderDetailService>();
 
+            services.AddScoped<IZodiacService, ZodiacService>();
+
             services.AddDbContext<Data.AstroDataContext>();
 
             //api and razor setup
@@ -75,6 +77,12 @@ namespace AstroBackEnd
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            
+            //FirebaseApp.Create(new AppOptions()
+            //{
+            //    Credential = GoogleCredential.FromFile(@"C:\Users\USER\Desktop\test-app-firebase-serviceAccountKey.json"),
+            //});
+
             app.UseDeveloperExceptionPage();
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "AstroBackEnd v1"));
@@ -85,7 +93,12 @@ namespace AstroBackEnd
             
             app.UseRouting();
 
-            app.UseCors();
+            app.UseCors(builder =>
+            {
+                builder.AllowAnyHeader();
+                builder.AllowAnyMethod();
+                builder.AllowAnyOrigin();
+            });
 
             app.UseAuthentication();
 

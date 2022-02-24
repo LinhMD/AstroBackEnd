@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace AstroBackEnd.Migrations
 {
-    public partial class init_db : Migration
+    public partial class init_database : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -435,9 +435,9 @@ namespace AstroBackEnd.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    OrderId = table.Column<int>(type: "int", nullable: true),
-                    ProductId = table.Column<int>(type: "int", nullable: true),
-                    Price = table.Column<double>(type: "float", nullable: false),
+                    OrderId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    TotalPrice = table.Column<double>(type: "float", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     ReviewMessage = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ReviewDate = table.Column<DateTime>(type: "datetime2", nullable: true)
@@ -450,13 +450,7 @@ namespace AstroBackEnd.Migrations
                         column: x => x.OrderId,
                         principalTable: "Orders",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_OrderDetails_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -499,11 +493,6 @@ namespace AstroBackEnd.Migrations
                 name: "IX_OrderDetails_OrderId",
                 table: "OrderDetails",
                 column: "OrderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OrderDetails_ProductId",
-                table: "OrderDetails",
-                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_UserId",

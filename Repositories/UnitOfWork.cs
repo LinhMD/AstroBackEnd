@@ -1,4 +1,5 @@
 ﻿using AstroBackEnd.Data;
+using AstroBackEnd.Models;
 using AstroBackEnd.Repositories.Core;
 using AstroBackEnd.Repositories.Implement;
 using System;
@@ -23,7 +24,11 @@ namespace AstroBackEnd.Repositories
             OrderDetails = new OrderDetailRepository(dataContext);
             Product = new ProductRepository(dataContext);
             Catagory = new CatagoryRepository(dataContext);
+
             Image = new ImageRepository(dataContext);
+
+            Zodiacs = new ZodiacRepository(dataContext);
+
         }
         public IUserRepository Users { get; }
 
@@ -41,9 +46,13 @@ namespace AstroBackEnd.Repositories
 
         public ICatagoryRepository Catagory { get; }
 
+
         public IImageRepository Image { get; }
 
         public IZodiacProductRepositorye ZodiacProduct { get; }
+
+        public IZodiacRepository Zodiacs { get; }
+
 
 
         public int Complete()
