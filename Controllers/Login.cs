@@ -2,6 +2,7 @@
 using AstroBackEnd.Models;
 using AstroBackEnd.Repositories;
 using AstroBackEnd.RequestModels;
+using FirebaseAdmin.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -11,6 +12,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -38,12 +40,18 @@ namespace AstroBackEnd.Controllers
             return new Random().Next();
         }
 
+       /** [HttpGet("firebase")]
+        public async Task<IActionResult> getFireBaseUser()
+        {
+            UserRecord userRecord = await FirebaseAuth.DefaultInstance.GetUserAsync("xy6kJ9hYfyU7VYrW8S3AU3wYM4r2");
+            return Ok(userRecord);
+        }**/
+
         // POST api/<Login>
         [HttpPost]
         public IActionResult Post([FromBody] UserLogin userLogin)
         {
             var user = Authenticate(userLogin);
-
             
             if (user != null)
             {

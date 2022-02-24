@@ -1,4 +1,5 @@
-﻿using AstroBackEnd.RequestModels.OrderDetailRequest;
+﻿using AstroBackEnd.RequestModels;
+using AstroBackEnd.RequestModels.OrderDetailRequest;
 using AstroBackEnd.Services.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,28 +22,41 @@ namespace AstroBackEnd.Controllers
             this._detailService = detailService;
         }
 
+
         [HttpGet]
-        public IActionResult GetAllOrderDetail()
-        {
-
-            try
-            {
-                IEnumerable<Models.OrderDetail> details = _detailService.GetAllOrderDetails();
-
-                return Ok(details);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpPost("f")]
-        public IActionResult FindOrderDetail(FindOrderDetailRequest request)
+        public IActionResult FindOrderDetail(   int? OrderId, 
+                                                string? ProductName, 
+                                                double? TotalPriceStart,
+                                                double? TotalPriceEnd, 
+                                                int? QuantityStart,
+                                                int? QuantityEnd, 
+                                                string? ReviewMessage, 
+                                                DateTime? ReviewDateStart, 
+                                                DateTime? ReviewDateEnd,
+                                                string? sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
-                IEnumerable<Models.OrderDetail> details = _detailService.FindOrderDetail(request);
+                IEnumerable<Models.OrderDetail> details = _detailService.FindOrderDetail(new FindOrderDetailRequest() 
+                { 
+                    OrderId = OrderId,
+                    ProductName = ProductName,
+                    TotalPriceStart = TotalPriceStart,
+                    TotalPriceEnd = TotalPriceEnd,
+                    QuantityStart = QuantityStart,
+                    QuantityEnd = QuantityEnd,
+                    ReviewMessage = ReviewMessage,
+                    ReviewDateStart= ReviewDateStart,
+                    ReviewDateEnd = ReviewDateEnd,
+                    Paging = new PagingRequest()
+                    {
+                        Page = page,
+                        PageSize = pageSize,
+                        SortBy = sortBy
+                    }
+                    
+                
+                });
                 return Ok(details);
             }
             catch 

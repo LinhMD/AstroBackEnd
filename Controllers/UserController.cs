@@ -28,20 +28,6 @@ namespace AstroBackEnd.Controllers
             this._work = work;
         }
 
-        [HttpGet]
-        public IActionResult GetAllUser()
-        {
-            try
-            {
-                return Ok(_userService.GetAllUser());
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-            
-        }
-
         [HttpGet("{id}")]
         public IActionResult GetUser(int id)
         {
@@ -84,12 +70,25 @@ namespace AstroBackEnd.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("f")]
-        public IActionResult FindUsers([FromBody]FindUserRequest request)
+        [HttpGet]
+        public IActionResult FindUsers(string? name, string? phone, string? sortBy,int status = 1,  int page = 1, int pageSize = 20)
         {
             try
             {
+                FindUserRequest request = new FindUserRequest()
+                {
+                    Name = name,
+                    Phone = phone,
+                    Status = status,
+                    PagingRequest = new PagingRequest()
+                    {
+                        SortBy = sortBy,
+                        Page = page,
+                        PageSize = pageSize
+                    }
+
+                };
+
                 var users = _userService.FindUsers(request);
                 return Ok(users);
             }

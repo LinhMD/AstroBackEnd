@@ -16,5 +16,8 @@ namespace AstroBackEnd.RequestModels
 
         [RegularExpression(@"\(?\d{3}\)?-? *\d{3}-? *-?\d{4}", ErrorMessage = "Must be phone number")]
         public string? PhoneNumber { get; set; }
+
+        
+        public int? Status { get; set; }
     }
-}
+}   
