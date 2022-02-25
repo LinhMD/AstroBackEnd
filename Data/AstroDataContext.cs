@@ -47,8 +47,6 @@ namespace AstroBackEnd.Data
 
         public DbSet<ImgLink> ImgLinks { get; set; }
 
-        public DbSet<ProductZodiac> ProductZodiacs { get; set; }
-
         public DbSet<Order> Orders { get; set; }
 
         public DbSet<OrderDetail> OrderDetails { get; set; }

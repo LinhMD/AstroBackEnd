@@ -175,7 +175,7 @@ namespace AstroBackEnd.Migrations
                         column: x => x.HoroscopeId,
                         principalTable: "Horoscopes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -350,32 +350,6 @@ namespace AstroBackEnd.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductZodiacs",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductId = table.Column<int>(type: "int", nullable: false),
-                    ZodiacId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductZodiacs", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ProductZodiacs_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ProductZodiacs_Zodiacs_ZodiacId",
-                        column: x => x.ZodiacId,
-                        principalTable: "Zodiacs",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Orders",
                 columns: table => new
                 {
@@ -420,7 +394,7 @@ namespace AstroBackEnd.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Profiles_Zodiacs_ZodiacId",
                         column: x => x.ZodiacId,
@@ -450,7 +424,13 @@ namespace AstroBackEnd.Migrations
                         column: x => x.OrderId,
                         principalTable: "Orders",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_OrderDetails_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -535,16 +515,6 @@ namespace AstroBackEnd.Migrations
                 column: "ZodiacsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductZodiacs_ProductId",
-                table: "ProductZodiacs",
-                column: "ProductId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductZodiacs_ZodiacId",
-                table: "ProductZodiacs",
-                column: "ZodiacId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Profiles_UserId",
                 table: "Profiles",
                 column: "UserId");
@@ -606,9 +576,6 @@ namespace AstroBackEnd.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProductZodiac");
-
-            migrationBuilder.DropTable(
-                name: "ProductZodiacs");
 
             migrationBuilder.DropTable(
                 name: "Quotes");
