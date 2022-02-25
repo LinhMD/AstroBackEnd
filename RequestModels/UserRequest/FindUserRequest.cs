@@ -12,9 +12,7 @@ namespace AstroBackEnd.RequestModels
 
         public string? Phone { get; set; }
 
-        public int Status { get { return _status; } set { _status = value; } }
-
-        private int _status = 1;
+        public int? Status { get; set; }
 
         public PagingRequest PagingRequest { get; set; }
 

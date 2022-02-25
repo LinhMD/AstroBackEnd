@@ -63,7 +63,11 @@ namespace AstroBackEnd.Services.Implement
                     checkPhoneNumber = user.PhoneNumber.Contains(userRequest.Phone);
                 }
 
-                checkStatus = user.Status == userRequest.Status;
+                if (userRequest.Status == null)
+                {
+                    checkStatus = user.Status == userRequest.Status;
+                }
+                
                 
                 return checkUserName && checkStatus && checkPhoneNumber;
             };
