@@ -15,6 +15,11 @@ namespace AstroBackEnd.Services.Implement
         {
             this._work = _work; 
         }
+
+        public Zodiac GetZodiac(int id)
+        {
+            return _work.Zodiacs.Get(id);
+        }
         public Zodiac CreateZodiac(CreateZodiacRequest request)
         {
             Zodiac zodiac = new Zodiac()

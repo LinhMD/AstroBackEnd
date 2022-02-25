@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/v1.0/[controller]")]
+    [Route("api/v1/house")]
     [ApiController]
     public class HouseController : ControllerBase
     {
@@ -31,7 +31,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet]
-        [Route("{FindHouse}")]
+        [Route("findhouses")]
         public IActionResult FindHouses(int id, string name, string title, string description, string tag, string mainContent, string sortBy, int page, int pageSize)
         {
             PagingRequest pagingRequest = new PagingRequest()

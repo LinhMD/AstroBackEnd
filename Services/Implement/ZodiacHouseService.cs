@@ -15,6 +15,11 @@ namespace AstroBackEnd.Services.Implement
         {
             this._work = _work;
         }
+
+        public ZodiacHouse GetZodiacHouse(int id)
+        {
+            return _work.ZodiacHouses.Get(id);
+        }
         public ZodiacHouse CreateZodiacHouse(CreateZodiacHouseRequest request)
         {
             Zodiac zodiac = _work.Zodiacs.Get(request.ZodiacId);

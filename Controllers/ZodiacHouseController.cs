@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/v1.0/[controller]")]
+    [Route("api/v1/zodiachouse")]
     [ApiController]
     public class ZodiacHouseController : Controller
     {
@@ -21,6 +21,12 @@ namespace AstroBackEnd.Controllers
             this._work = _work;
         }
 
+        [HttpGet("{id}")]
+        public IActionResult GetZodiacHouse(int id)
+        {
+            return Ok(iZodiacHouseService.GetZodiacHouse(id));
+        }
+
         [HttpPost]
         public IActionResult CreateZodiacHouse(CreateZodiacHouseRequest request)
         {
@@ -28,11 +34,14 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet]
-        public IActionResult FindZodiacHouse(int id, int zodiacId, int houseId, string content, string sortBy)
+        [Route("findzodiachouses")]
+        public IActionResult FindZodiacHouse(int id, int zodiacId, int houseId, string content, string sortBy, int page, int pagaSize)
         {
             PagingRequest pagingRequest = new PagingRequest()
             {
                 SortBy = sortBy,
+                Page = page,
+                PageSize = pagaSize
             };
             FindZodiacHouse request = new FindZodiacHouse()
             {

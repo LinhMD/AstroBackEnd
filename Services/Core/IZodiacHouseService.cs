@@ -6,6 +6,7 @@ namespace AstroBackEnd.Services.Core
 {
     public interface IZodiacHouseService
     {
+        public ZodiacHouse GetZodiacHouse(int id);
         public ZodiacHouse CreateZodiacHouse(CreateZodiacHouseRequest request);
 
         public IEnumerable<ZodiacHouse> FindZodiacHouse(FindZodiacHouse request);

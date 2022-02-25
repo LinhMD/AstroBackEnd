@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/v1.0/[controller]")]
+    [Route("api/v1/zodiac")]
     [ApiController]
     public class ZodiacController : ControllerBase
     {
@@ -23,12 +23,21 @@ namespace AstroBackEnd.Controllers
             this._zodiacService = zodiacService;
         }
 
+        [HttpGet("{id}")]
+        public IActionResult GetZodiac(int id)
+        {
+            return Ok(_zodiacService.GetZodiac(id));
+        }
+
         [HttpGet]
-        public IActionResult FindZodiac(string name, string sortBy)
+        [Route("finzodiacs")]
+        public IActionResult FindZodiac(string name, string sortBy, int page, int pageSize)
         {
             PagingRequest pagingRequest = new PagingRequest()
             {
                 SortBy = sortBy,
+                Page = page,    
+                PageSize = pageSize
             };
 
             FindZodiacRequest request = new FindZodiacRequest()

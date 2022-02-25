@@ -6,6 +6,7 @@ namespace AstroBackEnd.Services.Core
 {
     public interface IZodiacService
     {
+        public Zodiac GetZodiac(int id);
 
         public Zodiac CreateZodiac(CreateZodiacRequest request);
 
