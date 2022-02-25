@@ -24,6 +24,8 @@ namespace AstroBackEnd.Repositories
             Products = new ProductRepository(dataContext);
             Catagory = new CatagoryRepository(dataContext);
             Zodiacs = new ZodiacRepository(dataContext);
+            Houses = new HouseRepository(dataContext);
+            ZodiacHouses = new ZodiacHouseRepository(dataContext);
         }
         public IUserRepository Users { get; }
 
@@ -43,6 +45,8 @@ namespace AstroBackEnd.Repositories
 
         public IZodiacRepository Zodiacs { get; }
 
+        public IHouseRepository Houses { get; }
+        public IZodiacHouseRepository ZodiacHouses { get; }
 
         public int Complete()
         {

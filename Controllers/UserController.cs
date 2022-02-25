@@ -57,7 +57,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateUser(int id,[FromBody] UserCreateRequest request)
+        public IActionResult UpdateUser(int id,[FromBody] UserUpdateRequest request)
         {
             try
             {
