@@ -25,7 +25,7 @@ namespace AstroBackEnd.Services.Implement
 
         public Product CreateMasterProduct(MasterProductCreateRequest request)
         {
-            var mtId = _work.Products.Get(request.MasterProductId);
+            var mtId = _work.Product.Get(request.MasterProductId);
             var cata = _work.Catagory.Get(request.CatagoryId);
             Product product = new Product()
             {
@@ -40,7 +40,7 @@ namespace AstroBackEnd.Services.Implement
                 Color = request.Color,
                 Inventory = request.Inventory,
             };
-            return _work.Products.Add(product);
+            return _work.Product.Add(product);
         }
 
         public Product CreateProduct(ProductsCreateRequest request)
@@ -59,12 +59,12 @@ namespace AstroBackEnd.Services.Implement
                 Inventory = request.Inventory,
             };
             
-            return _work.Products.Add(product);
+            return _work.Product.Add(product);
         }
 
         public void DeleteProduct(int id)
         {
-            _work.Products.Remove(_work.Products.Get(id));
+            _work.Catagory.Remove(_work.Catagory.Get(id));
         }
 
         public void Dispose()
@@ -118,34 +118,34 @@ namespace AstroBackEnd.Services.Implement
                 switch (request.PagingRequest.SortBy)
                 {
                     case "Name":
-                        result = _work.Products.FindPaging(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                        result = _work.Product.FindPaging(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
                         break;
                     case "Description":
-                        result = _work.Products.FindPaging(filter, p => p.Description, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                        result = _work.Product.FindPaging(filter, p => p.Description, request.PagingRequest.Page, request.PagingRequest.PageSize);
                         break;
                     case "CatagoryId":
-                        result = _work.Products.FindPaging(filter, p => p.Catagory, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                        result = _work.Product.FindPaging(filter, p => p.Catagory, request.PagingRequest.Page, request.PagingRequest.PageSize);
                         break;
                     case "Size":
-                        result = _work.Products.FindPaging(filter, p => p.Catagory, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                        result = _work.Product.FindPaging(filter, p => p.Catagory, request.PagingRequest.Page, request.PagingRequest.PageSize);
                         break;
                     case "Price":
-                        result = _work.Products.FindPaging(filter, p => p.Catagory, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                        result = _work.Product.FindPaging(filter, p => p.Catagory, request.PagingRequest.Page, request.PagingRequest.PageSize);
                         break;
                     case "Gender":
-                        result = _work.Products.FindPaging(filter, p => p.Catagory, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                        result = _work.Product.FindPaging(filter, p => p.Catagory, request.PagingRequest.Page, request.PagingRequest.PageSize);
                         break;
                     case "Color":
-                        result = _work.Products.FindPaging(filter, p => p.Catagory, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                        result = _work.Product.FindPaging(filter, p => p.Catagory, request.PagingRequest.Page, request.PagingRequest.PageSize);
                         break;
                     default:
-                        result = _work.Products.FindPaging(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                        result = _work.Product.FindPaging(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
                         break;
                 }
             }
             else
             {
-                result = _work.Products.Find(filter, p => p.Name);
+                result = _work.Product.Find(filter, p => p.Name);
             }
 
             return result;
@@ -153,19 +153,19 @@ namespace AstroBackEnd.Services.Implement
 
         public IEnumerable<Product> GetAllProduct()
         {
-            return _work.Products.GetAll<String>(p => p.Name);
+            return _work.Product.GetAll<String>(p => p.Name);
         }
 
 
         public Product GetProduct(int id)
         {
-            return _work.Products.Get(id);
+            return _work.Product.Get(id);
         }
 
         public Product UpdateProduct(int id, ProductsUpdateRequest request)
         {
-            var product = _work.Products.Get(id);
-            var mtId = _work.Products.Get(request.MasterProductId);
+            var product = _work.Product.Get(id);
+            var mtId = _work.Product.Get(request.MasterProductId);
             var cata = _work.Catagory.Get(request.CatagoryId);
             if (!string.IsNullOrWhiteSpace(request.Name))
             {
