@@ -30,7 +30,6 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet]
-        [Route("finzodiacs")]
         public IActionResult FindZodiac(string name, string sortBy, int page, int pageSize)
         {
             PagingRequest pagingRequest = new PagingRequest()

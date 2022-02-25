@@ -31,7 +31,6 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet]
-        [Route("findhouses")]
         public IActionResult FindHouses(int id, string name, string title, string description, string tag, string mainContent, string sortBy, int page, int pageSize)
         {
             PagingRequest pagingRequest = new PagingRequest()
