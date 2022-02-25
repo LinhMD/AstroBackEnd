@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace AstroBackEnd.Repositories
 {
@@ -21,9 +22,13 @@ namespace AstroBackEnd.Repositories
             Profiles = new ProfileRepository(dataContext);
             Orders = new OrderRepository(dataContext);
             OrderDetails = new OrderDetailRepository(dataContext);
-            Products = new ProductRepository(dataContext);
+            Product = new ProductRepository(dataContext);
             Catagory = new CatagoryRepository(dataContext);
+            Image = new ImageRepository(dataContext);
             Zodiacs = new ZodiacRepository(dataContext);
+            Houses = new HouseRepository(dataContext);
+            ZodiacHouses = new ZodiacHouseRepository(dataContext);
+
         }
         public IUserRepository Users { get; }
 
@@ -33,15 +38,23 @@ namespace AstroBackEnd.Repositories
 
         public IProfileRepository Profiles { get; }
 
+        public IProductRepository Product { get; }
+
         public IOrderRepository Orders { get; }
 
         public IOrderDetailRepository OrderDetails { get; }
 
-        public IProductRepository Products { get; }
-
         public ICatagoryRepository Catagory { get; }
 
+
+        public IImageRepository Image { get; }
+
+        public IZodiacProductRepositorye ZodiacProduct { get; }
+
         public IZodiacRepository Zodiacs { get; }
+
+        public IHouseRepository Houses { get; }
+        public IZodiacHouseRepository ZodiacHouses { get; }
 
 
         public int Complete()

@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/zodiac")]
     [ApiController]
     public class ZodiacController : ControllerBase
     {
@@ -23,45 +23,27 @@ namespace AstroBackEnd.Controllers
             this._zodiacService = zodiacService;
         }
 
-        [HttpGet]
-        
+        [HttpGet("{id}")]
         public IActionResult GetZodiac(int id)
         {
             return Ok(_zodiacService.GetZodiac(id));
         }
 
         [HttpGet]
-        [Route("GetAllZodiac")]
-        public IActionResult GetAllZodiac()
+        public IActionResult FindZodiac(string name, string sortBy, int page, int pageSize)
         {
-            Func<Zodiac,ZodiacView> maping = Zodiac =>
+            PagingRequest pagingRequest = new PagingRequest()
             {
-                return new ZodiacView()
-                {
-                    Id = Zodiac.Id,
-                    Name = Zodiac.Name,
-                    ZodiacDayStart = Zodiac.ZodiacDayStart,
-                    ZodiacMonthStart = Zodiac.ZodiacMonthEnd,
-                    ZodiacDayEnd = Zodiac.ZodiacDayEnd,
-                    ZodiacMonthEnd = Zodiac.ZodiacMonthEnd,
-                    Icon = Zodiac.Icon,
-                    Descreiption = Zodiac.Descreiption,
-                    MainContent = Zodiac.MainContent,
-                    
-                };
+                SortBy = sortBy,
+                Page = page,    
+                PageSize = pageSize
             };
-            return Ok(_zodiacService.GetAllZodiac().Select(maping));
-        }
 
-        private void Func(Zodiac zodiac, ZodiacView zodiacView)
-        {
-            throw new NotImplementedException();
-        }
-
-        [HttpPost]
-        [Route("FindZodiac")]
-        public IActionResult FindZodiac(FindZodiacRequest request)
-        {
+            FindZodiacRequest request = new FindZodiacRequest()
+            {
+                Name = name,
+                PagingRequest = pagingRequest,
+            };
             return Ok(_zodiacService.FindZodiac(request));
         }
 

@@ -15,6 +15,11 @@ namespace AstroBackEnd.Services.Implement
         {
             this._work = _work; 
         }
+
+        public Zodiac GetZodiac(int id)
+        {
+            return _work.Zodiacs.Get(id);
+        }
         public Zodiac CreateZodiac(CreateZodiacRequest request)
         {
             Zodiac zodiac = new Zodiac()
@@ -38,12 +43,6 @@ namespace AstroBackEnd.Services.Implement
             Zodiac zodiac = _work.Zodiacs.Get(id);
             _work.Zodiacs.Remove(zodiac);
             return zodiac.Name;
-        }
-
-
-        public Zodiac GetZodiac(int id)
-        {
-            return _work.Zodiacs.Get(id);
         }
 
         public Zodiac UpdateZodiac(int id, UpdateZodiacRequest updateZodiac)
@@ -92,7 +91,10 @@ namespace AstroBackEnd.Services.Implement
                 bool checkName = true;
                 if (!string.IsNullOrWhiteSpace(request.Name))
                 {
-                    checkName = p.Name.Contains(request.Name);
+                    if (!string.IsNullOrWhiteSpace(p.Name)){
+                        checkName = p.Name.Contains(request.Name);
+                    }
+                    
                 }
                 return checkName;
             };
@@ -107,7 +109,7 @@ namespace AstroBackEnd.Services.Implement
                         result = _work.Zodiacs.FindPaging(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
                         break;
                     default:
-                        result = null;
+                        result = _work.Zodiacs.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
                         break;
                 }
             }
@@ -117,11 +119,6 @@ namespace AstroBackEnd.Services.Implement
             }
 
             return result;
-        }
-
-        public IEnumerable<Zodiac> GetAllZodiac()
-        {
-            return _work.Zodiacs.GetAll<String>(p => p.Name);
         }
 
         public void Dispose()
