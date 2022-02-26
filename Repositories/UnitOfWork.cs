@@ -26,10 +26,15 @@ namespace AstroBackEnd.Repositories
             Catagory = new CatagoryRepository(dataContext);
             Image = new ImageRepository(dataContext);
             Zodiacs = new ZodiacRepository(dataContext);
+
+            ImgLinks = new ImgLinkRepository(dataContext);
+
             Houses = new HouseRepository(dataContext);
             ZodiacHouses = new ZodiacHouseRepository(dataContext);
 
+
         }
+
         public IUserRepository Users { get; }
 
         public IRoleRepository Roles { get; }
@@ -52,6 +57,10 @@ namespace AstroBackEnd.Repositories
         public IZodiacProductRepositorye ZodiacProduct { get; }
 
         public IZodiacRepository Zodiacs { get; }
+
+
+        public IImgLinksRepository ImgLinks { get; }
+        
 
         public IHouseRepository Houses { get; }
         public IZodiacHouseRepository ZodiacHouses { get; }

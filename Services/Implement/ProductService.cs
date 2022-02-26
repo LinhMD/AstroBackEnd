@@ -25,41 +25,46 @@ namespace AstroBackEnd.Services.Implement
 
         public Product CreateMasterProduct(MasterProductCreateRequest request)
         {
+
+
             var mtId = _work.Product.Get(request.MasterProductId);
+
             var cata = _work.Catagory.Get(request.CatagoryId);
             Product product = new Product()
             {
-                MasterProduct = mtId,
                 Name = request.Name,
                 Description = request.Description,
                 Detail = request.Detail,
                 Catagory = cata,
-                Size = request.Size,
-                Price = request.Price,
-                Gender = request.Gender,
-                Color = request.Color,
-                Inventory = request.Inventory,
+                
             };
-            return _work.Product.Add(product);
+
+            _work.Products.Add(product);
+            _work.ImgLinks.AddAll(request.ImgLink.Select(i => new ImgLink() { Link = i, ProductId = product.Id }));
+
+            return _work.Products.GetAllProductData(product.Id);
+
         }
 
-        public Product CreateProduct(ProductsCreateRequest request)
+        public Product CreateProductVariant(ProductVariantCreateRequest request)
         {
-            var cata = _work.Catagory.Get(request.CatagoryId);
+            Product master = _work.Products.Get(request.MasterProductId);
+
             Product product = new Product()
             {
-                Name = request.Name,
-                Description = request.Description,
-                Detail = request.Detail,
-                Catagory = cata,
+                MasterProduct = master,
                 Size = request.Size,
                 Price = request.Price,
                 Gender = request.Gender,
                 Color = request.Color,
                 Inventory = request.Inventory,
             };
-            
-            return _work.Product.Add(product);
+
+            _work.Products.Add(product);
+            _work.ImgLinks.AddAll(request.ImgLink.Select(i => new ImgLink() { Link = i, ProductId = product.Id }));
+
+            return _work.Products.GetAllProductData(product.Id);
+
         }
 
         public void DeleteProduct(int id)
@@ -72,23 +77,11 @@ namespace AstroBackEnd.Services.Implement
             this._work.Complete();
         }
 
-        public IEnumerable<Product> FindProducts(FindProductsRequest request)
+        public IEnumerable<Product> FindProductVariant(FindProductsVariantRequest request)
         {
             Func<Product, bool> filter = p =>
             {
-                bool checkName = true;
-                if (!string.IsNullOrWhiteSpace(request.Name))
-                {
-                    checkName = p.Name.Contains(request.Name);
-                }
-
-                bool checkDescription = true;
-                if (!string.IsNullOrWhiteSpace(request.Description))
-                {
-                    checkDescription = p.Description.Contains(request.Description);
-                }
-
-                bool checkCatagory = request.CatagoryId==null ? true : p.Catagory.Id== request.CatagoryId;
+                if (p.MasterProduct == null) return false;
 
                 bool checkSize = true;
                 if (!string.IsNullOrWhiteSpace(request.Size))
@@ -97,18 +90,17 @@ namespace AstroBackEnd.Services.Implement
                 }
 
                 bool checkPrice = true;
-                checkPrice = request.Price==null ? true : p.Price== request.Price;
+                checkPrice = request.Price==null || p.Price== request.Price;
 
                 bool checkGender = true;
-                checkGender = request.Gender == null ? true : p.Gender == request.Gender;
+                checkGender = request.Gender == null || p.Gender == request.Gender;
 
                 bool checkColor = true;
                 if (!string.IsNullOrWhiteSpace(request.Color))
                 {
                     checkColor = p.Color.Contains(request.Color);
                 }
-                return checkName && checkDescription && checkCatagory && checkSize &&
-                        checkPrice && checkGender && checkColor;
+                return checkSize && checkPrice && checkGender && checkColor;
             };
 
             IEnumerable<Product> result = null;
@@ -117,26 +109,18 @@ namespace AstroBackEnd.Services.Implement
             {
                 switch (request.PagingRequest.SortBy)
                 {
-                    case "Name":
-                        result = _work.Product.FindPaging(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
-                        break;
-                    case "Description":
-                        result = _work.Product.FindPaging(filter, p => p.Description, request.PagingRequest.Page, request.PagingRequest.PageSize);
-                        break;
-                    case "CatagoryId":
-                        result = _work.Product.FindPaging(filter, p => p.Catagory, request.PagingRequest.Page, request.PagingRequest.PageSize);
-                        break;
+
                     case "Size":
-                        result = _work.Product.FindPaging(filter, p => p.Catagory, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                        result = _work.Products.FindPaging(filter, p => p.Size, request.PagingRequest.Page, request.PagingRequest.PageSize);
                         break;
                     case "Price":
-                        result = _work.Product.FindPaging(filter, p => p.Catagory, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                        result = _work.Products.FindPaging(filter, p => p.Price, request.PagingRequest.Page, request.PagingRequest.PageSize);
                         break;
                     case "Gender":
-                        result = _work.Product.FindPaging(filter, p => p.Catagory, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                        result = _work.Products.FindPaging(filter, p => p.Gender, request.PagingRequest.Page, request.PagingRequest.PageSize);
                         break;
                     case "Color":
-                        result = _work.Product.FindPaging(filter, p => p.Catagory, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                        result = _work.Products.FindPaging(filter, p => p.Color, request.PagingRequest.Page, request.PagingRequest.PageSize);
                         break;
                     default:
                         result = _work.Product.FindPaging(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
@@ -151,6 +135,58 @@ namespace AstroBackEnd.Services.Implement
             return result;
         }
 
+
+        public IEnumerable<Product> FindMasterProduct(FindMasterProductRequest request)
+        {
+            Func<Product, bool> filter = p =>
+            {
+                if (p.MasterProduct != null) return false;
+
+                bool checkName = string.IsNullOrWhiteSpace(request.Name) || (!string.IsNullOrEmpty(p.Detail) && p.Name.Contains(request.Name)); 
+
+                bool checkDescription = string.IsNullOrWhiteSpace(request.Description) || (!string.IsNullOrEmpty(p.Description) && p.Description.Contains(request.Description));
+
+                bool checkDetail = string.IsNullOrWhiteSpace(request.Detail) || (!string.IsNullOrEmpty(p.Detail) && p.Detail.Contains(request.Detail));
+
+                bool checkCatagory = request.CatagoryId == null || p.Catagory.Id == request.CatagoryId;
+
+                bool zodiacIdCheck = request.ZodiacsId == null || p.Zodiacs.Select(z => z.Id).Contains(((int)request.ZodiacsId.Value));
+
+                bool variationCheck = request.ProductVariationId == null || p.ProductVariation.Select(z => z.Id).Contains(((int)request.ProductVariationId.Value));
+
+                return checkName && checkDescription && checkCatagory;
+            };
+
+
+            IEnumerable<Product> result = null;
+
+            if (request.PagingRequest != null)
+            {
+                switch (request.PagingRequest.SortBy)
+                {
+                    case "Name":
+                        result = _work.Products.FindProducWithAllData(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                        break;
+                    case "Description":
+                        result = _work.Products.FindProducWithAllData(filter, p => p.Description, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                        break;
+                    case "CatagoryId":
+                        result = _work.Products.FindProducWithAllData(filter, p => p.Catagory.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                        break;
+                    default:
+                        result = _work.Products.FindProducWithAllData(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                        break;
+                }
+            }
+            else
+            {
+                result = _work.Products.Find(filter, p => p.Name);
+            }
+
+            return result;
+
+        }
+
         public IEnumerable<Product> GetAllProduct()
         {
             return _work.Product.GetAll<String>(p => p.Name);
@@ -159,13 +195,21 @@ namespace AstroBackEnd.Services.Implement
 
         public Product GetProduct(int id)
         {
-            return _work.Product.Get(id);
+
+            Product product = _work.Products.GetAllProductData(id);
+
+            if (product == null) throw new ArgumentException("Can not find product with id(" + id + ")");
+
+            return product;
+
         }
 
-        public Product UpdateProduct(int id, ProductsUpdateRequest request)
+        public Product UpdateMasterProduct(int id, MasterProductsUpdateRequest request)
         {
-            var product = _work.Product.Get(id);
-            var mtId = _work.Product.Get(request.MasterProductId);
+
+            var product = this.GetProduct(id);
+         
+
             var cata = _work.Catagory.Get(request.CatagoryId);
             if (!string.IsNullOrWhiteSpace(request.Name))
             {
@@ -183,15 +227,31 @@ namespace AstroBackEnd.Services.Implement
             {
                 product.Catagory = cata;
             }
+            if(request.ImgLinksAdd != null && request.ImgLinksAdd.Count != 0)
+            {
+                _work.ImgLinks.AddAll(request.ImgLinksAdd.Select(i => new ImgLink() { Link = i, ProductId = id }));
+            }
+
+            _work.Complete();
+
+            return this.GetProduct(id);
+
+        }
+
+        public Product UpdateProductVariant(int id, ProductVariantUpdateRequest request)
+        {
+            var product = this.GetProduct(id);
+            
+
             if (!string.IsNullOrWhiteSpace(request.Size))
             {
                 product.Size = request.Size;
             }
-            if (!string.IsNullOrWhiteSpace(Convert.ToString(request.Price)))
+            if (request.Price != null && request.Price >= 0D)
             {
                 product.Price = request.Price;
             }
-            if (!string.IsNullOrWhiteSpace(Convert.ToString(request.Gender)))
+            if (request.Gender != null)
             {
                 product.Gender = request.Gender;
             }
@@ -199,12 +259,28 @@ namespace AstroBackEnd.Services.Implement
             {
                 product.Color = request.Color;
             }
-            if (!string.IsNullOrWhiteSpace(Convert.ToString(request.Inventory)))
-            {
-                product.Inventory = request.Inventory;
-            }
-            return product;
 
+            if (request.ImgLinksAdd != null && request.ImgLinksAdd.Count != 0)
+            {
+                IEnumerable<ImgLink> links = request.ImgLinksAdd.Select(i => new ImgLink() { Link = i, ProductId = id });
+                _work.ImgLinks.AddAll(links);
+                foreach (var link in links)
+                {
+                    product.ImgLinks.Add(link);
+                }
+            }
+
+            return product;
+        }
+
+        public Product GetMasterProduct(int id)
+        {
+            return _work.Products.FindProducWithAllData(p => p.Id == id && p.MasterProduct == null, p => p.Id).FirstOrDefault();
+        }
+
+        public Product GetProductVariant(int id)
+        {
+            return _work.Products.FindProducWithAllData(p => p.Id == id && p.MasterProduct != null, p => p.Id).FirstOrDefault();
         }
     }
 }

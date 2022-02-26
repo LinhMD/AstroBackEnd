@@ -20,12 +20,6 @@ namespace AstroBackEnd.Controllers
         {
             this._orderService = orderService;
         }
-        [HttpGet]
-        public IActionResult GetAllOrder()
-        {
-
-            return Ok(_orderService.GetAllOrders());
-        }
 
         [HttpPost]
         public IActionResult CreateOrder(CreateOrderRequest request)
@@ -82,7 +76,7 @@ namespace AstroBackEnd.Controllers
                 return BadRequest(e.Message);
             }
         }
-        [HttpPost("f")]
+        [HttpGet]
         public IActionResult FindOrder( int? Status, 
                                         DateTime? OrderTimeStart, DateTime? OrderTimeEnd,
                                         double? TotalCostStart, double? TotalCostEnd, 

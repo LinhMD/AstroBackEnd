@@ -26,6 +26,9 @@ namespace AstroBackEnd.Repositories
 
         IZodiacRepository Zodiacs { get; }
 
+
+        IImgLinksRepository ImgLinks { get; }
+
         IImageRepository Image { get; }
         
         IZodiacProductRepositorye ZodiacProduct { get; }
