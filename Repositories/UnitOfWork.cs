@@ -22,14 +22,16 @@ namespace AstroBackEnd.Repositories
             Profiles = new ProfileRepository(dataContext);
             Orders = new OrderRepository(dataContext);
             OrderDetails = new OrderDetailRepository(dataContext);
-            Product = new ProductRepository(dataContext);
-            Catagory = new CatagoryRepository(dataContext);
+            Products = new ProductRepository(dataContext);
+            Catagorys = new CatagoryRepository(dataContext);
             Image = new ImageRepository(dataContext);
             Zodiacs = new ZodiacRepository(dataContext);
             Houses = new HouseRepository(dataContext);
             ZodiacHouses = new ZodiacHouseRepository(dataContext);
 
+
         }
+
         public IUserRepository Users { get; }
 
         public IRoleRepository Roles { get; }
@@ -38,18 +40,16 @@ namespace AstroBackEnd.Repositories
 
         public IProfileRepository Profiles { get; }
 
-        public IProductRepository Product { get; }
+        public IProductRepository Products { get; }
 
         public IOrderRepository Orders { get; }
 
         public IOrderDetailRepository OrderDetails { get; }
 
-        public ICatagoryRepository Catagory { get; }
+        public ICatagoryRepository Catagorys { get; }
 
 
         public IImageRepository Image { get; }
-
-        public IZodiacProductRepositorye ZodiacProduct { get; }
 
         public IZodiacRepository Zodiacs { get; }
 

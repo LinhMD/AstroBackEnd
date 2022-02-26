@@ -21,7 +21,20 @@ namespace AstroBackEnd.Repositories.Implement
         {
             return AstroData.Products.Include("MasterProduct")
                 .Include("Catagory").Include("ImgLinks").Include("Zodiacs")
-                .Include("ProductVariation").First(p => p.Id == id);
+                .Include("ProductVariation").FirstOrDefault(p => p.Id == id);
+        }
+
+        public IEnumerable<Product> FindProducWithAllData<TSortBy>(Func<Product, bool> filter, Func<Product, TSortBy> sortBy, int page, int pageSize)
+        {
+            return AstroData.Products.Include("MasterProduct")
+                                        .Include("Catagory")
+                                        .Include("ImgLinks")
+                                        .Include("Zodiacs")
+                                        .Include("ProductVariation")
+                                        .Where(filter)
+                                        .OrderBy(sortBy)
+                                        .Skip((page - 1) * pageSize)
+                                        .Take(pageSize + 1);
         }
     }
 }

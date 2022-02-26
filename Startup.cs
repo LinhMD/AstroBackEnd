@@ -1,6 +1,8 @@
 using AstroBackEnd.Repositories;
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.Services.Implement;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -43,6 +45,8 @@ namespace AstroBackEnd
                 });
 
             //Dependency injection part
+            services.AddDbContext<Data.AstroDataContext>();
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IUserService, UserService>();
@@ -63,7 +67,8 @@ namespace AstroBackEnd
 
             services.AddScoped<IZodiacHouseService, ZodiacHouseService>();
 
-            services.AddDbContext<Data.AstroDataContext>();
+            services.AddScoped<IImageService, ImageService>();
+            
 
             
 
@@ -83,11 +88,11 @@ namespace AstroBackEnd
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            
-            //FirebaseApp.Create(new AppOptions()
-            //{
-            //    Credential = GoogleCredential.FromFile(@"C:\Users\USER\Desktop\test-app-firebase-serviceAccountKey.json"),
-            //});
+
+            FirebaseApp.Create(new AppOptions()
+            {
+                Credential = GoogleCredential.FromFile(@"C:\Users\USER\Desktop\astrology-a5858-firebase-adminsdk-r9xmf-ac88ef956c.json"),
+            });
 
             app.UseDeveloperExceptionPage();
             app.UseSwagger();

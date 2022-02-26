@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AstroBackEnd.RequestModels.ProductRequest
 {
-    public class ProductsUpdateRequest
+    public class MasterProductsUpdateRequest
     {
         public int MasterProductId { get; set; }
 
@@ -18,16 +18,6 @@ namespace AstroBackEnd.RequestModels.ProductRequest
 
         public int CatagoryId { get; set; }
 
-        public string? Size { get; set; }
-
-        public double? Price { get; set; }
-
-        public int? Gender { get; set; }
-
-        public string? Color { get; set; }
-
-        public int? Inventory { get; set; }
-
-        //public IList<ImgLink> ImgLinks { get; set; }
+        public IList<string> ImgLinksAdd { get; set; }
     }
 }

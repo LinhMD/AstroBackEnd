@@ -63,11 +63,12 @@ namespace AstroBackEnd.Services.Implement
                     checkPhoneNumber = user.PhoneNumber.Contains(userRequest.Phone);
                 }
 
-                if (userRequest.Status == null)
+
+                if (userRequest.Status.HasValue)
                 {
                     checkStatus = user.Status == userRequest.Status;
                 }
-                
+
                 
                 return checkUserName && checkStatus && checkPhoneNumber;
             };
@@ -116,6 +117,21 @@ namespace AstroBackEnd.Services.Implement
         public IEnumerable<User> GetAllUser()
         {
             return _work.Users.GetAll(u => u.UserName);
+        }
+
+        public Order getCart(int userId)
+        {
+            var cart = this._work.Orders.Find(o => o.UserId == userId && o.Status == 0, o => o.Id).FirstOrDefault();
+
+            if(cart != null)
+            {
+                cart = new Order()
+                {
+                    
+                };
+            }
+
+            return cart;
         }
     }
 }
