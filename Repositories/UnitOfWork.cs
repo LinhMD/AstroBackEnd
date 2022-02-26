@@ -26,6 +26,10 @@ namespace AstroBackEnd.Repositories
             Zodiacs = new ZodiacRepository(dataContext);
             Houses = new HouseRepository(dataContext);
             ZodiacHouses = new ZodiacHouseRepository(dataContext);
+            Quotes = new QuoteRepository(dataContext);
+            Horoscopes = new HoroscopeRepository(dataContext);
+            Planets = new PlanetRepository(dataContext);
+
         }
         public IUserRepository Users { get; }
 
@@ -46,7 +50,14 @@ namespace AstroBackEnd.Repositories
         public IZodiacRepository Zodiacs { get; }
 
         public IHouseRepository Houses { get; }
+
         public IZodiacHouseRepository ZodiacHouses { get; }
+
+        public IHoroscopeRepository Horoscopes { get; }
+
+        public IQuoteRepository Quotes { get; }
+
+        public IPlanetRepository Planets { get; }
 
         public int Complete()
         {

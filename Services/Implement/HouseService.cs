@@ -46,7 +46,7 @@ namespace AstroBackEnd.Services.Implement
                  bool checkTitleHouse = true;
                  bool checkTag = true;
                  bool checkMainContent = true;
-                 if (request.Id != null)
+                 if (request.Id != 0)
                  {
                     if(p.Id == request.Id)
                     {
@@ -113,7 +113,7 @@ namespace AstroBackEnd.Services.Implement
                      }
 
                  }
-                 return checkNameHouse && checkDescriptionHouse && checkMainContent && checkTag && checkTitleHouse;
+                 return checkId && checkNameHouse && checkDescriptionHouse && checkMainContent && checkTag && checkTitleHouse;
              };
             PagingRequest paging = request.PagingRequest;
             if (paging == null || paging.SortBy == null)

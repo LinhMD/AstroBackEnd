@@ -1,4 +1,5 @@
 using AstroBackEnd.Repositories;
+using AstroBackEnd.Repositories.Core;
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.Services.Implement;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -63,9 +64,13 @@ namespace AstroBackEnd
 
             services.AddScoped<IZodiacHouseService, ZodiacHouseService>();
 
-            services.AddDbContext<Data.AstroDataContext>();
+            services.AddScoped<IQuoteService, QuoteService>();
 
-            
+            services.AddScoped<IHoroscopeService, HoroscopeService>();
+
+            services.AddScoped<IPlanetService, PlanetService>();
+
+            services.AddDbContext<Data.AstroDataContext>();
 
             //api and razor setup
             services.AddControllersWithViews();

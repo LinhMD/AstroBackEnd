@@ -30,6 +30,12 @@ namespace AstroBackEnd.Repositories
 
         IZodiacHouseRepository ZodiacHouses { get; }
 
+        IHoroscopeRepository Horoscopes { get; }
+
+        IQuoteRepository Quotes { get; }
+
+        IPlanetRepository Planets { get; }
+
         int Complete();
 
         
