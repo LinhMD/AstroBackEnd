@@ -27,9 +27,7 @@ namespace AstroBackEnd.Services.Implement
         {
 
 
-            var mtId = _work.Product.Get(request.MasterProductId);
-
-            var cata = _work.Catagory.Get(request.CatagoryId);
+            var cata = _work.Catagorys.Get(request.CatagoryId);
             Product product = new Product()
             {
                 Name = request.Name,
@@ -40,7 +38,7 @@ namespace AstroBackEnd.Services.Implement
             };
 
             _work.Products.Add(product);
-            _work.ImgLinks.AddAll(request.ImgLink.Select(i => new ImgLink() { Link = i, ProductId = product.Id }));
+            _work.Image.AddAll(request.ImgLink.Select(i => new ImgLink() { Link = i, ProductId = product.Id }));
 
             return _work.Products.GetAllProductData(product.Id);
 
@@ -61,7 +59,7 @@ namespace AstroBackEnd.Services.Implement
             };
 
             _work.Products.Add(product);
-            _work.ImgLinks.AddAll(request.ImgLink.Select(i => new ImgLink() { Link = i, ProductId = product.Id }));
+            _work.Image.AddAll(request.ImgLink.Select(i => new ImgLink() { Link = i, ProductId = product.Id }));
 
             return _work.Products.GetAllProductData(product.Id);
 
@@ -69,7 +67,7 @@ namespace AstroBackEnd.Services.Implement
 
         public void DeleteProduct(int id)
         {
-            _work.Catagory.Remove(_work.Catagory.Get(id));
+            _work.Catagorys.Remove(_work.Catagorys.Get(id));
         }
 
         public void Dispose()
@@ -123,13 +121,13 @@ namespace AstroBackEnd.Services.Implement
                         result = _work.Products.FindPaging(filter, p => p.Color, request.PagingRequest.Page, request.PagingRequest.PageSize);
                         break;
                     default:
-                        result = _work.Product.FindPaging(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                        result = _work.Products.FindPaging(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
                         break;
                 }
             }
             else
             {
-                result = _work.Product.Find(filter, p => p.Name);
+                result = _work.Products.Find(filter, p => p.Name);
             }
 
             return result;
@@ -189,7 +187,7 @@ namespace AstroBackEnd.Services.Implement
 
         public IEnumerable<Product> GetAllProduct()
         {
-            return _work.Product.GetAll<String>(p => p.Name);
+            return _work.Products.GetAll<String>(p => p.Name);
         }
 
 
@@ -210,7 +208,7 @@ namespace AstroBackEnd.Services.Implement
             var product = this.GetProduct(id);
          
 
-            var cata = _work.Catagory.Get(request.CatagoryId);
+            var cata = _work.Catagorys.Get(request.CatagoryId);
             if (!string.IsNullOrWhiteSpace(request.Name))
             {
                 product.Name = request.Name;
@@ -229,7 +227,7 @@ namespace AstroBackEnd.Services.Implement
             }
             if(request.ImgLinksAdd != null && request.ImgLinksAdd.Count != 0)
             {
-                _work.ImgLinks.AddAll(request.ImgLinksAdd.Select(i => new ImgLink() { Link = i, ProductId = id }));
+                _work.Image.AddAll(request.ImgLinksAdd.Select(i => new ImgLink() { Link = i, ProductId = id }));
             }
 
             _work.Complete();
@@ -263,7 +261,7 @@ namespace AstroBackEnd.Services.Implement
             if (request.ImgLinksAdd != null && request.ImgLinksAdd.Count != 0)
             {
                 IEnumerable<ImgLink> links = request.ImgLinksAdd.Select(i => new ImgLink() { Link = i, ProductId = id });
-                _work.ImgLinks.AddAll(links);
+                _work.Image.AddAll(links);
                 foreach (var link in links)
                 {
                     product.ImgLinks.Add(link);

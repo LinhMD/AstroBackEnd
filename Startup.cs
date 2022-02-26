@@ -45,6 +45,8 @@ namespace AstroBackEnd
                 });
 
             //Dependency injection part
+            services.AddDbContext<Data.AstroDataContext>();
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IUserService, UserService>();
@@ -65,7 +67,8 @@ namespace AstroBackEnd
 
             services.AddScoped<IZodiacHouseService, ZodiacHouseService>();
 
-            services.AddDbContext<Data.AstroDataContext>();
+            services.AddScoped<IImageService, ImageService>();
+            
 
             
 
