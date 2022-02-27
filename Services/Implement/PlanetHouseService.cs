@@ -29,7 +29,6 @@ namespace AstroBackEnd.Services.Implement
             if (request.HouseId > 0)
             {
                 house = _work.Houses.Get(request.HouseId);
-
             }
             else
             {
@@ -58,7 +57,6 @@ namespace AstroBackEnd.Services.Implement
                 return _work.PlanetHouses.Add(planetHouse);
             }
             return null;
-
         }
 
         public IEnumerable<PlanetHouse> FindPlanetHouse(FindPlanetHouseRequest request)
@@ -69,53 +67,24 @@ namespace AstroBackEnd.Services.Implement
                 bool checkHouseId = true;
                 bool checkPlanetId = true;
                 bool checkContent = true;
-                if (request.Id != 0)
+                if (request.Id > 0)
                 {
-                    if (p.Id == request.Id)
-                    {
-                        checkId = true;
-                    }
-                    else
-                    {
-                        checkId = false;
-                    }
+                    checkId = p.Id == request.Id;
                 }
-                if (request.HouseId != 0)
+                if (request.HouseId > 0)
                 {
-                    if (p.HouseId == request.HouseId)
-                    {
-                        checkHouseId = true;
-                    }
-                    else
-                    {
-                        checkHouseId = false;
-                    }
+                    checkHouseId = p.HouseId == request.HouseId;
                 }
-                if (request.PlanetId != 0)
+                if (request.PlanetId > 0)
                 {
-                    if (p.PlanetId == request.PlanetId)
-                    {
-                        checkPlanetId = true;
-                    }
-                    else
-                    {
-                        checkPlanetId = false;
-                    }
+                    checkPlanetId = p.PlanetId == request.PlanetId;
                 }
                 if (!string.IsNullOrWhiteSpace(request.Content))
                 {
-                    if (!string.IsNullOrWhiteSpace(p.Content))
-                    {
-                        checkContent = p.Content.Contains(request.Content);
-                    }
-                    else
-                    {
-                        checkContent = false;
-                    }
+                    checkContent = !string.IsNullOrWhiteSpace(p.Content) ? p.Content.Contains(request.Content) : false;
                 }
                 return checkId && checkContent && checkPlanetId && checkHouseId;
             };
-
             PagingRequest paging = request.PagingRequest;
             if (paging == null || paging.SortBy == null)
             {
@@ -156,13 +125,13 @@ namespace AstroBackEnd.Services.Implement
         public PlanetHouse DeletePlanetHouse(int id)
         {
             PlanetHouse planetHouse = _work.PlanetHouses.Get(id);
-            if (planetHouse == null)
-                return null;
-            else
+            if (planetHouse != null)
             {
                 _work.PlanetHouses.Remove(planetHouse);
                 return planetHouse;
             }
+            return null;
+
         }
 
         public void Dispose()

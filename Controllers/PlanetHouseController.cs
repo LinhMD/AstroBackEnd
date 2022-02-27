@@ -26,27 +26,17 @@ namespace AstroBackEnd.Controllers
         public IActionResult GetPlanetHouse(int id)
         {
             PlanetHouse planetHouse = planetHouseService.GetPlanetHouse(id);
-            if (planetHouse == null)
-                return NotFound();
-            else
+            if (planetHouse != null)
                 return Ok(planetHouse);
+            else
+                return NotFound();
         }
 
         [HttpGet]
-        public IActionResult FindPlanetZodiac(int id, string planetId, string HouseId, string content, string sortBy, int page, int pageSize)
+        public IActionResult FindPlanetZodiac(int id, int planetId, int HouseId, string content, string sortBy, int page, int pageSize)
         {
             try
             {
-                int checkplanetId = 0;
-                int checkHouseId = 0;
-                if (!string.IsNullOrWhiteSpace(planetId))
-                {
-                    checkplanetId = Int32.Parse(planetId);
-                }
-                if (!string.IsNullOrWhiteSpace(HouseId))
-                {
-                    checkHouseId = Int32.Parse(HouseId);
-                }
                 PagingRequest pagingRequest = new PagingRequest()
                 {
                     SortBy = sortBy,
@@ -58,8 +48,8 @@ namespace AstroBackEnd.Controllers
                 {
                     Id = id,
                     Content = content,
-                    PlanetId = checkplanetId,
-                    HouseId = checkHouseId,
+                    PlanetId = planetId,
+                    HouseId = HouseId,
                     PagingRequest = pagingRequest
                 };
                 return Ok(planetHouseService.FindPlanetHouse(findPlanetZodiacRequest));
@@ -87,10 +77,10 @@ namespace AstroBackEnd.Controllers
         public IActionResult DeletePlanetZodiac(int id)
         {
             PlanetHouse planetHouse = planetHouseService.DeletePlanetHouse(id);
-            if (planetHouse == null)
-                return NotFound();
-            else
+            if (planetHouse != null)
                 return Ok(planetHouse);
+            else
+                return NotFound();
 
         }
 
@@ -98,11 +88,12 @@ namespace AstroBackEnd.Controllers
         public IActionResult UpdatePlanet(int id, UpdatePlanetHouseRequest request)
         {
             PlanetHouse planetHouse = planetHouseService.UpdatePlanetHouse(id, request);
-            if (planetHouse == null)
+            if (planetHouse != null)
             {
-                return NotFound();
+                return Ok(planetHouse);
             }
-            return Ok(planetHouse);
+            return NotFound();
+
         }
     }
 }

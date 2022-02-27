@@ -69,38 +69,18 @@ namespace AstroBackEnd.Services.Implement
                 bool checkZodiacId = true;
                 bool checkPlanetId = true;
                 bool checkContent = true;
-                if (request.Id != 0)
+                if (request.Id > 0)
                 {
-                    if (p.Id == request.Id)
-                    {
-                        checkId = true;
-                    }
-                    else
-                    {
-                        checkId = false;
-                    }
+                    checkId = p.Id == request.Id;
                 }
-                if (request.ZodiacId != 0)
+                if (request.ZodiacId > 0)
                 {
-                    if (p.ZodiacId == request.ZodiacId)
-                    {
-                        checkZodiacId = true;
-                    }
-                    else
-                    {
-                        checkZodiacId = false;
-                    }
+                    checkZodiacId = p.ZodiacId == request.ZodiacId;
+
                 }
-                if (request.PlanetId != 0)
+                if (request.PlanetId > 0)
                 {
-                    if (p.PlanetId == request.PlanetId)
-                    {
-                        checkPlanetId = true;
-                    }
-                    else
-                    {
-                        checkPlanetId = false;
-                    }
+                    checkPlanetId = p.PlanetId == request.PlanetId;
                 }
                 if (!string.IsNullOrWhiteSpace(request.Content))
                 {

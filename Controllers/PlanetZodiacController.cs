@@ -26,27 +26,17 @@ namespace AstroBackEnd.Controllers
         public IActionResult GetPlanetZodiac(int id)
         {
             PlanetZodiac planetZodiac = planetZodiacService.GetPlanetZodiac(id);
-            if (planetZodiac == null)
-                return NotFound();
-            else
+            if (planetZodiac != null)
                 return Ok(planetZodiac);
+            else
+                return NotFound();
         }
 
         [HttpGet]
-        public IActionResult FindPlanetZodiac(int id, string planetId, string zodiacId, string content, string sortBy, int page, int pageSize)
+        public IActionResult FindPlanetZodiac(int id, int planetId, int zodiacId, string content, string sortBy, int page, int pageSize)
         {
             try
-            {
-                int checkplanetId = 0;
-                int checkzodiacId = 0;
-                if (!string.IsNullOrWhiteSpace(planetId))
-                {
-                    checkplanetId = Int32.Parse(planetId);
-                }
-                if (!string.IsNullOrWhiteSpace(zodiacId))
-                {
-                    checkzodiacId = Int32.Parse(zodiacId);
-                }
+            { 
                 PagingRequest pagingRequest = new PagingRequest()
                 {
                     SortBy = sortBy,
@@ -58,8 +48,8 @@ namespace AstroBackEnd.Controllers
                 {
                     Id = id,
                     Content = content,
-                    PlanetId = checkplanetId,
-                    ZodiacId = checkzodiacId,
+                    PlanetId = planetId,
+                    ZodiacId = zodiacId,
                     PagingRequest = pagingRequest
                 };
                 return Ok(planetZodiacService.FindPlanetZodiac(findPlanetZodiacRequest));
@@ -86,10 +76,10 @@ namespace AstroBackEnd.Controllers
         public IActionResult DeletePlanetZodiac(int id)
         {
             PlanetZodiac planetZodiac = planetZodiacService.DeletePlanetZodiac(id);
-            if (planetZodiac == null)
-                return NotFound();
-            else
+            if (planetZodiac != null)
                 return Ok(planetZodiac);
+            else
+                return NotFound();
 
         }
 
@@ -97,11 +87,12 @@ namespace AstroBackEnd.Controllers
         public IActionResult UpdatePlanet(int id, UpdatePlanetZodiacRequest request)
         {
             PlanetZodiac planetZodiac = planetZodiacService.UpdatePlanetZodiac(id, request);
-            if (planetZodiac == null)
+            if (planetZodiac != null)
             {
-                return NotFound();
+                return Ok(planetZodiac);
             }
-            return Ok(planetZodiac);
+            return NotFound();
+            
         }
     }
 }

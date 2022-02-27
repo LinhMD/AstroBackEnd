@@ -18,19 +18,18 @@ namespace AstroBackEnd.Services.Implement
         }
         public Quote CreateQuote(CreateQuoteRequest request)
         {
-            if(request.HoroscopeId < 1)
-            {
-                 throw new Exception("HoroscopeId cannot empty and must be than zero");
-
-            }
-            else
+            if(request.HoroscopeId > 0)
             {
                 Quote quote = new Quote()
                 {
                     Content = request.Content,
                     HoroscopeId = request.HoroscopeId,
                 };
-                return _work.Quotes.Add(quote); ;
+                return _work.Quotes.Add(quote);
+            }
+            else
+            {
+                throw new Exception("HoroscopeId cannot empty and must be than zero");
             }
         }
 
@@ -41,16 +40,9 @@ namespace AstroBackEnd.Services.Implement
                 bool checkId = true;
                 bool checkContent = true;
                 bool checkHoroscopeId = true;
-                if (request.Id != 0)
+                if (request.Id > 0)
                 {
-                    if (p.Id == request.Id)
-                    {
-                        checkId = true;
-                    }
-                    else
-                    {
-                        checkId = false;
-                    }
+                    checkId = p.Id == request.Id;
                 }
                 if (!string.IsNullOrWhiteSpace(request.Content))
                 {
@@ -65,14 +57,7 @@ namespace AstroBackEnd.Services.Implement
                 }
                 if (request.HoroscopeId > 0)
                 {
-                    if (p.HoroscopeId > 0)
-                    {
-                        checkHoroscopeId = p.HoroscopeId == request.HoroscopeId;
-                    }
-                    else
-                    {
-                        checkHoroscopeId = false;
-                    }
+                    checkHoroscopeId = p.HoroscopeId == request.HoroscopeId;
                 }
                 return checkId && checkContent && checkHoroscopeId;
             };
@@ -96,14 +81,12 @@ namespace AstroBackEnd.Services.Implement
         public Quote DeleteQuote(int id)
         {
             Quote quote = _work.Quotes.Get(id);
-            if (quote == null)
-                return null;
-            else
+            if (quote != null)
             {
                 _work.Quotes.Remove(quote);
                 return quote;
             }
-
+            return null;
         }
 
         public Quote GetQuote(int id)

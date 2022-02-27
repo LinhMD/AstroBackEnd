@@ -48,14 +48,7 @@ namespace AstroBackEnd.Services.Implement
                  bool checkMainContent = true;
                  if (request.Id != 0)
                  {
-                    if(p.Id == request.Id)
-                    {
-                        checkId = true;
-                    }
-                    else
-                    {
-                        checkId = false;
-                    }
+                    checkId = request.Id == request.Id;
                  }
                  if (!string.IsNullOrWhiteSpace(request.Name)){
                      if (!string.IsNullOrWhiteSpace(p.Name))

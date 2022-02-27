@@ -18,11 +18,7 @@ namespace AstroBackEnd.Services.Implement
         }
         public Horoscope CreateHoroscope(CreateHoroscopeRequest request)
         {
-            if (request.NumberLuck < 1)
-            {
-                throw new Exception("Number lukcy must be than zero");
-            }
-            else
+            if (request.NumberLuck > 0)
             {
                 Horoscope horoscope = new Horoscope()
                 {
@@ -34,19 +30,24 @@ namespace AstroBackEnd.Services.Implement
                 };
                 return _work.Horoscopes.Add(horoscope);
             }
+            else
+            {
+                throw new Exception("Number lukcy must be than zero");
+            }
         }
 
         public Horoscope DeleteHoroscope(int id)
         {
             Horoscope horoscope = _work.Horoscopes.Get(id);
-            if (horoscope == null)
-                return null;
-            else
+            if (horoscope != null)
             {
                 _work.Horoscopes.Remove(horoscope);
                 return horoscope;
             }
-                
+            else
+            {
+                return null;
+            }
         }
 
         public IEnumerable<Horoscope> FindHoroscope(FindHoroscopeRequest request)
@@ -61,14 +62,7 @@ namespace AstroBackEnd.Services.Implement
                 bool checkMoney = true;
                 if (request.Id != 0)
                 {
-                    if (p.Id == request.Id)
-                    {
-                        checkId = true;
-                    }
-                    else
-                    {
-                        checkId = false;
-                    }
+                    checkId = p.Id == request.Id;
                 }
                 if (!string.IsNullOrWhiteSpace(request.ColorLuck))
                 {
@@ -83,14 +77,7 @@ namespace AstroBackEnd.Services.Implement
                 }
                 if (request.NumberLuck > 0)
                 {
-                    if (p.NumberLuck > 0)
-                    {
-                        checkNumberLuck = p.NumberLuck == request.NumberLuck;
-                    }
-                    else
-                    {
-                        checkNumberLuck = false;
-                    }
+                     checkNumberLuck = p.NumberLuck == request.NumberLuck;
                 }
                 if (!string.IsNullOrWhiteSpace(request.Work))
                 {

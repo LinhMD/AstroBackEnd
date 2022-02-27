@@ -26,22 +26,17 @@ namespace AstroBackEnd.Controllers
         public IActionResult GetHoroscope(int id)
         {
             Horoscope horoscope = horoscopeService.GetHoroscope(id);
-            if(horoscope == null)
-                return NotFound();
-            else 
+            if(horoscope != null)
                 return Ok(horoscope);
+            else
+                return NotFound();
         }
 
         [HttpGet]
-        public IActionResult FindHoroscope(int id, string colorLuck, string numberLuck, string work, string love, string money, string sortBy, int page, int pageSize)
+        public IActionResult FindHoroscope(int id, string colorLuck, float numberLuck, string work, string love, string money, string sortBy, int page, int pageSize)
         {
             try
             {
-                float checkNumberLuck = 0;
-                if (!string.IsNullOrWhiteSpace(numberLuck))
-                {
-                    checkNumberLuck = float.Parse(numberLuck);
-                }
                 PagingRequest pagingRequest = new PagingRequest()
                 {
                     SortBy = sortBy,
@@ -55,7 +50,7 @@ namespace AstroBackEnd.Controllers
                     ColorLuck = colorLuck,
                     Love = love,
                     Money = money,
-                    NumberLuck = checkNumberLuck,
+                    NumberLuck = numberLuck,
                     PagingRequest = pagingRequest
                 };
                 return Ok(horoscopeService.FindHoroscope(findHoroscopeRequest));
@@ -63,7 +58,6 @@ namespace AstroBackEnd.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            
         }
 
         [HttpPost]
@@ -82,21 +76,21 @@ namespace AstroBackEnd.Controllers
         public IActionResult UpdateHoroscope(int id, UpdateHoroscopeRequest request)
         {
             Horoscope horoscope = horoscopeService.UpdateHoroscope(id, request);
-            if(horoscope == null)
+            if(horoscope != null)
             {
-                return NotFound();
+                 return Ok(horoscope);
             }
-            return Ok(horoscope);
+            return NotFound();
         }
 
         [HttpDelete]
         public IActionResult DeleteHoroscope(int id)
         {
             Horoscope horoscope = horoscopeService.DeleteHoroscope(id);
-            if (horoscope == null)
-                return NotFound();
-            else
+            if (horoscope != null)
                 return Ok(horoscope);
+            else
+                return NotFound();
         }
 
     }

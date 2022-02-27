@@ -27,34 +27,28 @@ namespace AstroBackEnd.Controllers
         public IActionResult GetQuote(int id)
         {
             Quote quote = quoteService.GetQuote(id);
-            if (quote == null)
-                return NotFound();
-            else
+            if (quote != null)
                 return Ok(quote);
+            else
+                return NotFound();
         }
 
         [HttpGet]
-        public IActionResult FindQuote(int id, string content, string horoscopeId, string sortBy, int page, int pageSize)
+        public IActionResult FindQuote(int id, string content, int horoscopeId, string sortBy, int page, int pageSize)
         {
             try
             {
-                int checkHoroscopeId = 0;
-                if (!string.IsNullOrWhiteSpace(horoscopeId))
-                {
-                    checkHoroscopeId = Int32.Parse(horoscopeId);
-                }
                 PagingRequest pagingRequest = new PagingRequest()
                 {
                     SortBy = sortBy,
                     Page = page,
                     PageSize = pageSize,
                 };
-
                 FindQuoteRequest findQuoteRequest = new FindQuoteRequest()
                 {
                     Id = id,
                     Content = content,
-                    HoroscopeId = checkHoroscopeId,
+                    HoroscopeId = horoscopeId,
                     PagingRequest = pagingRequest
                 };
                 return Ok(quoteService.FindQuote(findQuoteRequest));
@@ -63,7 +57,6 @@ namespace AstroBackEnd.Controllers
             {
                 return BadRequest(ex.Message);
             }
-
         }
 
         [HttpPost]
@@ -83,21 +76,21 @@ namespace AstroBackEnd.Controllers
         public IActionResult UpdateQuote(int id, UpdateQuoteRequest request)
         {
             Quote quote = quoteService.UpdateQuote(id, request);
-            if (quote == null)
+            if (quote != null)
             {
-                return NotFound();
+                return Ok(quote);
             }
-            return Ok(quote);
+            return NotFound();
         }
 
         [HttpDelete]
         public IActionResult DeleteQuote(int id)
         {
             Quote quote = quoteService.DeleteQuote(id);
-            if (quote == null)
-                return NotFound();
-            else
+            if (quote != null)
                 return Ok(quote);
+            else
+                return NotFound();
         }
     }
 }
