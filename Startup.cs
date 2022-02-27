@@ -70,6 +70,10 @@ namespace AstroBackEnd
 
             services.AddScoped<IPlanetService, PlanetService>();
 
+            services.AddScoped<IPlanetZodiacService, PlanetZodiacService>();
+
+            services.AddScoped<IPlanetHouseService, PlanetHouseService>();
+
             services.AddDbContext<Data.AstroDataContext>();
 
             //api and razor setup

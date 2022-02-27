@@ -36,6 +36,10 @@ namespace AstroBackEnd.Repositories
 
         IPlanetRepository Planets { get; }
 
+        IPlanetZodiacRepository PlanetZodiacs { get; }
+
+        IPlanetHouseRepository PlanetHouses { get; }
+
         int Complete();
 
         

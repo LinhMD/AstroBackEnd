@@ -168,9 +168,9 @@ namespace AstroBackEnd.Services.Implement
                 {
                     house.Tag = request.Tag;
                 }
-                if (!string.IsNullOrWhiteSpace(request.MainContentl))
+                if (!string.IsNullOrWhiteSpace(request.MainContent))
                 {
-                    house.MainContent = request.MainContentl;
+                    house.MainContent = request.MainContent;
                 }
                 return house;
             }
@@ -178,7 +178,6 @@ namespace AstroBackEnd.Services.Implement
             {
                 return null;
             }
-            
         }
 
 

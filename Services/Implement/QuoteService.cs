@@ -76,7 +76,6 @@ namespace AstroBackEnd.Services.Implement
                 }
                 return checkId && checkContent && checkHoroscopeId;
             };
-
             PagingRequest paging = request.PagingRequest;
             if (paging == null || paging.SortBy == null)
             {

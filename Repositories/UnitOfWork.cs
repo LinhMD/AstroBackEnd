@@ -29,7 +29,8 @@ namespace AstroBackEnd.Repositories
             Quotes = new QuoteRepository(dataContext);
             Horoscopes = new HoroscopeRepository(dataContext);
             Planets = new PlanetRepository(dataContext);
-
+            PlanetZodiacs = new PlanetZodiacRepository(dataContext);
+            PlanetHouses = new PlanetHouseRepository(dataContext);
         }
         public IUserRepository Users { get; }
 
@@ -59,6 +60,9 @@ namespace AstroBackEnd.Repositories
 
         public IPlanetRepository Planets { get; }
 
+        public IPlanetZodiacRepository PlanetZodiacs { get; }
+
+        public IPlanetHouseRepository PlanetHouses { get; }
         public int Complete()
         {
             return _dataContext.SaveChanges();
