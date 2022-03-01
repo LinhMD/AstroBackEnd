@@ -33,9 +33,18 @@ namespace AstroBackEnd.Services.Implement
             return _work.Image.Add(image);
         }
 
-        public void DeleteImage(int id)
+        public ImgLink DeleteImage(int id)
         {
-            _work.Image.Remove(_work.Image.Get(id));
+            ImgLink imgLink = _work.Image.Get(id);
+            if (imgLink != null)
+            {
+                _work.Image.Remove(GetImage(id));
+                return imgLink;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public void Dispose()

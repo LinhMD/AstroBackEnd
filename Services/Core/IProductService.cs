@@ -16,7 +16,7 @@ namespace AstroBackEnd.Services.Core
 
         public IEnumerable<Product> FindProducts(FindProductsRequest Request);
 
-        public void DeleteProduct(int id);
+        public Product DeleteProduct(int id);
 
         public Product UpdateProduct(int id, ProductsUpdateRequest request);
 

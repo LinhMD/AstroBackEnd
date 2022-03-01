@@ -62,9 +62,18 @@ namespace AstroBackEnd.Services.Implement
             return _work.Product.Add(product);
         }
 
-        public void DeleteProduct(int id)
+        public Product DeleteProduct(int id)
         {
-            _work.Catagory.Remove(_work.Catagory.Get(id));
+            Product product = _work.Product.Get(id);
+            if (product != null)
+            {
+                _work.Product.Remove(GetProduct(id));
+                return product;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public void Dispose()
@@ -76,6 +85,8 @@ namespace AstroBackEnd.Services.Implement
         {
             Func<Product, bool> filter = p =>
             {
+                bool checkId = request.Id == null ? true : p.Id == request.Id;
+
                 bool checkName = true;
                 if (!string.IsNullOrWhiteSpace(request.Name))
                 {
@@ -117,6 +128,9 @@ namespace AstroBackEnd.Services.Implement
             {
                 switch (request.PagingRequest.SortBy)
                 {
+                    case "Id":
+                        result = _work.Product.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                        break;
                     case "Name":
                         result = _work.Product.FindPaging(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
                         break;

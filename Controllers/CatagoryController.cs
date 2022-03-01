@@ -16,7 +16,7 @@ using AstroBackEnd.ViewsModel;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/catagory")]
     [ApiController]
     public class CatagoryController : ControllerBase
     {
@@ -28,22 +28,22 @@ namespace AstroBackEnd.Controllers
             this._work = work;
         }
 
-        [HttpGet]
-        public IActionResult GetAllCatagory()
-        {
-            Func<Catagory, ViewsModel.CatagoryView> maping = catagory =>
-            {
-                return new CatagoryView()
-                {
-                    Id = catagory.Id,
-                    //MasterProductId = product.MasterProduct.Id,
-                    Name = catagory.Name
+        //[HttpGet]
+        //public IActionResult GetAllCatagory()
+        //{
+        //    Func<Catagory, ViewsModel.CatagoryView> maping = catagory =>
+        //    {
+        //        return new CatagoryView()
+        //        {
+        //            Id = catagory.Id,
+        //            //MasterProductId = product.MasterProduct.Id,
+        //            Name = catagory.Name
 
-                };
+        //        };
 
-            };
-            return Ok(_Service.GetAllCatagory().Select(maping));
-        }
+        //    };
+        //    return Ok(_Service.GetAllCatagory().Select(maping));
+        //}
 
         [HttpGet("{id}")]
         public IActionResult GetCatagory(int id)
@@ -65,22 +65,29 @@ namespace AstroBackEnd.Controllers
             return Ok(_Service.CreateCatagory(request));
         }
 
-        [HttpPost]
-        [Route("findProduct")]
-        public IActionResult FindCatagory(FindCatagoryRequest request)
+        [HttpGet]
+        //[Route("catagory")]
+        public IActionResult FindCatagory(int id, string name, string sortBy, int page, int pageSize)
         {
-            Func<Catagory, ViewsModel.CatagoryView> maping = catagory =>
+            try
             {
-                return new CatagoryView()
+                PagingRequest pagingRequest = new PagingRequest()
                 {
-                    Id = catagory.Id,
-                    //MasterProductId = product.MasterProduct.Id,
-                    Name = catagory.Name
-                    
+                    SortBy = sortBy,
+                    Page = page,
+                    PageSize = pageSize,
                 };
-
-            };
-            return Ok(_Service.FindCatagory(request).Select(maping));
+                FindCatagoryRequest findCatagoryRequest = new FindCatagoryRequest()
+                {
+                    Id=id,
+                    Name = name
+                };
+                return Ok(_Service.FindCatagory(findCatagoryRequest));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("{id}")]
@@ -89,6 +96,23 @@ namespace AstroBackEnd.Controllers
             Catagory updateCatagory = _Service.UpdateCatagory(id, request);
 
             return Ok(updateCatagory);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteCatagory(int id)
+        {
+            //_Service.DeleteCatagory(id);
+            //return Ok();
+            Catagory catagory = _work.Catagory.Get(id);
+            if (catagory!=null)
+            {
+                _Service.DeleteCatagory(id);
+                return Ok(catagory);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
     }

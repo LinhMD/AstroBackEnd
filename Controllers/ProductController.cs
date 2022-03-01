@@ -16,7 +16,7 @@ using AstroBackEnd.ViewsModel;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/product")]
     [ApiController]
     public class ProductController : ControllerBase
     {
@@ -86,29 +86,39 @@ namespace AstroBackEnd.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("findProduct")]
-        public IActionResult FindProduct(FindProductsRequest request)
+        [HttpGet]
+        [Route("Product")]
+        public IActionResult FindProduct(int id, string name,
+            string description, int catagoryId,
+            string size, double price,
+            int gender, string color,
+            string sortBy, int page, int pageSize)
         {
-            Func<Product, ViewsModel.ProductView> maping = product =>
+            try
             {
-                return new ProductView()
+                PagingRequest pagingRequest = new PagingRequest()
                 {
-                    Id = product.Id,
-                    //MasterProductId = product.MasterProduct.Id,
-                    Name = product.Name,
-                    Description = product.Description,
-                    Detail = product.Detail,
-                    //CatagoryId = product.Catagory.Id,
-                    Size = product.Size,
-                    Price = product.Price,
-                    Gender = product.Gender,
-                    Color = product.Color,
-                    Inventory = product.Inventory
+                    SortBy = sortBy,
+                    Page = page,
+                    PageSize = pageSize,
                 };
-
-            };
-            return Ok(_Service.FindProducts(request).Select(maping));
+                FindProductsRequest findProductsRequest = new FindProductsRequest()
+                {
+                    Id = id,
+                    Name = name,
+                    Description= description,
+                    CatagoryId=catagoryId,
+                    Size=size,
+                    Price=price,
+                    Gender=gender,
+                    Color=color
+                };
+                return Ok(_Service.FindProducts(findProductsRequest));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("{id}")]
@@ -122,8 +132,18 @@ namespace AstroBackEnd.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteProduct(int id)
         {
-            _Service.DeleteProduct(id);
-            return Ok();
+            //_Service.DeleteCatagory(id);
+            //return Ok();
+            Product product = _work.Product.Get(id);
+            if (product != null)
+            {
+                _Service.DeleteProduct(id);
+                return Ok(product);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
     }
 }

@@ -28,6 +28,8 @@ namespace AstroBackEnd.Repositories
 
         IZodiacProductRepositorye ZodiacProduct { get; }
 
+        IZodiacRepository Zodiac { get; }
+
         int Complete();
 
         

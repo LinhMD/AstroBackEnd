@@ -31,9 +31,19 @@ namespace AstroBackEnd.Services.Implement
             return _work.Catagory.Add(catagorys);
         }
 
-        public void DeleteCatagory(int id)
+        public Catagory DeleteCatagory(int id)
         {
-            _work.Catagory.Remove(GetCatagory(id));
+            
+            Catagory catagory = _work.Catagory.Get(id);
+            if(catagory != null)
+            {
+                _work.Catagory.Remove(GetCatagory(id));
+                return catagory;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public void Dispose()
@@ -45,6 +55,8 @@ namespace AstroBackEnd.Services.Implement
         {
             Func<Catagory, bool> filter = p =>
             {
+                bool checkId = request.Id == null ? true : p.Id == request.Id;
+
                 bool checkName = true;
                 if (!string.IsNullOrWhiteSpace(request.Name))
                 {
@@ -59,10 +71,16 @@ namespace AstroBackEnd.Services.Implement
             {
                 switch (request.PagingRequest.SortBy)
                 {
+                    case "Id":
+                        result = _work.Catagory.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                        break;
                     case "Name":
                         result = _work.Catagory.FindPaging(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
                         break;
-                    
+                    default:
+                        result = _work.Catagory.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                        break;
+
                 }
             }
             else

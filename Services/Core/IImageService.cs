@@ -17,7 +17,7 @@ namespace AstroBackEnd.Services.Core
 
         public IEnumerable<ImgLink> FindImage(FindImageRequest Request);
 
-        public void DeleteImage(int id);
+        public ImgLink DeleteImage(int id);
 
         public ImgLink UpdateImage(int id, ImageUpdateRequest request);
 

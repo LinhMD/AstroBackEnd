@@ -57,6 +57,12 @@ namespace AstroBackEnd
 
             services.AddScoped<IOrderDetailService, OrderDetailService>();
 
+            services.AddScoped<ICatagorysService,CatagoryService >();
+
+            services.AddScoped <IZodiacProductService,ZodiacProductService > ();
+
+            services.AddScoped <IImageService,ImageService > ();
+
             services.AddDbContext<Data.AstroDataContext>();
 
             //api and razor setup

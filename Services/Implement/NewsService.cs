@@ -36,9 +36,18 @@ namespace AstroBackEnd.Services.Implement
             return _work.News.Add(news);
         }
 
-        public void DeleteNew(int id)
+        public News DeleteNew(int id)
         {
-            _work.News.Remove(GetNews(id));
+            News news = _work.News.Get(id);
+            if (news != null)
+            {
+                _work.News.Remove(GetNews(id));
+                return news;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public void Dispose()
@@ -72,12 +81,34 @@ namespace AstroBackEnd.Services.Implement
 
                 return checkTitle && checkDescription && checkTag ;
             };
+            IEnumerable<News> result = null;
+            if (Request.PagingRequest != null)
+            {
+                switch (Request.PagingRequest.SortBy)
+                {
+                    case "Title":
+                        result = _work.News.FindPaging(filter, p => p.Title, Request.PagingRequest.Page, Request.PagingRequest.PageSize);
+                        break;
+                    case "ZodiacId":
+                        result = _work.News.FindPaging(filter, p => p.Description, Request.PagingRequest.Page, Request.PagingRequest.PageSize);
+                        break;
+
+                    case "Tag":
+                        result = _work.News.FindPaging(filter, p => p.Tag, Request.PagingRequest.Page, Request.PagingRequest.PageSize);
+                        break;
+                    default:
+                        result = _work.News.FindPaging(filter, p => p.Title, Request.PagingRequest.Page, Request.PagingRequest.PageSize);
+                        break;
+                }
+            }
+            else
+            {
+                result = _work.News.Find(filter, p => p.Title);
+            }
 
 
 
-            IEnumerable<News> neww = _work.News.FindPaging<String>(filter, n => n.Title, Request.Page, Request.PageSize);
-
-            return neww;
+            return result;
         }
 
         public IEnumerable<News> GetAllNew()
