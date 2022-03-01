@@ -31,6 +31,10 @@ namespace AstroBackEnd.Controllers
         [HttpGet]
         public IActionResult GetAllCatagory()
         {
+            using(var sweph = new SwissEphNet.SwissEph())
+            {
+                
+            }
             Func<Catagory, ViewsModel.CatagoryView> maping = catagory =>
             {
                 return new CatagoryView()

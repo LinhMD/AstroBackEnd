@@ -21,6 +21,7 @@ namespace AstroBackEnd.Models
         [MaxLength(255)]
         public string UserName { set; get; }
 
+        public string Email { get; set; }
 
         [Required] 
         public Role Role { get; set; }

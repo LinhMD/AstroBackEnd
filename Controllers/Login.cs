@@ -2,6 +2,7 @@
 using AstroBackEnd.Models;
 using AstroBackEnd.Repositories;
 using AstroBackEnd.RequestModels;
+using AstroBackEnd.Utilities;
 using FirebaseAdmin.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,10 +27,13 @@ namespace AstroBackEnd.Controllers
         private IConfiguration _config;
 
         private IUnitOfWork _unitOfWork;
-        public Login(IConfiguration config, IUnitOfWork unitOfWork)
+
+        private FireabaseUtility _fbUtil;
+        public Login(IConfiguration config, IUnitOfWork unitOfWork, FireabaseUtility utility)
         {
             this._config = config;
             this._unitOfWork = unitOfWork;
+            this._fbUtil = utility;
         }
 
         [HttpGet]
@@ -40,12 +44,19 @@ namespace AstroBackEnd.Controllers
             return new Random().Next();
         }
 
-       /** [HttpGet("firebase")]
-        public async Task<IActionResult> getFireBaseUser()
+        [HttpGet("firebase")]
+        public async Task<IActionResult> getFireBaseUser(string token)
         {
-            UserRecord userRecord = await FirebaseAuth.DefaultInstance.GetUserAsync("xy6kJ9hYfyU7VYrW8S3AU3wYM4r2");
-            return Ok(userRecord);
-        }**/
+            try
+            {
+                UserRecord userRecord = await _fbUtil.getFireBaseUserByToken(token);
+                return Ok(userRecord);
+            }catch(Exception e)
+            {
+                return BadRequest(  e.Message);
+            }
+
+        }
 
         // POST api/<Login>
         [HttpPost]

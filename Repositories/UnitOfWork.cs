@@ -54,6 +54,7 @@ namespace AstroBackEnd.Repositories
         public IZodiacRepository Zodiacs { get; }
 
         public IHouseRepository Houses { get; }
+
         public IZodiacHouseRepository ZodiacHouses { get; }
 
 

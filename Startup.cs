@@ -1,6 +1,7 @@
 using AstroBackEnd.Repositories;
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.Services.Implement;
+using AstroBackEnd.Utilities;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -68,9 +69,8 @@ namespace AstroBackEnd
             services.AddScoped<IZodiacHouseService, ZodiacHouseService>();
 
             services.AddScoped<IImageService, ImageService>();
-            
 
-            
+            services.AddSingleton<FireabaseUtility>();
 
             //api and razor setup
             services.AddControllersWithViews();
@@ -91,7 +91,8 @@ namespace AstroBackEnd
 
             FirebaseApp.Create(new AppOptions()
             {
-                Credential = GoogleCredential.FromFile(@"C:\Users\USER\Desktop\astrology-a5858-firebase-adminsdk-r9xmf-ac88ef956c.json"),
+                Credential = GoogleCredential.FromFile(@"C:\Users\USER\Desktop\astrology-a5858-firebase-adminsdk-r9xmf-8a53d6bbf9.json"),
+                
             });
 
             app.UseDeveloperExceptionPage();
