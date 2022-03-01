@@ -32,10 +32,7 @@ namespace AstroBackEnd.Controllers
         [HttpGet]
         public IActionResult GetAllCatagory()
         {
-            using(var sweph = new SwissEphNet.SwissEph())
-            {
-                
-            }
+            
             Func<Catagory, ViewsModel.CatagoryView> maping = catagory =>
             {
                 return new CatagoryView()
@@ -70,6 +67,7 @@ namespace AstroBackEnd.Controllers
             ValidationContext vc = new ValidationContext(request);
             ICollection<ValidationResult> results = new List<ValidationResult>();
             Validator.TryValidateObject(request, vc, results);
+            
             return Ok(_Service.CreateCatagory(request));
         }
 
