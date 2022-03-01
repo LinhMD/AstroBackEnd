@@ -23,7 +23,7 @@ namespace AstroBackEnd.Controllers
             this._zodiacService = zodiacService;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("id")]
         public IActionResult GetZodiac(int id)
         {
             return Ok(_zodiacService.GetZodiac(id));
@@ -55,7 +55,7 @@ namespace AstroBackEnd.Controllers
 
 
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public IActionResult ReomoveZodiac(int id)
         {
             return Ok(_zodiacService.RemoveZodiac(id));

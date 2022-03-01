@@ -1,4 +1,5 @@
 using AstroBackEnd.Repositories;
+using AstroBackEnd.Repositories.Core;
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.Services.Implement;
 using FirebaseAdmin;
@@ -67,10 +68,22 @@ namespace AstroBackEnd
 
             services.AddScoped<IZodiacHouseService, ZodiacHouseService>();
 
+
+            services.AddScoped<IQuoteService, QuoteService>();
+
             services.AddScoped<IImageService, ImageService>();
             
 
-            
+
+            services.AddScoped<IHoroscopeService, HoroscopeService>();
+
+            services.AddScoped<IPlanetService, PlanetService>();
+
+            services.AddScoped<IPlanetZodiacService, PlanetZodiacService>();
+
+            services.AddScoped<IPlanetHouseService, PlanetHouseService>();
+
+            services.AddDbContext<Data.AstroDataContext>();
 
             //api and razor setup
             services.AddControllersWithViews();
