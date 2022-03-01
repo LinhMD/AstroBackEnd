@@ -52,19 +52,19 @@ namespace AstroBackEnd.Services.Implement
             {
                 zodiac.Name = updateZodiac.ZodiacName;
             }
-            if (zodiac.ZodiacDayStart != 0)
+            if (zodiac.ZodiacDayStart > 0)
             {
                 zodiac.ZodiacDayStart = updateZodiac.ZodiacDayStart;
             }
-            if (zodiac.ZodiacMonthStart != 0)
+            if (zodiac.ZodiacMonthStart > 0)
             {
                 zodiac.ZodiacMonthStart = updateZodiac.ZodiacMonthStart;
             }
-            if (zodiac.ZodiacDayEnd != 0)
+            if (zodiac.ZodiacDayEnd > 0)
             {
                 zodiac.ZodiacDayEnd = updateZodiac.ZodiacDayEnd;
             }
-            if (zodiac.ZodiacMonthEnd != 0)
+            if (zodiac.ZodiacMonthEnd > 0)
             {
                 zodiac.ZodiacMonthEnd = updateZodiac.ZodiacMonthEnd;
             }
