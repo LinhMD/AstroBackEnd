@@ -13,10 +13,11 @@ using AstroBackEnd.Models;
 using Microsoft.AspNetCore.Authorization;
 using AstroBackEnd.RequestModels.CatagoryRequest;
 using AstroBackEnd.ViewsModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/catagory")]
     [ApiController]
     public class CatagoryController : ControllerBase
     {
@@ -66,6 +67,9 @@ namespace AstroBackEnd.Controllers
         [HttpPost]
         public IActionResult CreateProduct([FromBody] CatagoryCreateRequest request)
         {
+            ValidationContext vc = new ValidationContext(request);
+            ICollection<ValidationResult> results = new List<ValidationResult>();
+            Validator.TryValidateObject(request, vc, results);
             return Ok(_Service.CreateCatagory(request));
         }
 

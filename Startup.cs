@@ -73,8 +73,8 @@ namespace AstroBackEnd
             services.AddScoped<IQuoteService, QuoteService>();
 
             services.AddScoped<IImageService, ImageService>();
-            
 
+            services.AddSingleton<FireabaseUtility>();
 
             services.AddScoped<IHoroscopeService, HoroscopeService>();
 

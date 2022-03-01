@@ -12,7 +12,7 @@ using AstroBackEnd.RequestModels.NewRequest;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/news")]
     [ApiController]
     public class NewsController : ControllerBase
     {

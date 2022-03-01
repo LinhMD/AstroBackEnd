@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/user")]
     [ApiController]
     public class UserController : ControllerBase
     {

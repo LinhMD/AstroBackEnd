@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/profile")]
     [ApiController]
     public class ProfileController : ControllerBase
     {

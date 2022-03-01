@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/detail")]
     [ApiController]
     public class OrderDetailController : ControllerBase
     {

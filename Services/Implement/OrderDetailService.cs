@@ -28,7 +28,7 @@ namespace AstroBackEnd.Services.Implement
             var order = _work.Orders.GetAllOrderInfo(request.OrderId);
             if (order == null) throw new ArgumentException("Order ID not found");
 
-            var product = _work.Product.Get(request.ProductId);
+            var product = _work.Products.Get(request.ProductId);
 
             if (product == null) throw new ArgumentException("Product ID not found");
 
@@ -59,7 +59,7 @@ namespace AstroBackEnd.Services.Implement
             {
                 bool checkID = request.OrderId == null || detail.OrderId == request.OrderId;
 
-                bool checkProductName = request.ProductName == null || _work.Product.Get(detail.ProductId).Name.Contains(request.ProductName);
+                bool checkProductName = request.ProductName == null || _work.Products.Get(detail.ProductId).Name.Contains(request.ProductName);
 
                 bool checkTotalPriceStart = request.TotalPriceStart == null || detail.TotalPrice >= request.TotalPriceStart;
                 bool checkTotalPriceEnd = request.TotalPriceEnd == null || detail.TotalPrice <= request.TotalPriceEnd;
@@ -124,7 +124,7 @@ namespace AstroBackEnd.Services.Implement
             {
                 detail.Quantity = (int)request.Quantity;
 
-                var product = _work.Product.Get(detail.ProductId);
+                var product = _work.Products.Get(detail.ProductId);
                 if (product == null) throw new ArgumentException("Product ID not found");
 
                 detail.TotalPrice = product.Price == null? 0D : (int)product.Price * detail.Quantity;
