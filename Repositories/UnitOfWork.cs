@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace AstroBackEnd.Repositories
 {
@@ -22,7 +23,8 @@ namespace AstroBackEnd.Repositories
             Orders = new OrderRepository(dataContext);
             OrderDetails = new OrderDetailRepository(dataContext);
             Products = new ProductRepository(dataContext);
-            Catagory = new CatagoryRepository(dataContext);
+            Catagorys = new CatagoryRepository(dataContext);
+            Image = new ImageRepository(dataContext);
             Zodiacs = new ZodiacRepository(dataContext);
             Houses = new HouseRepository(dataContext);
             ZodiacHouses = new ZodiacHouseRepository(dataContext);
@@ -31,7 +33,9 @@ namespace AstroBackEnd.Repositories
             Planets = new PlanetRepository(dataContext);
             PlanetZodiacs = new PlanetZodiacRepository(dataContext);
             PlanetHouses = new PlanetHouseRepository(dataContext);
+
         }
+
         public IUserRepository Users { get; }
 
         public IRoleRepository Roles { get; }
@@ -40,19 +44,23 @@ namespace AstroBackEnd.Repositories
 
         public IProfileRepository Profiles { get; }
 
+        public IProductRepository Products { get; }
+
         public IOrderRepository Orders { get; }
 
         public IOrderDetailRepository OrderDetails { get; }
 
-        public IProductRepository Products { get; }
+        public ICatagoryRepository Catagorys { get; }
 
-        public ICatagoryRepository Catagory { get; }
+
+        public IImageRepository Image { get; }
 
         public IZodiacRepository Zodiacs { get; }
 
         public IHouseRepository Houses { get; }
 
         public IZodiacHouseRepository ZodiacHouses { get; }
+
 
         public IHoroscopeRepository Horoscopes { get; }
 
@@ -63,6 +71,9 @@ namespace AstroBackEnd.Repositories
         public IPlanetZodiacRepository PlanetZodiacs { get; }
 
         public IPlanetHouseRepository PlanetHouses { get; }
+
+
+
         public int Complete()
         {
             return _dataContext.SaveChanges();

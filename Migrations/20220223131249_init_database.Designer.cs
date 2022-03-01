@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AstroBackEnd.Migrations
 {
     [DbContext(typeof(AstroDataContext))]
-    [Migration("20220220052809_init_database")]
+    [Migration("20220223131249_init_database")]
     partial class init_database
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -354,28 +354,6 @@ namespace AstroBackEnd.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("AstroBackEnd.Models.ProductZodiac", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ZodiacId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("ZodiacId");
-
-                    b.ToTable("ProductZodiacs");
-                });
-
             modelBuilder.Entity("AstroBackEnd.Models.Profile", b =>
                 {
                     b.Property<int>("Id")
@@ -657,25 +635,6 @@ namespace AstroBackEnd.Migrations
                     b.Navigation("Catagory");
 
                     b.Navigation("MasterProduct");
-                });
-
-            modelBuilder.Entity("AstroBackEnd.Models.ProductZodiac", b =>
-                {
-                    b.HasOne("AstroBackEnd.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AstroBackEnd.Models.Zodiac", "Zodiac")
-                        .WithMany()
-                        .HasForeignKey("ZodiacId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("Zodiac");
                 });
 
             modelBuilder.Entity("AstroBackEnd.Models.Profile", b =>

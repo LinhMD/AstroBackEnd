@@ -57,7 +57,8 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateUser(int id,[FromBody] UserUpdateRequest request)
+
+        public IActionResult UpdateUser(int id, [FromBody] UserUpdateRequest request)
         {
             try
             {
@@ -115,6 +116,14 @@ namespace AstroBackEnd.Controllers
             { 
                 return BadRequest(e.Message); 
             }
+        }
+
+        [HttpGet("cart")]
+        public IActionResult GetUserCart()
+        {
+
+
+            return null;
         }
     }
 }
