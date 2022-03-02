@@ -85,7 +85,7 @@ namespace AstroBackEnd.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public IActionResult UpdateProduct(int id, CatagoryUpdateRequest request)
         {
             Category updateCatagory = _Service.UpdateCategory(id, request);

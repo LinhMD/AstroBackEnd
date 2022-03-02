@@ -77,7 +77,7 @@ namespace AstroBackEnd.Controllers
             
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public IActionResult UpdateProfile(int id, CreateProfileRequest request)
         {
            

@@ -73,7 +73,7 @@ namespace AstroBackEnd.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult DeletePlanetZodiac(int id)
         {
             PlanetHouse planetHouse = planetHouseService.DeletePlanetHouse(id);

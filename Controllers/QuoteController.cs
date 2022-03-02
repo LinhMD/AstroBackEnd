@@ -83,7 +83,7 @@ namespace AstroBackEnd.Controllers
             return NotFound();
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult DeleteQuote(int id)
         {
             Quote quote = quoteService.DeleteQuote(id);
