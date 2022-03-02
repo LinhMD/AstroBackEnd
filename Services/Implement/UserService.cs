@@ -73,8 +73,6 @@ namespace AstroBackEnd.Services.Implement
                 return checkUserName && checkStatus && checkPhoneNumber;
             };
 
-
-
             IEnumerable<User> users = _work.Users.FindPaging<String>(filter, u => u.UserName, userRequest.PagingRequest.Page, userRequest.PagingRequest.PageSize);
 
             return users;

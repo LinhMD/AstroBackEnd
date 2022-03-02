@@ -46,9 +46,9 @@ namespace AstroBackEnd.Services.Implement
                  bool checkTitleHouse = true;
                  bool checkTag = true;
                  bool checkMainContent = true;
-                 if (request.Id != 0)
+                 if (request.Id > 0)
                  {
-                    checkId = request.Id == request.Id;
+                    checkId = p.Id == request.Id;
                  }
                  if (!string.IsNullOrWhiteSpace(request.Name)){
                      if (!string.IsNullOrWhiteSpace(p.Name))

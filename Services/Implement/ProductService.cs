@@ -284,5 +284,7 @@ namespace AstroBackEnd.Services.Implement
         {
             return _work.Products.FindProducWithAllData(p => p.Id == id && p.MasterProduct != null, p => p.Id).FirstOrDefault();
         }
+
+       
     }
 }

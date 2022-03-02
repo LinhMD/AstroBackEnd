@@ -30,7 +30,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet]
-        public IActionResult FindZodiac(string name, string sortBy, int page, int pageSize)
+        public IActionResult FindZodiac(int id, string name, string sortBy, int page = 1, int pageSize = 20)
         {
             PagingRequest pagingRequest = new PagingRequest()
             {
@@ -41,6 +41,7 @@ namespace AstroBackEnd.Controllers
 
             FindZodiacRequest request = new FindZodiacRequest()
             {
+                Id = id,
                 Name = name,
                 PagingRequest = pagingRequest,
             };

@@ -34,7 +34,6 @@ namespace AstroBackEnd.Services.Implement
                 Descreiption = request.ZodiacDescription
                 
             };
-            System.Console.WriteLine(zodiac.Name.ToString());
             return _work.Zodiacs.Add(zodiac);
         }
 
@@ -89,36 +88,40 @@ namespace AstroBackEnd.Services.Implement
             Func<Zodiac, bool> filter = p =>
             {
                 bool checkName = true;
+                bool checkId = true;
+                if(request.Id > 0)
+                {
+                    checkId = p.Id == request.Id;
+                }
                 if (!string.IsNullOrWhiteSpace(request.Name))
                 {
                     if (!string.IsNullOrWhiteSpace(p.Name)){
                         checkName = p.Name.Contains(request.Name);
                     }
+                    else
+                    {
+                       checkName = false;
+                    }
                     
                 }
-                return checkName;
+                return checkName && checkId;
             };
-
-            IEnumerable<Zodiac> result = null;
+            Console.WriteLine(request.PagingRequest.PageSize);
 
             if (request.PagingRequest != null)
             {
                 switch (request.PagingRequest.SortBy)
                 {
                     case "Name":
-                        result = _work.Zodiacs.FindPaging(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
-                        break;
+                        return _work.Zodiacs.FindPaging(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
                     default:
-                        result = _work.Zodiacs.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
-                        break;
+                        return _work.Zodiacs.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
                 }
             }
             else
             {
-                result = _work.Zodiacs.Find(filter, p => p.Name);
+                return _work.Zodiacs.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
             }
-
-            return result;
         }
 
         public void Dispose()

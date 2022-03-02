@@ -104,12 +104,5 @@ namespace AstroBackEnd.Controllers
 
         private readonly IImageService _imageService;
 
-        [HttpDelete]
-        public IActionResult DeleteLink(string link)
-        {
-            _imageService.DeleteImage(link);
-            return Ok();
-
-        }
     }
 }

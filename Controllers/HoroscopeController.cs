@@ -33,7 +33,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet]
-        public IActionResult FindHoroscope(int id, string colorLuck, float numberLuck, string work, string love, string money, string sortBy, int page, int pageSize)
+        public IActionResult FindHoroscope(int id, string colorLuck, float numberLuck, string work, string love, string money, string sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
