@@ -97,18 +97,12 @@ namespace AstroBackEnd.Controllers
                 return Ok(imgLink);
             }
             else
-        {
+            {
                 return NotFound();
             }
+        }
 
         private readonly IImageService _imageService;
 
-        [HttpDelete]
-        public IActionResult DeleteLink(string link)
-        {
-            _imageService.DeleteImage(link);
-            return Ok();
-
-        }
     }
 }

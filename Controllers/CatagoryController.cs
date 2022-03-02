@@ -30,24 +30,7 @@ namespace AstroBackEnd.Controllers
             this._work = work;
         }
 
-        [HttpGet]
-        public IActionResult GetAllCatagory()
-        {
-            
-            Func<Catagory, ViewsModel.CatagoryView> maping = catagory =>
-            {
-                return new CatagoryView()
-                {
-                    Id = catagory.Id,
-                    //MasterProductId = product.MasterProduct.Id,
-                    Name = catagory.Name
-
-                };
-
-            };
-            return Ok(_Service.GetAllCatagory().Select(maping));
-        }
-
+        
         [HttpGet("{id}")]
         public IActionResult GetCatagory(int id)
         {
@@ -115,7 +98,7 @@ namespace AstroBackEnd.Controllers
         {
             //_Service.DeleteCatagory(id);
             //return Ok();
-            Catagory catagory = _work.Catagory.Get(id);
+            Catagory catagory = _work.Catagorys.Get(id);
             if (catagory!=null)
             {
                 _Service.DeleteCatagory(id);

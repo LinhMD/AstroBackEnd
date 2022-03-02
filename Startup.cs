@@ -90,8 +90,6 @@ namespace AstroBackEnd
 
             services.AddScoped<ICatagorysService,CatagoryService >();
 
-            services.AddScoped <IZodiacProductService,ZodiacProductService > ();
-
             services.AddScoped <IImageService,ImageService > ();
 
 

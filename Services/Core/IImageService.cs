@@ -21,7 +21,6 @@ namespace AstroBackEnd.Services.Core
 
         public void DeleteImage(string link);
 
-        public void DeleteImage(string link);
 
         public ImgLink UpdateImage(int id, ImageUpdateRequest request);
 

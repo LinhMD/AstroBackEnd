@@ -33,10 +33,10 @@ namespace AstroBackEnd.Services.Implement
 
         public Catagory DeleteCatagory(int id)
         {            
-            Catagory catagory = _work.Catagory.Get(id);
+            Catagory catagory = _work.Catagorys.Get(id);
             if(catagory != null)
             {
-                _work.Catagory.Remove(GetCatagory(id));
+                _work.Catagorys.Remove(GetCatagory(id));
                 return catagory;
             }
             else
@@ -73,13 +73,13 @@ namespace AstroBackEnd.Services.Implement
                 switch (request.PagingRequest.SortBy)
                 {
                     case "Id":
-                        result = _work.Catagory.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                        result = _work.Catagorys.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
                         break;
                     case "Name":
                         result = _work.Catagorys.FindPaging(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
                         break;
                     default:
-                        result = _work.Catagory.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                        result = _work.Catagorys.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
                         break;
 
                 }
