@@ -34,7 +34,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet]
-        public IActionResult FindZodiacHouse(int id, int zodiacId, int houseId, string content, string sortBy, int page, int pagaSize)
+        public IActionResult FindZodiacHouse(int id, int zodiacId, int houseId, string content, string sortBy, int page = 1, int pagaSize = 20)
         {
             PagingRequest pagingRequest = new PagingRequest()
             {

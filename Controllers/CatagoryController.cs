@@ -62,7 +62,7 @@ namespace AstroBackEnd.Controllers
 
         [HttpGet]
         //[Route("catagory")]
-        public IActionResult FindCatagory(int id, string name, string sortBy, int page, int pageSize)
+        public IActionResult FindCatagory(int id, string name, string sortBy, int page = 1, int pageSize = 20)
         {
             try
             {

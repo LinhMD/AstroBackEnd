@@ -34,7 +34,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet]
-        public IActionResult FindQuote(int id, string content, int horoscopeId, string sortBy, int page, int pageSize)
+        public IActionResult FindQuote(int id, string content, int horoscopeId, string sortBy, int page = 1, int pageSize = 20)
         {
             try
             {

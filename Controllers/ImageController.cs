@@ -53,7 +53,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet]
-        public IActionResult FindImage(int id, string link,int productId, string sortBy, int page, int pageSize)
+        public IActionResult FindImage(int id, string link,int productId, string sortBy, int page = 1, int pageSize = 20)
         {
             try
             {

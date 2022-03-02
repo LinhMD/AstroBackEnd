@@ -33,7 +33,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet]
-        public IActionResult FindPlanet(int id, string name, string title, string description, string tag, string mainContent, string sortBy, int page, int pageSize)
+        public IActionResult FindPlanet(int id, string name, string title, string description, string tag, string mainContent, string sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
