@@ -105,7 +105,7 @@ namespace AstroBackEnd
 
             FirebaseApp.Create(new AppOptions()
             {
-                Credential = GoogleCredential.FromFile(@"C:\Users\USER\Desktop\astrology-a5858-firebase-adminsdk-r9xmf-8a53d6bbf9.json"),
+                Credential = GoogleCredential.FromFile(Configuration["FireBaseConfig"]),
                 
             });
 
