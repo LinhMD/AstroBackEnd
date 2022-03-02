@@ -25,7 +25,7 @@ namespace AstroBackEnd.Models
 
         public string UID { get; set; }
 
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         [Required] 
         public Role Role { get; set; }

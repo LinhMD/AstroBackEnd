@@ -257,6 +257,10 @@ namespace AstroBackEnd.Services.Implement
             {
                 product.Color = request.Color;
             }
+            if(request.Inventory != null && request.Inventory >= 0)
+            {
+                product.Inventory = request.Inventory;
+            }
 
             if (request.ImgLinksAdd != null && request.ImgLinksAdd.Count != 0)
             {

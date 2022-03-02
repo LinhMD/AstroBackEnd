@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AstroBackEnd.RequestModels.UserRequest;
 
 namespace AstroBackEnd.Services.Implement
 {
@@ -17,18 +18,17 @@ namespace AstroBackEnd.Services.Implement
         private readonly IUnitOfWork _work;
 
         private readonly AstroDataContext _astroData;
-        public UserService(IUnitOfWork work, AstroDataContext astroData)
+
+        private readonly IProductService _productService;
+        public UserService(IUnitOfWork work, AstroDataContext astroData, IProductService productService)
         {
             this._work = work;
             this._astroData = astroData;
+            this._productService = productService;
         }
 
         public User CreateUser(UserCreateRequest request)
         {
-            if (this._work.Users.Find(u => u.UserName == request.UserName, u => u.UserName).Any())
-            {
-                throw new ArgumentException("Username already exist");
-            }
 
             User user = new User()
             {
@@ -121,15 +121,40 @@ namespace AstroBackEnd.Services.Implement
 
         public Order getCart(int userId)
         {
-            var cart = this._work.Orders.Find(o => o.UserId == userId && o.Status == 0, o => o.Id).FirstOrDefault();
 
-            if(cart != null)
+            var cart = _work.Orders.FindWithAllInfo(o => o.UserId == userId && o.Status == 0, o => o.Id).FirstOrDefault(o => true);
+
+            if(cart == null)
             {
                 cart = new Order()
                 {
-                    
+                    Status = 0,
+                    OrderTime = DateTime.Now,
+                    UserId = userId
                 };
+                cart = this._work.Orders.Add(cart);
             }
+
+            return cart;
+        }
+
+        public Order AddToCart(int userId, AddToCartRequest request)
+        {
+            var cart = this.getCart(userId);
+            Product product = _productService.GetProductVariant(request.ProductId);
+
+            if (product == null ) throw new ArgumentException("Product Id Not found");
+
+            OrderDetail detail = new OrderDetail()
+            {
+                OrderId = cart.Id,
+                ProductId = request.ProductId,
+                Quantity = product.Id,
+                TotalPrice = (double)(request.Quantity * product.Price)
+            };
+            cart.OrderDetails.Add(detail);
+
+            this._work.OrderDetails.Add(detail);
 
             return cart;
         }

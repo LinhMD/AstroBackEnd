@@ -23,16 +23,16 @@ namespace AstroBackEnd.Controllers
     [ApiController]
     public class Login : ControllerBase
     {
-        
+
         private IConfiguration _config;
 
-        private IUnitOfWork _unitOfWork;
+        private IUnitOfWork _work;
 
         private FireabaseUtility _fbUtil;
         public Login(IConfiguration config, IUnitOfWork unitOfWork, FireabaseUtility utility)
         {
             this._config = config;
-            this._unitOfWork = unitOfWork;
+            this._work = unitOfWork;
             this._fbUtil = utility;
         }
 
@@ -44,18 +44,43 @@ namespace AstroBackEnd.Controllers
             return new Random().Next();
         }
 
-        [HttpGet("firebase")]
-        public async Task<IActionResult> getFireBaseUser(string token)
+        [HttpPost("firebase")]
+        public async Task<IActionResult> getFireBaseUser([FromBody] FireBaseLoginRequest request)
         {
             try
             {
-                UserRecord userRecord = await _fbUtil.getFireBaseUserByToken(token);
-                return Ok(userRecord);
-            }catch(Exception e)
+                UserRecord userRecord = await _fbUtil.getFireBaseUserByToken(request.Token);
+                string uid = userRecord.Uid;
+                User user = _work.Users.Find(u => u.UID == uid, u => u.Id).FirstOrDefault();
+
+                if(user == null)
+                {
+                     user = this.SignUp(userRecord);
+                }
+                
+                return Ok(Generate(user));
+
+            }
+            catch(Exception e)
             {
-                return BadRequest(  e.Message);
+                return BadRequest(e.Message);
             }
 
+        }
+
+        private User SignUp(UserRecord userRecord)
+        {
+            var user = new User()
+            {
+                UID = userRecord.Uid,
+                UserName = userRecord.DisplayName,
+                Email = userRecord.Email,
+                Role = _work.Roles.Get(2),
+                PhoneNumber = userRecord.PhoneNumber,
+                Status = 1
+            };
+
+            return _work.Users.Add(user);
         }
 
         // POST api/<Login>
@@ -97,8 +122,8 @@ namespace AstroBackEnd.Controllers
         //TODO: implement login
         private User Authenticate(UserLogin userLogin)
         {
-            User user = _unitOfWork.Users.Find(u => u.UserName == userLogin.UserName, u => u.UserName).FirstOrDefault();
-            user = _unitOfWork.Users.GetAllUserData(user.Id);
+            User user = _work.Users.Find(u => u.UserName == userLogin.UserName, u => u.UserName).FirstOrDefault();
+            user = _work.Users.GetAllUserData(user.Id);
             return user;
         }
 

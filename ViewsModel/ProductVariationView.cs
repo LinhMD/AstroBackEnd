@@ -21,7 +21,7 @@ namespace AstroBackEnd.ViewsModel
             Inventory = p.Inventory;
             Price = p.Price;
             Size = p.Size;
-            ImgLinks = p.ImgLinks.Select(i => i.Link).ToArray();
+            ImgLinks = p.ImgLinks?.Select(i => i.Link).ToArray();
         }
 
         public int Id { get; set; }

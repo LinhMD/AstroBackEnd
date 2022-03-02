@@ -11,6 +11,8 @@ using System.Security.Claims;
 using AstroBackEnd.Repositories;
 using AstroBackEnd.Models;
 using Microsoft.AspNetCore.Authorization;
+using AstroBackEnd.Utilities;
+using AstroBackEnd.RequestModels.UserRequest;
 
 namespace AstroBackEnd.Controllers
 {
@@ -119,11 +121,44 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet("cart")]
+        [Authorize]
         public IActionResult GetUserCart()
         {
 
+            try
+            {
+                ClaimsIdentity claimsIdentity = this.User.Identity as ClaimsIdentity;
+                string userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                int id = int.Parse(userId);
 
-            return null;
+                Order cart = _userService.getCart(id);
+
+                return Ok(cart);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost("cart")]
+        [Authorize]
+        public IActionResult AddItemToCart([FromBody]AddToCartRequest request)
+        {
+            try
+            {
+                ClaimsIdentity claimsIdentity = this.User.Identity as ClaimsIdentity;
+                string userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                int id = int.Parse(userId);
+
+                Order cart = _userService.AddToCart(id, request);
+
+                return Ok(cart);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 }

@@ -20,6 +20,7 @@ namespace AstroBackEnd.Models
         public string? DeleveryPhone { get; set; }
 
         public IList<OrderDetail> OrderDetails { get; set; }
+
         public int UserId { get; set; }
     }
 }
