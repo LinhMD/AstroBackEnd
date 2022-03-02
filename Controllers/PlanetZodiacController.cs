@@ -3,6 +3,7 @@ using AstroBackEnd.Repositories;
 using AstroBackEnd.RequestModels;
 using AstroBackEnd.RequestModels.PlanetZodiacRequest;
 using AstroBackEnd.Services.Core;
+using AstroBackEnd.Utilities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -52,9 +53,12 @@ namespace AstroBackEnd.Controllers
                     ZodiacId = zodiacId,
                     PagingRequest = pagingRequest
                 };
+
+                Validation.Validate(findPlanetZodiacRequest);
+
                 return Ok(planetZodiacService.FindPlanetZodiac(findPlanetZodiacRequest));
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
             }

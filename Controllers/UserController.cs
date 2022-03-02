@@ -73,6 +73,9 @@ namespace AstroBackEnd.Controllers
             }
         }
 
+        /// <summary>
+        /// there is no summary
+        /// </summary>
         [HttpGet]
         public IActionResult FindUsers(string? name, string? phone, string? sortBy,int status = 1,  int page = 1, int pageSize = 20)
         {
@@ -120,6 +123,10 @@ namespace AstroBackEnd.Controllers
             }
         }
 
+        /// <summary>
+        /// Get Cart of the current user
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("cart")]
         [Authorize]
         public IActionResult GetUserCart()
