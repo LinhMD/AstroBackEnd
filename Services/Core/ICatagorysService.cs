@@ -17,7 +17,7 @@ namespace AstroBackEnd.Services.Core
 
         public IEnumerable<Catagory> FindCatagory(FindCatagoryRequest request);
 
-        public void DeleteCatagory(int id);
+        public Catagory DeleteCatagory(int id);
 
         public Catagory UpdateCatagory(int id, CatagoryUpdateRequest request);
 

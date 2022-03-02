@@ -22,7 +22,7 @@ namespace AstroBackEnd.Services.Core
 
         public IEnumerable<Product> FindMasterProduct(FindMasterProductRequest request);
 
-        public void DeleteProduct(int id);
+        public Product DeleteProduct(int id);
 
         public Product UpdateMasterProduct(int id, MasterProductsUpdateRequest request);
 

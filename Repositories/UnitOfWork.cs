@@ -74,6 +74,10 @@ namespace AstroBackEnd.Repositories
 
 
 
+        public IZodiacRepository Zodiac { get; }
+
+
+
         public int Complete()
         {
             return _dataContext.SaveChanges();
