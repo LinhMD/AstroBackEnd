@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AstroBackEnd.Migrations
 {
     [DbContext(typeof(AstroDataContext))]
-    [Migration("20220301121358_add_field_to_user_table")]
-    partial class add_field_to_user_table
+    [Migration("20220302150701_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -42,7 +42,7 @@ namespace AstroBackEnd.Migrations
                     b.ToTable("BirthCharts");
                 });
 
-            modelBuilder.Entity("AstroBackEnd.Models.Catagory", b =>
+            modelBuilder.Entity("AstroBackEnd.Models.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -54,7 +54,7 @@ namespace AstroBackEnd.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Catagories");
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("AstroBackEnd.Models.Horoscope", b =>
@@ -315,7 +315,7 @@ namespace AstroBackEnd.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CatagoryId")
+                    b.Property<int?>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Color")
@@ -350,7 +350,7 @@ namespace AstroBackEnd.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CatagoryId");
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("MasterProductId");
 
@@ -639,15 +639,15 @@ namespace AstroBackEnd.Migrations
 
             modelBuilder.Entity("AstroBackEnd.Models.Product", b =>
                 {
-                    b.HasOne("AstroBackEnd.Models.Catagory", "Catagory")
+                    b.HasOne("AstroBackEnd.Models.Category", "Category")
                         .WithMany()
-                        .HasForeignKey("CatagoryId");
+                        .HasForeignKey("CategoryId");
 
                     b.HasOne("AstroBackEnd.Models.Product", "MasterProduct")
                         .WithMany("ProductVariation")
                         .HasForeignKey("MasterProductId");
 
-                    b.Navigation("Catagory");
+                    b.Navigation("Category");
 
                     b.Navigation("MasterProduct");
                 });
