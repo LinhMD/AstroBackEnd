@@ -79,7 +79,7 @@ namespace AstroBackEnd.Controllers
 
         [HttpGet]
         public IActionResult FindNews(string title, string description, string tag,
-            string sortBy, int page, int pageSize)
+            string sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
