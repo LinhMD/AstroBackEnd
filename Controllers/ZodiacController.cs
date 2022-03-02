@@ -56,7 +56,7 @@ namespace AstroBackEnd.Controllers
 
 
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult ReomoveZodiac(int id)
         {
             return Ok(_zodiacService.RemoveZodiac(id));

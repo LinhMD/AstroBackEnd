@@ -77,7 +77,7 @@ namespace AstroBackEnd.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public IActionResult UpdateImage(int id, ImageUpdateRequest request)
         {
             ImgLink updateImage = _Service.UpdateImage(id, request);

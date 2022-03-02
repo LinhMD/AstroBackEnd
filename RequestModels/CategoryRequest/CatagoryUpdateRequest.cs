@@ -7,8 +7,6 @@ namespace AstroBackEnd.RequestModels.CatagoryRequest
 {
     public class CatagoryUpdateRequest
     {
-        
-
         public string Name { get; set; }
         
     }

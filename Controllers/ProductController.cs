@@ -83,7 +83,7 @@ namespace AstroBackEnd.Controllers
 
         }
 
-        [HttpPut("master/{id}")]
+        [HttpPut("master")]
         public IActionResult UpdateProduct(int id, MasterProductsUpdateRequest request)
         {
             try
@@ -142,7 +142,7 @@ namespace AstroBackEnd.Controllers
 
         }
 
-        [HttpPut("variant/{id}")]
+        [HttpPut("variant")]
         public IActionResult UpdateProductVariant(int id, ProductVariantUpdateRequest request)
         {
             try

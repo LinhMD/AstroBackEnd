@@ -83,7 +83,6 @@ namespace AstroBackEnd.Controllers
             return _work.Users.Add(user);
         }
 
-        // POST api/<Login>
         [HttpPost]
         public IActionResult Post([FromBody] UserLogin userLogin)
         {
@@ -118,8 +117,6 @@ namespace AstroBackEnd.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-
-        //TODO: implement login
         private User Authenticate(UserLogin userLogin)
         {
             User user = _work.Users.Find(u => u.UserName == userLogin.UserName, u => u.UserName).FirstOrDefault();

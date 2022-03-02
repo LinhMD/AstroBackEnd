@@ -60,7 +60,7 @@ namespace AstroBackEnd.Controllers
             return Ok(houseService.CreateHouse(request));
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult DeleteHouse(int id)
         {
             return Ok(houseService.DeleteHouse(id));

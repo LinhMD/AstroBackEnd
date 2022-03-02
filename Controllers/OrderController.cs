@@ -34,7 +34,7 @@ namespace AstroBackEnd.Controllers
                 return BadRequest(e.Message);
             }
         }
-        [HttpPut("{id}")]
+        [HttpPut]
         public IActionResult UpdateOrder(int id, CreateOrderRequest request)
         {
             try

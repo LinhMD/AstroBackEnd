@@ -83,7 +83,7 @@ namespace AstroBackEnd.Controllers
             return NotFound();
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult DeleteHoroscope(int id)
         {
             Horoscope horoscope = horoscopeService.DeleteHoroscope(id);

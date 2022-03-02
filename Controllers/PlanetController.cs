@@ -74,7 +74,7 @@ namespace AstroBackEnd.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult DeletePlanet(int id)
         {
             Planet planet = _work.Planets.Get(id);
