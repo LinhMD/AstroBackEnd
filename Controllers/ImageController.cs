@@ -1,12 +1,16 @@
+
 ﻿
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.RequestModels;
+
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 using System.Security.Claims;
 using AstroBackEnd.Repositories;
 using AstroBackEnd.Models;
@@ -20,6 +24,7 @@ namespace AstroBackEnd.Controllers
     [ApiController]
     public class ImageController : ControllerBase
     {
+
         private IImageService _Service;
         private IUnitOfWork _work;
         public ImageController(IImageService service, IUnitOfWork work)
@@ -95,6 +100,15 @@ namespace AstroBackEnd.Controllers
         {
                 return NotFound();
             }
+
+        private readonly IImageService _imageService;
+
+        [HttpDelete]
+        public IActionResult DeleteLink(string link)
+        {
+            _imageService.DeleteImage(link);
+            return Ok();
+
         }
     }
 }

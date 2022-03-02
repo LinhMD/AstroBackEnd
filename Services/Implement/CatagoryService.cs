@@ -32,8 +32,7 @@ namespace AstroBackEnd.Services.Implement
         }
 
         public Catagory DeleteCatagory(int id)
-        {
-            
+        {            
             Catagory catagory = _work.Catagory.Get(id);
             if(catagory != null)
             {
@@ -44,6 +43,8 @@ namespace AstroBackEnd.Services.Implement
             {
                 return null;
             }
+
+
         }
 
         public void Dispose()

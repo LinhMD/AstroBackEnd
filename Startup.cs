@@ -87,11 +87,13 @@ namespace AstroBackEnd
 
             services.AddScoped<IPlanetHouseService, PlanetHouseService>();
 
+
             services.AddScoped<ICatagorysService,CatagoryService >();
 
             services.AddScoped <IZodiacProductService,ZodiacProductService > ();
 
             services.AddScoped <IImageService,ImageService > ();
+
 
             services.AddDbContext<Data.AstroDataContext>();
 

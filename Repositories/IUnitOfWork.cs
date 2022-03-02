@@ -44,7 +44,6 @@ namespace AstroBackEnd.Repositories
         IPlanetHouseRepository PlanetHouses { get; }
 
 
-        IZodiacRepository Zodiac { get; }
 
         int Complete();
 

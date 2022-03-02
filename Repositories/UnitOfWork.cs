@@ -73,7 +73,9 @@ namespace AstroBackEnd.Repositories
         public IPlanetHouseRepository PlanetHouses { get; }
 
 
+
         public IZodiacRepository Zodiac { get; }
+
 
 
         public int Complete()
