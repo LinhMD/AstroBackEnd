@@ -14,8 +14,8 @@ namespace AstroBackEnd.ViewsModel
             this.Name = product.Name;
             Description = product.Description;
             Detail = product.Detail;
-            CatagoryId = product.Catagory.Id;
-            CatagoryName = product.Catagory.Name;
+            CategoryId = product.Category.Id;
+            CategoryName = product.Category.Name;
             this.ImgLinks = product.ImgLinks.Select(i => i.Link).ToArray();
             this.ZodiacNames = product.Zodiacs.Select(z => z.Name).ToArray();
             this.ProductVariation = product.ProductVariation.Select(p => new ProductVariationView(p)).ToArray();
@@ -29,9 +29,9 @@ namespace AstroBackEnd.ViewsModel
 
         public string Detail { get; set; }
 
-        public int CatagoryId { get; set; }
+        public int CategoryId { get; set; }
 
-        public string CatagoryName { get; set; }
+        public string CategoryName { get; set; }
 
         
         public IList<string> ImgLinks { get; set; }

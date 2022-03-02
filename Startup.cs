@@ -88,7 +88,7 @@ namespace AstroBackEnd
             services.AddScoped<IPlanetHouseService, PlanetHouseService>();
 
 
-            services.AddScoped<ICatagorysService,CatagoryService >();
+            services.AddScoped<ICategorysService,CategoryService >();
 
             services.AddScoped <IImageService,ImageService > ();
 

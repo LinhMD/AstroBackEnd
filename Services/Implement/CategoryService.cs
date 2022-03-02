@@ -12,32 +12,32 @@ using AstroBackEnd.RequestModels.CatagoryRequest;
 
 namespace AstroBackEnd.Services.Implement
 {
-    public class CatagoryService : ICatagorysService, IDisposable
+    public class CategoryService : ICategorysService, IDisposable
     {
         private readonly IUnitOfWork _work;
 
         private readonly AstroDataContext _astroData;
-        public CatagoryService(IUnitOfWork work, AstroDataContext astroData)
+        public CategoryService(IUnitOfWork work, AstroDataContext astroData)
         {
             this._work = work;
             this._astroData = astroData;
         }
-        public Catagory CreateCatagory(CatagoryCreateRequest request)
+        public Category CreateCategory(CategoryCreateRequest request)
         {
-            Catagory catagorys = new Catagory()
+            Category catagorys = new Category()
             {
                 Name = request.Name
             };
-            return _work.Catagorys.Add(catagorys);
+            return _work.Categorys.Add(catagorys);
         }
 
-        public Catagory DeleteCatagory(int id)
+        public Category DeleteCategory(int id)
         {            
-            Catagory catagory = _work.Catagorys.Get(id);
-            if(catagory != null)
+            Category category = _work.Categorys.Get(id);
+            if(category != null)
             {
-                _work.Catagorys.Remove(GetCatagory(id));
-                return catagory;
+                _work.Categorys.Remove(GetCategory(id));
+                return category;
             }
             else
             {
@@ -52,9 +52,9 @@ namespace AstroBackEnd.Services.Implement
             this._work.Complete();
         }
 
-        public IEnumerable<Catagory> FindCatagory(FindCatagoryRequest request)
+        public IEnumerable<Category> FindCategory(FindCategoryRequest request)
         {
-            Func<Catagory, bool> filter = p =>
+            Func<Category, bool> filter = p =>
             {
                 bool checkId = request.Id == null ? true : p.Id == request.Id;
 
@@ -67,44 +67,44 @@ namespace AstroBackEnd.Services.Implement
                 
                 return checkName ;
             };
-            IEnumerable<Catagory> result = null;
+            IEnumerable<Category> result = null;
             if (request.PagingRequest != null)
             {
                 switch (request.PagingRequest.SortBy)
                 {
                     case "Id":
-                        result = _work.Catagorys.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                        result = _work.Categorys.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
                         break;
                     case "Name":
-                        result = _work.Catagorys.FindPaging(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                        result = _work.Categorys.FindPaging(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
                         break;
                     default:
-                        result = _work.Catagorys.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                        result = _work.Categorys.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
                         break;
 
                 }
             }
             else
             {
-                result = _work.Catagorys.Find(filter, p => p.Name);
+                result = _work.Categorys.Find(filter, p => p.Name);
             }
 
             return result;
         }
 
-        public IEnumerable<Catagory> GetAllCatagory()
+        public IEnumerable<Category> GetAllCategory()
         {
-            return _work.Catagorys.GetAll<String>(p => p.Name);
+            return _work.Categorys.GetAll<String>(p => p.Name);
         }
 
-        public Catagory GetCatagory(int id)
+        public Category GetCategory(int id)
         {
-            return _work.Catagorys.Get(id);
+            return _work.Categorys.Get(id);
         }
 
-        public Catagory UpdateCatagory(int id, CatagoryUpdateRequest request)
+        public Category UpdateCategory(int id, CatagoryUpdateRequest request)
         {
-            var catagory = _work.Catagorys.Get(id);
+            var catagory = _work.Categorys.Get(id);
             if (!string.IsNullOrWhiteSpace(request.Name))
             {
                 catagory.Name = request.Name;

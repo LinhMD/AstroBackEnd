@@ -56,18 +56,18 @@ namespace AstroBackEnd.Data
                     ); 
                 }
 
-                var cata1 = new Catagory()
+                var cata1 = new Category()
                 {
                     Name = "Vòng tay"
                 };
-                var cata2 = new Catagory()
+                var cata2 = new Category()
                 {
                     Name = "Áo thun"
                 };
 
-                if (!context.Catagories.Any())
+                if (!context.Categories.Any())
                 {
-                    context.Catagories.AddRange(
+                    context.Categories.AddRange(
                         cata1, cata2
                     );
                 }
@@ -81,7 +81,7 @@ namespace AstroBackEnd.Data
                     var master = new Product()
                     {
                         Name = "Áo thun bọ cạp",
-                        Catagory = cata2,
+                        Category = cata2,
                         Detail = "Áo thun dành cho cung bọ cạp",
                         Description = "nah"
                     };
@@ -92,21 +92,21 @@ namespace AstroBackEnd.Data
                     var child1 = new Product()
                     {
                         Name = "Áo thun bọ cạp",
-                        Catagory = cata2,
+                        Category = cata2,
                         Color = "#FF0000",
                         MasterProduct = master
                     };
                     var child2 = new Product()
                     {
                         Name = "Áo thun bọ cạp",
-                        Catagory = cata2,
+                        Category = cata2,
                         Color = "#0000FF",
                         MasterProduct = master
                     };
                     var child3 = new Product()
                     {
                         Name = "Áo thun bọ cạp",
-                        Catagory = cata2,
+                        Category = cata2,
                         Color = "#00FF00",
                         MasterProduct = master
                     };

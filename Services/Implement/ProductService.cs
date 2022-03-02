@@ -27,13 +27,13 @@ namespace AstroBackEnd.Services.Implement
         {
 
 
-            var cata = _work.Catagorys.Get(request.CatagoryId);
+            var cata = _work.Categorys.Get(request.CatagoryId);
             Product product = new Product()
             {
                 Name = request.Name,
                 Description = request.Description,
                 Detail = request.Detail,
-                Catagory = cata,
+                Category = cata,
                 
             };
 
@@ -67,7 +67,7 @@ namespace AstroBackEnd.Services.Implement
 
         public void DeleteProduct(int id)
         {
-            _work.Catagorys.Remove(_work.Catagorys.Get(id));
+            _work.Categorys.Remove(_work.Categorys.Get(id));
         }
 
         public void Dispose()
@@ -146,7 +146,7 @@ namespace AstroBackEnd.Services.Implement
 
                 bool checkDetail = string.IsNullOrWhiteSpace(request.Detail) || (!string.IsNullOrEmpty(p.Detail) && p.Detail.Contains(request.Detail));
 
-                bool checkCatagory = request.CatagoryId == null || p.Catagory.Id == request.CatagoryId;
+                bool checkCatagory = request.CatagoryId == null || p.Category.Id == request.CatagoryId;
 
                 bool zodiacIdCheck = request.ZodiacsId == null || p.Zodiacs.Select(z => z.Id).Contains(((int)request.ZodiacsId.Value));
 
@@ -169,7 +169,7 @@ namespace AstroBackEnd.Services.Implement
                         result = _work.Products.FindProducWithAllData(filter, p => p.Description, request.PagingRequest.Page, request.PagingRequest.PageSize);
                         break;
                     case "CatagoryId":
-                        result = _work.Products.FindProducWithAllData(filter, p => p.Catagory.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                        result = _work.Products.FindProducWithAllData(filter, p => p.Category.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
                         break;
                     default:
                         result = _work.Products.FindProducWithAllData(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
@@ -208,7 +208,7 @@ namespace AstroBackEnd.Services.Implement
             var product = this.GetProduct(id);
          
 
-            var cata = _work.Catagorys.Get(request.CatagoryId);
+            var cata = _work.Categorys.Get(request.CatagoryId);
             if (!string.IsNullOrWhiteSpace(request.Name))
             {
                 product.Name = request.Name;
@@ -223,7 +223,7 @@ namespace AstroBackEnd.Services.Implement
             }
             if (!string.IsNullOrWhiteSpace(Convert.ToString(request.CatagoryId)))
             {
-                product.Catagory = cata;
+                product.Category = cata;
             }
             if(request.ImgLinksAdd != null && request.ImgLinksAdd.Count != 0)
             {
