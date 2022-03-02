@@ -41,7 +41,7 @@ namespace AstroBackEnd.Data
 
         public DbSet<ZodiacHouse> ZodiacHouses { get; set; }
 
-        public DbSet<Catagory> Catagories { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         public DbSet<Product> Products { get; set; }
 

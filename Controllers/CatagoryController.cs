@@ -22,9 +22,9 @@ namespace AstroBackEnd.Controllers
     [ApiController]
     public class CatagoryController : ControllerBase
     {
-        private ICatagorysService _Service;
+        private ICategorysService _Service;
         private IUnitOfWork _work;
-        public CatagoryController(ICatagorysService service, IUnitOfWork work)
+        public CatagoryController(ICategorysService service, IUnitOfWork work)
         {
             this._Service = service;
             this._work = work;
@@ -34,7 +34,7 @@ namespace AstroBackEnd.Controllers
         [HttpGet("{id}")]
         public IActionResult GetCatagory(int id)
         {
-            var product = _Service.GetCatagory(id);
+            var product = _Service.GetCategory(id);
             if (product != null)
             {
                 return Ok(product);
@@ -46,12 +46,12 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateProduct([FromBody] CatagoryCreateRequest request)
+        public IActionResult CreateProduct([FromBody] CategoryCreateRequest request)
         {
             try
             {
                 Validation.Validate(request);
-                return Ok(_Service.CreateCatagory(request));
+                return Ok(_Service.CreateCategory(request));
             }
             catch (Exception e)
             {
@@ -72,12 +72,12 @@ namespace AstroBackEnd.Controllers
                     Page = page,
                     PageSize = pageSize,
                 };
-                FindCatagoryRequest findCatagoryRequest = new FindCatagoryRequest()
+                FindCategoryRequest findCatagoryRequest = new FindCategoryRequest()
                 {
                     Id=id,
                     Name = name
                 };
-                return Ok(_Service.FindCatagory(findCatagoryRequest));
+                return Ok(_Service.FindCategory(findCatagoryRequest));
             }
             catch (Exception ex)
             {
@@ -88,7 +88,7 @@ namespace AstroBackEnd.Controllers
         [HttpPut("{id}")]
         public IActionResult UpdateProduct(int id, CatagoryUpdateRequest request)
         {
-            Catagory updateCatagory = _Service.UpdateCatagory(id, request);
+            Category updateCatagory = _Service.UpdateCategory(id, request);
 
             return Ok(updateCatagory);
         }
@@ -98,10 +98,10 @@ namespace AstroBackEnd.Controllers
         {
             //_Service.DeleteCatagory(id);
             //return Ok();
-            Catagory catagory = _work.Catagorys.Get(id);
+            Category catagory = _work.Categorys.Get(id);
             if (catagory!=null)
             {
-                _Service.DeleteCatagory(id);
+                _Service.DeleteCategory(id);
                 return Ok(catagory);
             }
             else
