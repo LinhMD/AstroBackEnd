@@ -81,7 +81,6 @@ namespace AstroBackEnd.Controllers
                 return Ok(planetHouse);
             else
                 return NotFound();
-
         }
 
         [HttpPut]
@@ -93,7 +92,6 @@ namespace AstroBackEnd.Controllers
                 return Ok(planetHouse);
             }
             return NotFound();
-
         }
     }
 }

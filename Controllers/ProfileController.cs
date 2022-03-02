@@ -74,14 +74,11 @@ namespace AstroBackEnd.Controllers
             {
                 return BadRequest(e.Message);
             }
-            
         }
 
         [HttpPut]
         public IActionResult UpdateProfile(int id, CreateProfileRequest request)
         {
-           
-
             try
             {
                 Profile updateProfile = _profileService.UpdateProfile(id, request);
@@ -105,8 +102,7 @@ namespace AstroBackEnd.Controllers
             catch (Exception e)
             {
                 return BadRequest(e.Message);
-            }
-            
+            } 
         }
     }
 }

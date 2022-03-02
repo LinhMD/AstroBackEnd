@@ -54,15 +54,11 @@ namespace AstroBackEnd.Controllers
             return Ok(_zodiacService.CreateZodiac(request));
         }
 
-
-
         [HttpDelete("{id}")]
         public IActionResult ReomoveZodiac(int id)
         {
             return Ok(_zodiacService.RemoveZodiac(id));
         }
-
-
 
         [HttpPut]
         public IActionResult UpdateZodiac(int id, UpdateZodiacRequest updateZodiac)
@@ -70,13 +66,5 @@ namespace AstroBackEnd.Controllers
             _zodiacService.UpdateZodiac(id, updateZodiac);
             return Ok();
         }
-
-
-
-
-    }
-
-
-
-    
+    } 
 }
