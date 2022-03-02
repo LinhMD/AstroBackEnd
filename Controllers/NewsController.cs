@@ -25,11 +25,6 @@ namespace AstroBackEnd.Controllers
             this._Service = service;
             this._work = work;
         }
-        //[HttpGet]
-        //public IActionResult GetAllNew()
-        //{
-        //    return Ok(_Service.GetAllNew());
-        //}
 
         [HttpGet("{id}")]
         public IActionResult GetNew(int id)
@@ -61,7 +56,7 @@ namespace AstroBackEnd.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public IActionResult UpdateNew(int id, [FromBody] NewsUpdateRequest request)
         {
             
