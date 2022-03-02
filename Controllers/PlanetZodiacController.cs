@@ -84,7 +84,6 @@ namespace AstroBackEnd.Controllers
                 return Ok(planetZodiac);
             else
                 return NotFound();
-
         }
 
         [HttpPut]
@@ -95,8 +94,7 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(planetZodiac);
             }
-            return NotFound();
-            
+            return NotFound();  
         }
     }
 }

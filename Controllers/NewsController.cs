@@ -101,8 +101,6 @@ namespace AstroBackEnd.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteNews(int id)
         {
-            //_Service.DeleteCatagory(id);
-            //return Ok();
             News news = _work.News.Get(id);
             if (news != null)
             {

@@ -96,8 +96,6 @@ namespace AstroBackEnd.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteCatagory(int id)
         {
-            //_Service.DeleteCatagory(id);
-            //return Ok();
             Category catagory = _work.Categorys.Get(id);
             if (catagory!=null)
             {

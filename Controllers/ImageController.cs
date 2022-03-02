@@ -88,8 +88,6 @@ namespace AstroBackEnd.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteImage(int id)
         {
-            //_Service.DeleteCatagory(id);
-            //return Ok();
             ImgLink imgLink = _work.Image.Get(id);
             if (imgLink != null)
             {
