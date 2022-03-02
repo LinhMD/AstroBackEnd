@@ -65,8 +65,12 @@ namespace AstroBackEnd.Services.Implement
                 bool statusCheck = request.Status == null || order.Status == request.Status;
 
                 bool totalStartCheck = request.TotalCostStart == null || order.TotalCost >= request.TotalCostStart;
-                bool totalEndCheck = request.TotalCostEnd == null || order.TotalCost >= request.TotalCostEnd;
+                bool totalEndCheck = request.TotalCostEnd == null || order.TotalCost <= request.TotalCostEnd;
                 bool totalCostCheck = totalStartCheck && totalEndCheck;
+
+                bool orderStartCheck = request.OrderTimeStart == null || order.OrderTime >= request.OrderTimeStart;
+                bool orderEndCheck = request.OrderTimeEnd == null || order.OrderTime <= request.OrderTimeEnd;
+                bool orderCheck = totalStartCheck && totalEndCheck;
 
                 bool addressCheck = string.IsNullOrWhiteSpace(request.DeliveryAdress) || order.DeliveryAdress.Contains(request.DeliveryAdress);
 
@@ -124,7 +128,7 @@ namespace AstroBackEnd.Services.Implement
             order.DeliveryAdress = request.DeliveryAdress == null? order.DeliveryAdress : request.DeliveryAdress;
             order.DeleveryPhone = request.DeleveryPhone == null? order.DeleveryPhone: request.DeleveryPhone;
             order.Status = (int)request.Status;
-            order.TotalCost = order.OrderDetails.Sum(od => od.Price);
+            order.TotalCost = order.OrderDetails.Sum(od => od.TotalPrice);
 
             return order;
         }

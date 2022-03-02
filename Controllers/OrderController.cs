@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/order")]
     [ApiController]
     public class OrderController : ControllerBase
     {
@@ -19,12 +19,6 @@ namespace AstroBackEnd.Controllers
         public OrderController(IOrderService orderService)
         {
             this._orderService = orderService;
-        }
-        [HttpGet]
-        public IActionResult GetAllOrder()
-        {
-
-            return Ok(_orderService.GetAllOrders());
         }
 
         [HttpPost]
@@ -82,12 +76,33 @@ namespace AstroBackEnd.Controllers
                 return BadRequest(e.Message);
             }
         }
-        [HttpPost("f")]
-        public IActionResult FindOrder(FindOrderRequest request)
+        [HttpGet]
+        public IActionResult FindOrder( int? Status, 
+                                        DateTime? OrderTimeStart, DateTime? OrderTimeEnd,
+                                        double? TotalCostStart, double? TotalCostEnd, 
+                                        string? DeliveryAdress, 
+                                        string? DeleveryPhone, 
+                                        int? UserId,
+                                        string? sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
-                var orders = _orderService.FindOrder(request);
+                var orders = _orderService.FindOrder(new FindOrderRequest() { 
+                    Status = Status,
+                    OrderTimeEnd = OrderTimeEnd,
+                    OrderTimeStart = OrderTimeStart,
+                    TotalCostEnd = TotalCostEnd,
+                    TotalCostStart = TotalCostStart,
+                    DeliveryAdress = DeliveryAdress,
+                    DeleveryPhone = DeleveryPhone,
+                    UserId = UserId,
+
+                    PagingRequest = new RequestModels.PagingRequest()
+                    {
+                        Page = page,
+                        PageSize = pageSize,
+                        SortBy = sortBy
+                    }                });
                 return Ok(orders);
             }
             catch (Exception e)

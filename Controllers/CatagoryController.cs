@@ -13,6 +13,8 @@ using AstroBackEnd.Models;
 using Microsoft.AspNetCore.Authorization;
 using AstroBackEnd.RequestModels.CatagoryRequest;
 using AstroBackEnd.ViewsModel;
+using System.ComponentModel.DataAnnotations;
+using AstroBackEnd.Utilities;
 
 namespace AstroBackEnd.Controllers
 {
@@ -28,22 +30,23 @@ namespace AstroBackEnd.Controllers
             this._work = work;
         }
 
-        //[HttpGet]
-        //public IActionResult GetAllCatagory()
-        //{
-        //    Func<Catagory, ViewsModel.CatagoryView> maping = catagory =>
-        //    {
-        //        return new CatagoryView()
-        //        {
-        //            Id = catagory.Id,
-        //            //MasterProductId = product.MasterProduct.Id,
-        //            Name = catagory.Name
+        [HttpGet]
+        public IActionResult GetAllCatagory()
+        {
+            
+            Func<Catagory, ViewsModel.CatagoryView> maping = catagory =>
+            {
+                return new CatagoryView()
+                {
+                    Id = catagory.Id,
+                    //MasterProductId = product.MasterProduct.Id,
+                    Name = catagory.Name
 
-        //        };
+                };
 
-        //    };
-        //    return Ok(_Service.GetAllCatagory().Select(maping));
-        //}
+            };
+            return Ok(_Service.GetAllCatagory().Select(maping));
+        }
 
         [HttpGet("{id}")]
         public IActionResult GetCatagory(int id)
@@ -62,7 +65,16 @@ namespace AstroBackEnd.Controllers
         [HttpPost]
         public IActionResult CreateProduct([FromBody] CatagoryCreateRequest request)
         {
-            return Ok(_Service.CreateCatagory(request));
+            try
+            {
+                Validation.Validate(request);
+                return Ok(_Service.CreateCatagory(request));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            
         }
 
         [HttpGet]

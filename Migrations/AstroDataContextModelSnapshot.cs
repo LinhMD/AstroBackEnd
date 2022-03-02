@@ -201,13 +201,10 @@ namespace AstroBackEnd.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("OrderId")
+                    b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
-
-                    b.Property<int?>("ProductId")
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -219,11 +216,12 @@ namespace AstroBackEnd.Migrations
                     b.Property<string>("ReviewMessage")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<double>("TotalPrice")
+                        .HasColumnType("float");
+
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("OrderDetails");
                 });
@@ -319,7 +317,8 @@ namespace AstroBackEnd.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Color")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -337,13 +336,15 @@ namespace AstroBackEnd.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<double?>("Price")
                         .HasColumnType("float");
 
                     b.Property<string>("Size")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id");
 
@@ -352,28 +353,6 @@ namespace AstroBackEnd.Migrations
                     b.HasIndex("MasterProductId");
 
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("AstroBackEnd.Models.ProductZodiac", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ZodiacId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("ZodiacId");
-
-                    b.ToTable("ProductZodiacs");
                 });
 
             modelBuilder.Entity("AstroBackEnd.Models.Profile", b =>
@@ -388,6 +367,12 @@ namespace AstroBackEnd.Migrations
 
                     b.Property<string>("BirthPlace")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -453,6 +438,9 @@ namespace AstroBackEnd.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
@@ -461,6 +449,9 @@ namespace AstroBackEnd.Migrations
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
+
+                    b.Property<string>("UID")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
                         .IsRequired()
@@ -599,17 +590,11 @@ namespace AstroBackEnd.Migrations
 
             modelBuilder.Entity("AstroBackEnd.Models.OrderDetail", b =>
                 {
-                    b.HasOne("AstroBackEnd.Models.Order", "Order")
+                    b.HasOne("AstroBackEnd.Models.Order", null)
                         .WithMany("OrderDetails")
-                        .HasForeignKey("OrderId");
-
-                    b.HasOne("AstroBackEnd.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId");
-
-                    b.Navigation("Order");
-
-                    b.Navigation("Product");
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("AstroBackEnd.Models.PlanetHouse", b =>
@@ -663,25 +648,6 @@ namespace AstroBackEnd.Migrations
                     b.Navigation("Catagory");
 
                     b.Navigation("MasterProduct");
-                });
-
-            modelBuilder.Entity("AstroBackEnd.Models.ProductZodiac", b =>
-                {
-                    b.HasOne("AstroBackEnd.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AstroBackEnd.Models.Zodiac", "Zodiac")
-                        .WithMany()
-                        .HasForeignKey("ZodiacId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("Zodiac");
                 });
 
             modelBuilder.Entity("AstroBackEnd.Models.Profile", b =>

@@ -15,6 +15,7 @@ namespace AstroBackEnd.Repositories.Implement
         {
 
         }
+
         private AstroDataContext AstroData { get { return base._context as AstroDataContext; } }
     }
 }

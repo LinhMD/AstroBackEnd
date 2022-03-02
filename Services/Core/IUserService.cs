@@ -1,6 +1,7 @@
 ﻿using AstroBackEnd.Models;
 using AstroBackEnd.Repositories;
 using AstroBackEnd.RequestModels;
+using AstroBackEnd.RequestModels.UserRequest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,9 +19,12 @@ namespace AstroBackEnd.Services.Core
 
         public void DeleteUser(int id);
 
-        public void UpdateUser(int id, UserCreateRequest request);
+        public void UpdateUser(int id, UserUpdateRequest request);
 
         public User CreateUser(UserCreateRequest user);
 
+        public Order getCart(int userId);
+
+        public Order AddToCart(int userId, AddToCartRequest request);
     }
 }

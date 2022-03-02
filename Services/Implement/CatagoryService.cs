@@ -28,7 +28,7 @@ namespace AstroBackEnd.Services.Implement
             {
                 Name = request.Name
             };
-            return _work.Catagory.Add(catagorys);
+            return _work.Catagorys.Add(catagorys);
         }
 
         public Catagory DeleteCatagory(int id)
@@ -75,7 +75,7 @@ namespace AstroBackEnd.Services.Implement
                         result = _work.Catagory.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
                         break;
                     case "Name":
-                        result = _work.Catagory.FindPaging(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                        result = _work.Catagorys.FindPaging(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
                         break;
                     default:
                         result = _work.Catagory.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
@@ -85,7 +85,7 @@ namespace AstroBackEnd.Services.Implement
             }
             else
             {
-                result = _work.Catagory.Find(filter, p => p.Name);
+                result = _work.Catagorys.Find(filter, p => p.Name);
             }
 
             return result;
@@ -93,17 +93,17 @@ namespace AstroBackEnd.Services.Implement
 
         public IEnumerable<Catagory> GetAllCatagory()
         {
-            return _work.Catagory.GetAll<String>(p => p.Name);
+            return _work.Catagorys.GetAll<String>(p => p.Name);
         }
 
         public Catagory GetCatagory(int id)
         {
-            return _work.Catagory.Get(id);
+            return _work.Catagorys.Get(id);
         }
 
         public Catagory UpdateCatagory(int id, CatagoryUpdateRequest request)
         {
-            var catagory = _work.Catagory.Get(id);
+            var catagory = _work.Catagorys.Get(id);
             if (!string.IsNullOrWhiteSpace(request.Name))
             {
                 catagory.Name = request.Name;

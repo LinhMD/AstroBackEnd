@@ -92,7 +92,7 @@ namespace AstroBackEnd.Controllers
                 return Ok(imgLink);
             }
             else
-            {
+        {
                 return NotFound();
             }
         }

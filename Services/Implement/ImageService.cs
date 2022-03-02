@@ -22,9 +22,17 @@ namespace AstroBackEnd.Services.Implement
             this._work = work;
             this._astroData = astroData;
         }
+
+        public void DeleteImage(string link)
+        {
+            IEnumerable<ImgLink> removeList = this._work.Image.Find(i => i.Link.Equals(link), i => i.Id);
+            this._work.Image.RemoveAll(removeList);
+        }
+
+
         public ImgLink CreateImage(ImageCreateRequest request)
         {
-            var pro = _work.Product.Get(request.ProductId);
+            var pro = _work.Products.Get(request.ProductId);
             ImgLink image = new ImgLink()
             {
                 Link = request.Link,

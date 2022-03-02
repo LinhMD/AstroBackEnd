@@ -28,122 +28,134 @@ namespace AstroBackEnd.Controllers
             this._Service = service;
             this._work = work;
         }
-        [HttpGet]
-        public IActionResult GetAllProduct()
-        {
-            Func<Product, ViewsModel.ProductView> maping = product =>
-            {
-                return new ProductView()
-                {
-                    Id = product.Id,
-                    //MasterProductId = product.MasterProduct.Id,
-                    Name = product.Name,
-                    Description = product.Description,
-                    Detail = product.Detail,
-                    //CatagoryId = product.Catagory.Id,
-                    Size = product.Size,
-                    Price = product.Price,
-                    Gender = product.Gender,
-                    Color = product.Color,
-                    Inventory = product.Inventory
-                };
-
-            };
-            return Ok(_Service.GetAllProduct().Select(maping));
-        }
-
-        [HttpGet("{id}")]
-        public IActionResult GetProduct(int id)
-        {
-            var product = _Service.GetProduct(id);
-            if (product != null)
-            {
-                return Ok(product);
-            }
-            else
-            {
-                return NotFound();
-            }
-        }
-        [HttpPost]
-        public IActionResult CreateProduct([FromBody] ProductsCreateRequest request)
-        {
-            return Ok(_Service.CreateProduct(request));
-        }
-
-        [HttpPost]
-        [Route("CreateMasterProduct")]
-        public IActionResult CreateMasterProduct([FromBody] MasterProductCreateRequest request)
-        {
-            var result = _Service.CreateMasterProduct(request);
-            if (result == null)
-            {
-                return BadRequest(new { StatusCodes = 404, Message = "Can't create product" });
-            }
-            else
-            {
-                return Ok(new { StatusCode = 200, message = "The request has been completed successfully", data = result });
-            }
-        }
-
-        [HttpGet]
-        [Route("Product")]
-        public IActionResult FindProduct(int id, string name,
-            string description, int catagoryId,
-            string size, double price,
-            int gender, string color,
-            string sortBy, int page, int pageSize)
-        {
-            try
-            {
-                PagingRequest pagingRequest = new PagingRequest()
-                {
-                    SortBy = sortBy,
-                    Page = page,
-                    PageSize = pageSize,
-                };
-                FindProductsRequest findProductsRequest = new FindProductsRequest()
-                {
-                    Id = id,
-                    Name = name,
-                    Description= description,
-                    CatagoryId=catagoryId,
-                    Size=size,
-                    Price=price,
-                    Gender=gender,
-                    Color=color
-                };
-                return Ok(_Service.FindProducts(findProductsRequest));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPut("{id}")]
-        public IActionResult UpdateProduct(int id, ProductsUpdateRequest request)
-        {
-            Product updateProduct = _Service.UpdateProduct(id, request);
-
-            return Ok(updateProduct);
-        }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteProduct(int id)
         {
-            //_Service.DeleteCatagory(id);
-            //return Ok();
-            Product product = _work.Product.Get(id);
-            if (product != null)
+            _Service.DeleteProduct(id);
+            return Ok();
+        }
+
+        [HttpGet("master/{id}")]
+        public IActionResult GetProduct(int id)
+        {
+            var product = _Service.GetMasterProduct(id);
+            return product == null? NotFound("Master Product id {" +id + "} not found!!") : Ok(new MasterProductView(product));
+        }
+
+        
+        [HttpGet("master")]
+        public IActionResult GetAllProductMaster(int? Id, string? Name, string? Description, string? Detail, int? CatagoryId, int? ZodiacsId, int? ProductVariationId, string? SortBy, int Page = 1, int pageSize = 20)
+        {
+            try
             {
-                _Service.DeleteProduct(id);
-                return Ok(product);
+                return Ok(_Service.FindMasterProduct(new FindMasterProductRequest() { 
+                    Id = Id,
+                    CatagoryId = CatagoryId,
+                    Description = Description,
+                    Detail = Detail,
+                    Name = Name,
+                    ProductVariationId = ProductVariationId,
+                    ZodiacsId = ZodiacsId,
+                    PagingRequest = new PagingRequest() {  Page = Page, PageSize = pageSize , SortBy = SortBy }
+                
+                }).Select(p => new MasterProductView(p)));
             }
-            else
+            catch(Exception e)
             {
-                return NotFound();
+                return BadRequest(e.Message);
             }
         }
+
+
+        [HttpPost]
+        [Route("master")]
+        public IActionResult CreateMasterProduct([FromBody] MasterProductCreateRequest request)
+        {
+            try
+            {
+                return Ok(new MasterProductView(_Service.CreateMasterProduct(request)));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+        }
+
+        [HttpPut("master/{id}")]
+        public IActionResult UpdateProduct(int id, MasterProductsUpdateRequest request)
+        {
+            try
+            {
+                Product updateProduct = _Service.UpdateMasterProduct(id, request);
+
+                return Ok(new MasterProductView(updateProduct));
+            }
+            catch(Exception e)
+            {
+                
+                return BadRequest(e.StackTrace);
+            }
+           
+        }
+
+        [HttpGet("variant/{id}")]
+        public IActionResult GetMasterProduct(int id)
+        {
+            var product = _Service.GetProductVariant(id);
+            return product == null ? NotFound("Product variant id {" + id + "} not found!!") : Ok(new ProductVariationView(product));
+
+        }
+
+        [HttpGet("variant")]
+        public IActionResult GetAllProductVariant(string? Size, double? Price, int? Gender, string? Color, string? SortBy, int Page = 1, int pageSize = 20)
+        {
+            try
+            {
+                return Ok(_Service.FindProductVariant(new FindProductsVariantRequest() { 
+                    Color = Color,
+                    Gender = Gender,
+                    Price = Price,
+                    Size = Size,
+                    PagingRequest =  new PagingRequest() { Page = Page, PageSize = pageSize, SortBy = SortBy }
+
+                }).Select(p => new ProductVariationView(p)));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost("variant")]
+        public IActionResult CreateProduct([FromBody] ProductVariantCreateRequest request)
+        {
+            try
+            {
+                return Ok(new ProductVariationView(_Service.CreateProductVariant(request)));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+        }
+
+        [HttpPut("variant/{id}")]
+        public IActionResult UpdateProductVariant(int id, ProductVariantUpdateRequest request)
+        {
+            try
+            {
+                Product updateProduct = _Service.UpdateProductVariant(id, request);
+                return Ok(new ProductVariationView(updateProduct));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+
+        }
+
     }
 }

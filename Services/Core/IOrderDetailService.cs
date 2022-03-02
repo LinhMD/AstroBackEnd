@@ -18,7 +18,7 @@ namespace AstroBackEnd.Services.Core
 
         public OrderDetail CreateOrderDetail(OrderDetailCreateRequest request);
 
-        public OrderDetail UpdateOrderDetail(int id, OrderDetailCreateRequest request);
+        public OrderDetail UpdateOrderDetail(int id, OrderDetailUpdateRequest request);
 
         public void DeleteOrderDetail(int id);
     }

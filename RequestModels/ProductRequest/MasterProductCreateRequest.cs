@@ -1,6 +1,7 @@
 ﻿using AstroBackEnd.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,25 +9,17 @@ namespace AstroBackEnd.RequestModels.ProductRequest
 {
     public class MasterProductCreateRequest
     {
-        public int MasterProductId { get; set; }
 
+        [Required]
         public string Name { get; set; }
 
         public string? Description { get; set; }
 
         public string? Detail { get; set; }
 
+        [Required]
         public int CatagoryId { get; set; }
 
-        public string? Size { get; set; }
-
-        public double? Price { get; set; }
-
-        public int? Gender { get; set; }
-
-        public string? Color { get; set; }
-
-        public int? Inventory { get; set; }
-
+        public List<string> ImgLink { get; set; }
     }
 }
