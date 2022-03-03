@@ -2,6 +2,7 @@
 using AstroBackEnd.Repositories;
 using AstroBackEnd.RequestModels;
 using AstroBackEnd.Services.Core;
+using AstroBackEnd.Utilities;
 using AstroBackEnd.ViewsModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -26,45 +27,70 @@ namespace AstroBackEnd.Controllers
         [HttpGet("id")]
         public IActionResult GetZodiac(int id)
         {
-            return Ok(_zodiacService.GetZodiac(id));
+            try
+            {
+                return Ok(_zodiacService.GetZodiac(id));
+            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            
         }
 
         [HttpGet]
         public IActionResult FindZodiac(int id, string name, string sortBy, int page = 1, int pageSize = 20)
         {
-            PagingRequest pagingRequest = new PagingRequest()
+            try
             {
-                SortBy = sortBy,
-                Page = page,    
-                PageSize = pageSize
-            };
+                PagingRequest pagingRequest = new PagingRequest()
+                {
+                    SortBy = sortBy,
+                    Page = page,
+                    PageSize = pageSize
+                };
 
-            FindZodiacRequest request = new FindZodiacRequest()
+                FindZodiacRequest request = new FindZodiacRequest()
+                {
+                    Id = id,
+                    Name = name,
+                    PagingRequest = pagingRequest,
+                };
+                return Ok(_zodiacService.FindZodiac(request));
+            }
+            catch (ArgumentException e)
             {
-                Id = id,
-                Name = name,
-                PagingRequest = pagingRequest,
-            };
-            return Ok(_zodiacService.FindZodiac(request));
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPost]
         public IActionResult CreateZodiac(CreateZodiacRequest request)
         {
-            return Ok(_zodiacService.CreateZodiac(request));
+            try
+            {
+                return Ok(_zodiacService.CreateZodiac(request));
+            }catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
         public IActionResult ReomoveZodiac(int id)
         {
-            return Ok(_zodiacService.RemoveZodiac(id));
+            try
+            {
+                return Ok(_zodiacService.RemoveZodiac(id));
+            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 
         [HttpPut]
         public IActionResult UpdateZodiac(int id, UpdateZodiacRequest updateZodiac)
         {
-            _zodiacService.UpdateZodiac(id, updateZodiac);
-            return Ok();
+            try
+            {
+                return Ok(_zodiacService.UpdateZodiac(id, updateZodiac));
+            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
     } 
 }

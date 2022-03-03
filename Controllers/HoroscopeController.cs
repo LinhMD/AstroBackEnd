@@ -3,6 +3,7 @@ using AstroBackEnd.Repositories;
 using AstroBackEnd.RequestModels;
 using AstroBackEnd.RequestModels.HoroscopeRequest;
 using AstroBackEnd.Services.Core;
+using AstroBackEnd.Utilities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -16,6 +17,7 @@ namespace AstroBackEnd.Controllers
     {
         private readonly IUnitOfWork _work;
         private IHoroscopeService horoscopeService;
+        
         public HoroscopeController(IUnitOfWork _work, IHoroscopeService horoscopeService)
         {
             this._work = _work;
@@ -43,7 +45,7 @@ namespace AstroBackEnd.Controllers
                     Page = page,
                     PageSize = pageSize,
                 };
-
+               
                 FindHoroscopeRequest findHoroscopeRequest = new FindHoroscopeRequest()
                 {
                     Id = id,
@@ -80,6 +82,7 @@ namespace AstroBackEnd.Controllers
             {
                  return Ok(horoscope);
             }
+            Validation.Validate(horoscope);
             return NotFound();
         }
 

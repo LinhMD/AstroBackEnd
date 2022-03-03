@@ -29,11 +29,10 @@ namespace AstroBackEnd.Controllers
         [HttpGet("{id}")]
         public IActionResult GetNew(int id)
         {
-            //return Ok(_Service.GetNews(id));
             var result = _Service.GetNews(id);
             if (result==null)
             {
-                return BadRequest(new { StatusCodes = 404, Message = "New not found" }); // ok
+                return BadRequest(new { StatusCodes = 404, Message = "New not found" });
             }
             else
             {

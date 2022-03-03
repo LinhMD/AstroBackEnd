@@ -18,7 +18,7 @@ namespace AstroBackEnd.RequestModels.ProductRequest
         public string? Detail { get; set; }
 
         [Required]
-        public int CatagoryId { get; set; }
+        public int CategoryId { get; set; }
 
         public List<string> ImgLink { get; set; }
     }

@@ -99,7 +99,6 @@ namespace AstroBackEnd.Controllers
                 return NotFound();
             }
         }
-
         private readonly IImageService _imageService;
 
     }

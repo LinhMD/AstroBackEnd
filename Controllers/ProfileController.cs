@@ -51,17 +51,17 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet]
-        public IActionResult FindProfile(string? name, DateTime? BirthDateStart, DateTime? BirthDateEnd, string? BirthPlace, int? ZodiacId, string? sortBy, int page = 1, int pageSize = 20)
+        public IActionResult FindProfile(string? name, DateTime? birthDateStart, DateTime? birthDateEnd, string? birthPlace, int? zodiacId, string? sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
                 return Ok(_profileService.FindProfile(new FindProfileRequest() 
                 { 
                     Name = name,
-                    BirthDateStart = BirthDateStart,
-                    BirthDateEnd = BirthDateEnd,
-                    BirthPlace = BirthPlace,
-                    ZodiacId = ZodiacId,
+                    BirthDateStart = birthDateStart,
+                    BirthDateEnd = birthDateEnd,
+                    BirthPlace = birthPlace,
+                    ZodiacId = zodiacId,
                     PagingRequest = new PagingRequest()
                     {
                         Page = page,

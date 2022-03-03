@@ -11,7 +11,7 @@ using System.Security.Claims;
 using AstroBackEnd.Repositories;
 using AstroBackEnd.Models;
 using Microsoft.AspNetCore.Authorization;
-using AstroBackEnd.RequestModels.CatagoryRequest;
+using AstroBackEnd.RequestModels.CategoryRequest;
 using AstroBackEnd.ViewsModel;
 using System.ComponentModel.DataAnnotations;
 using AstroBackEnd.Utilities;
@@ -32,7 +32,7 @@ namespace AstroBackEnd.Controllers
 
         
         [HttpGet("{id}")]
-        public IActionResult GetCatagory(int id)
+        public IActionResult GetCategory(int id)
         {
             var product = _Service.GetCategory(id);
             if (product != null)
@@ -57,12 +57,10 @@ namespace AstroBackEnd.Controllers
             {
                 return BadRequest(e.Message);
             }
-            
         }
 
         [HttpGet]
-        //[Route("catagory")]
-        public IActionResult FindCatagory(int id, string name, string sortBy, int page = 1, int pageSize = 20)
+        public IActionResult FindCategory(int? id, string name, string sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
@@ -72,12 +70,12 @@ namespace AstroBackEnd.Controllers
                     Page = page,
                     PageSize = pageSize,
                 };
-                FindCategoryRequest findCatagoryRequest = new FindCategoryRequest()
+                FindCategoryRequest findCategoryRequest = new FindCategoryRequest()
                 {
                     Id=id,
                     Name = name
                 };
-                return Ok(_Service.FindCategory(findCatagoryRequest));
+                return Ok(_Service.FindCategory(findCategoryRequest));
             }
             catch (Exception ex)
             {
@@ -86,31 +84,26 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateProduct(int id, CatagoryUpdateRequest request)
+        public IActionResult UpdateCategory(int id, CategoryUpdateRequest request)
         {
-            Category updateCatagory = _Service.UpdateCategory(id, request);
+            Category updateCategory = _Service.UpdateCategory(id, request);
 
-            return Ok(updateCatagory);
+            return Ok(updateCategory);
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteCatagory(int id)
+        public IActionResult DeleteCategory(int id)
         {
-            //_Service.DeleteCatagory(id);
-            //return Ok();
-            Category catagory = _work.Categorys.Get(id);
-            if (catagory!=null)
+            Category category = _work.Categorys.Get(id);
+            if (category!=null)
             {
                 _Service.DeleteCategory(id);
-                return Ok(catagory);
+                return Ok(category);
             }
             else
             {
                 return NotFound();
             }
         }
-
-    }
-
-    
+    }   
 }

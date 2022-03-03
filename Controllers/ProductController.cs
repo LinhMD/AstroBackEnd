@@ -45,19 +45,19 @@ namespace AstroBackEnd.Controllers
 
         
         [HttpGet("master")]
-        public IActionResult GetAllProductMaster(int? Id, string? Name, string? Description, string? Detail, int? CatagoryId, int? ZodiacsId, int? ProductVariationId, string? SortBy, int Page = 1, int pageSize = 20)
+        public IActionResult GetAllProductMaster(int? id, string? name, string? description, string? detail, int? categoryId, int? zodiacsId, int? productVariationId, string? sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
                 return Ok(_Service.FindMasterProduct(new FindMasterProductRequest() { 
-                    Id = Id,
-                    CatagoryId = CatagoryId,
-                    Description = Description,
-                    Detail = Detail,
-                    Name = Name,
-                    ProductVariationId = ProductVariationId,
-                    ZodiacsId = ZodiacsId,
-                    PagingRequest = new PagingRequest() {  Page = Page, PageSize = pageSize , SortBy = SortBy }
+                    Id = id,
+                    CategoryId = categoryId,
+                    Description = description,
+                    Detail = detail,
+                    Name = name,
+                    ProductVariationId = productVariationId,
+                    ZodiacsId = zodiacsId,
+                    PagingRequest = new PagingRequest() {  Page = page, PageSize = pageSize , SortBy = sortBy }
                 
                 }).Select(p => new MasterProductView(p)));
             }
@@ -66,7 +66,6 @@ namespace AstroBackEnd.Controllers
                 return BadRequest(e.Message);
             }
         }
-
 
         [HttpPost]
         [Route("master")]

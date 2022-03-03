@@ -20,14 +20,14 @@ namespace AstroBackEnd.Repositories.Implement
         public Product GetAllProductData(int id)
         {
             return AstroData.Products.Include("MasterProduct")
-                .Include("Catagory").Include("ImgLinks").Include("Zodiacs")
+                .Include("Category").Include("ImgLinks").Include("Zodiacs")
                 .Include("ProductVariation").FirstOrDefault(p => p.Id == id);
         }
 
         public IEnumerable<Product> FindProducWithAllData<TSortBy>(Func<Product, bool> filter, Func<Product, TSortBy> sortBy, int page, int pageSize)
         {
             return AstroData.Products.Include("MasterProduct")
-                                        .Include("Catagory")
+                                        .Include("Category")
                                         .Include("ImgLinks")
                                         .Include("Zodiacs")
                                         .Include("ProductVariation")

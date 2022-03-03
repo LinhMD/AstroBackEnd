@@ -2,6 +2,7 @@
 using AstroBackEnd.Repositories;
 using AstroBackEnd.RequestModels;
 using AstroBackEnd.Services.Core;
+using AstroBackEnd.Utilities;
 using System;
 using System.Collections.Generic;
 
@@ -18,110 +19,143 @@ namespace AstroBackEnd.Services.Implement
 
         public Zodiac GetZodiac(int id)
         {
-            return _work.Zodiacs.Get(id);
+           Validation.ValidNumberThanZero(id, "Id must be than zero");
+            var zodiac = _work.Zodiacs.Get(id);
+            if(zodiac != null)
+            {
+                return zodiac;
+            }
+            else { throw new ArgumentException("This Zodiac not found"); }
         }
         public Zodiac CreateZodiac(CreateZodiacRequest request)
         {
-            Zodiac zodiac = new Zodiac()
+            Validation.ValidDayMonth(request.ZodiacDayStart, request.ZodiacMonthStart);
+            Validation.ValidDayMonth(request.ZodiacDayEnd, request.ZodiacMonthEnd);
+            try
             {
-                Name = request.ZodiacName,
-                ZodiacDayStart = request.ZodiacDayStart,
-                ZodiacMonthStart = request.ZodiacMonthStart,
-                ZodiacDayEnd = request.ZodiacDayEnd,
-                ZodiacMonthEnd = request.ZodiacMonthEnd,
-                Icon = request.ZodiacIcon,
-                MainContent = request.ZodiacMainContent,
-                Descreiption = request.ZodiacDescription
-                
-            };
-            return _work.Zodiacs.Add(zodiac);
+                Zodiac zodiac = new Zodiac()
+                {
+                    Name = request.ZodiacName,
+                    ZodiacDayStart = request.ZodiacDayStart,
+                    ZodiacMonthStart = request.ZodiacMonthStart,
+                    ZodiacDayEnd = request.ZodiacDayEnd,
+                    ZodiacMonthEnd = request.ZodiacMonthEnd,
+                    Icon = request.ZodiacIcon,
+                    MainContent = request.ZodiacMainContent,
+                    Descreiption = request.ZodiacDescription
+                };
+                return _work.Zodiacs.Add(zodiac);
+            }catch (Exception ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
         }
 
-        public string RemoveZodiac(int id)
+        public Zodiac RemoveZodiac(int id)
         {
-            Zodiac zodiac = _work.Zodiacs.Get(id);
-            _work.Zodiacs.Remove(zodiac);
-            return zodiac.Name;
+            Validation.ValidNumberThanZero(id, "Id must be than zero");
+            var zodiac = _work.Zodiacs.Get(id);
+            if (zodiac != null)
+            {
+                _work.Zodiacs.Remove(zodiac);
+                return zodiac;
+            }
+            else { throw new ArgumentException("This Zodiac not found"); }    
         }
 
         public Zodiac UpdateZodiac(int id, UpdateZodiacRequest updateZodiac)
         {
-            var zodiac = _work.Zodiacs.Get(id);
-            if (zodiac.Name != null)
+            Validation.ValidNumberThanZero(id, "Id must be than zero");
+            Zodiac zodiac = _work.Zodiacs.Get(id);
+            if(zodiac != null)
             {
-                zodiac.Name = updateZodiac.ZodiacName;
+                if (updateZodiac.ZodiacName != null)
+                {
+                    zodiac.Name = updateZodiac.ZodiacName;
+                }
+                if (updateZodiac.ZodiacDayStart > 0)
+                {
+                    zodiac.ZodiacDayStart = updateZodiac.ZodiacDayStart;
+                }
+                if (updateZodiac.ZodiacMonthStart > 0)
+                {
+                    zodiac.ZodiacMonthStart = updateZodiac.ZodiacMonthStart;
+                }
+                if (updateZodiac.ZodiacDayEnd > 0)
+                {
+                    zodiac.ZodiacDayEnd = updateZodiac.ZodiacDayEnd;
+                }
+                if (updateZodiac.ZodiacMonthEnd > 0)
+                {
+                    zodiac.ZodiacMonthEnd = updateZodiac.ZodiacMonthEnd;
+                }
+                if (updateZodiac.ZodiacDescription != null)
+                {
+                    zodiac.Descreiption = updateZodiac.ZodiacDescription;
+                }
+                if (updateZodiac.ZodiacIcon != null)
+                {
+                    zodiac.Icon = updateZodiac.ZodiacIcon;
+                }
+                if (updateZodiac.ZodiacMainContent != null)
+                {
+                    zodiac.MainContent = updateZodiac.ZodiacMainContent;
+                }
+                Validation.ValidDayMonth(zodiac.ZodiacDayStart, zodiac.ZodiacMonthStart);
+                Validation.ValidDayMonth(zodiac.ZodiacDayEnd, zodiac.ZodiacMonthEnd);
+                return zodiac;
             }
-            if (zodiac.ZodiacDayStart > 0)
+            else
             {
-                zodiac.ZodiacDayStart = updateZodiac.ZodiacDayStart;
+                throw new ArgumentException("This Zodiac not found");
             }
-            if (zodiac.ZodiacMonthStart > 0)
-            {
-                zodiac.ZodiacMonthStart = updateZodiac.ZodiacMonthStart;
-            }
-            if (zodiac.ZodiacDayEnd > 0)
-            {
-                zodiac.ZodiacDayEnd = updateZodiac.ZodiacDayEnd;
-            }
-            if (zodiac.ZodiacMonthEnd > 0)
-            {
-                zodiac.ZodiacMonthEnd = updateZodiac.ZodiacMonthEnd;
-            }
-            if (zodiac.Descreiption != null)
-            {
-                zodiac.Descreiption = updateZodiac.ZodiacDescription;
-            }
-            if (zodiac.Icon != null)
-            {
-                zodiac.Icon = updateZodiac.ZodiacIcon;
-            }
-            if(zodiac.MainContent != null)
-            {
-                zodiac.MainContent = updateZodiac.ZodiacMainContent;
-            }
-
-            return zodiac;
         }
 
         public IEnumerable<Zodiac> FindZodiac(FindZodiacRequest request)
         {
-            Func<Zodiac, bool> filter = p =>
+            if (request.Id < 0) { throw new ArgumentException("Id must be equal or than zero"); }
+            try
             {
-                bool checkName = true;
-                bool checkId = true;
-                if(request.Id > 0)
+                Func<Zodiac, bool> filter = p =>
                 {
-                    checkId = p.Id == request.Id;
-                }
-                if (!string.IsNullOrWhiteSpace(request.Name))
-                {
-                    if (!string.IsNullOrWhiteSpace(p.Name)){
-                        checkName = p.Name.Contains(request.Name);
-                    }
-                    else
+                    bool checkName = true;
+                    bool checkId = true;
+                    if (request.Id > 0)
                     {
-                       checkName = false;
+                        checkId = p.Id == request.Id;
                     }
-                    
-                }
-                return checkName && checkId;
-            };
-            Console.WriteLine(request.PagingRequest.PageSize);
+                    if (!string.IsNullOrWhiteSpace(request.Name))
+                    {
+                        if (!string.IsNullOrWhiteSpace(p.Name))
+                        {
+                            checkName = p.Name.Contains(request.Name);
+                        }
+                        else
+                        {
+                            checkName = false;
+                        }
 
-            if (request.PagingRequest != null)
-            {
-                switch (request.PagingRequest.SortBy)
+                    }
+                    return checkName && checkId;
+                };
+                Validation.ValidNumberThanZero(request.PagingRequest.Page, "Page must be than zero");
+                Validation.ValidNumberThanZero(request.PagingRequest.PageSize, "PageSize must be than zero");
+                if (request.PagingRequest != null)
                 {
-                    case "Name":
-                        return _work.Zodiacs.FindPaging(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
-                    default:
-                        return _work.Zodiacs.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                    switch (request.PagingRequest.SortBy)
+                    {
+                        case "Name":
+                            return _work.Zodiacs.FindPaging(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                        default:
+                            return _work.Zodiacs.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                    }
+                }
+                else
+                {
+                    return _work.Zodiacs.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
                 }
             }
-            else
-            {
-                return _work.Zodiacs.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
-            }
+            catch(Exception ex) { throw new ArgumentException("ZodiacService : " + ex.Message); }
         }
 
         public void Dispose()

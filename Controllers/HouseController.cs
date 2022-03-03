@@ -49,8 +49,7 @@ namespace AstroBackEnd.Controllers
                 MainContent = mainContent,
                 PagingRequest = pagingRequest,
 
-            };
-            
+            }; 
             return Ok(houseService.FindHouse(request));
         }
 
