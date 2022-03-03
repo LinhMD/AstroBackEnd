@@ -77,25 +77,25 @@ namespace AstroBackEnd.Controllers
             }
         }
         [HttpGet]
-        public IActionResult FindOrder( int? Status, 
-                                        DateTime? OrderTimeStart, DateTime? OrderTimeEnd,
-                                        double? TotalCostStart, double? TotalCostEnd, 
-                                        string? DeliveryAdress, 
-                                        string? DeleveryPhone, 
-                                        int? UserId,
+        public IActionResult FindOrder( int? status, 
+                                        DateTime? orderTimeStart, DateTime? orderTimeEnd,
+                                        double? totalCostStart, double? totalCostEnd, 
+                                        string? deliveryAdress, 
+                                        string? deleveryPhone, 
+                                        int? userId,
                                         string? sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
                 var orders = _orderService.FindOrder(new FindOrderRequest() { 
-                    Status = Status,
-                    OrderTimeEnd = OrderTimeEnd,
-                    OrderTimeStart = OrderTimeStart,
-                    TotalCostEnd = TotalCostEnd,
-                    TotalCostStart = TotalCostStart,
-                    DeliveryAdress = DeliveryAdress,
-                    DeleveryPhone = DeleveryPhone,
-                    UserId = UserId,
+                    Status = status,
+                    OrderTimeEnd = orderTimeEnd,
+                    OrderTimeStart = orderTimeStart,
+                    TotalCostEnd = totalCostEnd,
+                    TotalCostStart = totalCostStart,
+                    DeliveryAdress = deliveryAdress,
+                    DeleveryPhone = deleveryPhone,
+                    UserId = userId,
 
                     PagingRequest = new RequestModels.PagingRequest()
                     {

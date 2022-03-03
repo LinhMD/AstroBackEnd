@@ -57,12 +57,10 @@ namespace AstroBackEnd.Controllers
             {
                 return BadRequest(e.Message);
             }
-            
         }
 
         [HttpGet]
-        //[Route("catagory")]
-        public IActionResult FindCatagory(int id, string name, string sortBy, int page = 1, int pageSize = 20)
+        public IActionResult FindCatagory(int? id, string name, string sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
@@ -96,8 +94,6 @@ namespace AstroBackEnd.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteCatagory(int id)
         {
-            //_Service.DeleteCatagory(id);
-            //return Ok();
             Category catagory = _work.Categorys.Get(id);
             if (catagory!=null)
             {
@@ -109,8 +105,5 @@ namespace AstroBackEnd.Controllers
                 return NotFound();
             }
         }
-
-    }
-
-    
-}
+    }   
+}}

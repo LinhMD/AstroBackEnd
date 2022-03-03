@@ -30,7 +30,6 @@ namespace AstroBackEnd.Controllers
             this._work = work;
         }
 
-        
         [HttpGet("{id}")]
         public IActionResult GetCatagory(int id)
         {
@@ -56,12 +55,10 @@ namespace AstroBackEnd.Controllers
             catch (Exception e)
             {
                 return BadRequest(e.Message);
-            }
-            
+            }  
         }
 
         [HttpGet]
-        //[Route("catagory")]
         public IActionResult FindCatagory(int id, string name, string sortBy, int page = 1, int pageSize = 20)
         {
             try
@@ -107,8 +104,5 @@ namespace AstroBackEnd.Controllers
                 return NotFound();
             }
         }
-
-    }
-
-    
+    } 
 }
