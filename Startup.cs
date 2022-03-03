@@ -134,9 +134,9 @@ namespace AstroBackEnd
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
 
-            /*FirebaseApp.Create(new AppOptions()
+            FirebaseApp.Create(new AppOptions()
             {
-                Credential = GoogleCredential.FromFile(@"C:\Users\USER\Desktop\astrology-a5858-firebase-adminsdk-r9xmf-ac88ef956c.json"),
+                Credential = GoogleCredential.FromFile(Configuration["FireBaseConfig"]),
             });
 
             app.UseDeveloperExceptionPage();
