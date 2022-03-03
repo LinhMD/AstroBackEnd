@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AstroBackEnd.RequestModels.CatagoryRequest;
+using AstroBackEnd.RequestModels.CategoryRequest;
 
 namespace AstroBackEnd.Services.Core
 {
@@ -19,7 +19,7 @@ namespace AstroBackEnd.Services.Core
 
         public Category DeleteCategory(int id);
 
-        public Category UpdateCategory(int id, CatagoryUpdateRequest request);
+        public Category UpdateCategory(int id, CategoryUpdateRequest request);
 
         public Category CreateCategory(CategoryCreateRequest request);
     }
