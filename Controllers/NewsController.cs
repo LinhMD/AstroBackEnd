@@ -9,23 +9,21 @@ using AstroBackEnd.Data;
 using AstroBackEnd.Models;
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.RequestModels.NewRequest;
+using AstroBackEnd.RequestModels;
+using AstroBackEnd.Repositories;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/news")]
     [ApiController]
     public class NewsController : ControllerBase
     {
-        private readonly INewsService _Service;
-
-        public NewsController(INewsService newService)
+        private INewsService _Service;
+        private IUnitOfWork _work;
+        public NewsController(INewsService service, IUnitOfWork work)
         {
-            this._Service = newService;
-        }
-        [HttpGet]
-        public IActionResult GetAllNew()
-        {
-            return Ok(_Service.GetAllNew());
+            this._Service = service;
+            this._work = work;
         }
 
         [HttpGet("{id}")]
@@ -58,7 +56,7 @@ namespace AstroBackEnd.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public IActionResult UpdateNew(int id, [FromBody] NewsUpdateRequest request)
         {
             
@@ -74,18 +72,44 @@ namespace AstroBackEnd.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("findNew")]
-        public IActionResult FindNew([FromBody] FindNewsRequest request)
+        [HttpGet]
+        public IActionResult FindNews(string title, string description, string tag,
+            string sortBy, int page = 1, int pageSize = 20)
         {
-            var result = _Service.FindNews(request);
-            if (result == null || !result.Any() )
+            try
             {
-                return BadRequest(new { StatusCodes = 404, Message = "Can't find" });
+                PagingRequest pagingRequest = new PagingRequest()
+                {
+                    SortBy = sortBy,
+                    Page = page,
+                    PageSize = pageSize,
+                };
+                FindNewsRequest findNewsRequest = new FindNewsRequest()
+                {
+                    Title = title,
+                    Description = description,
+                    Tag =tag
+                };
+                return Ok(_Service.FindNews(findNewsRequest));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteNews(int id)
+        {
+            News news = _work.News.Get(id);
+            if (news != null)
+            {
+                _Service.DeleteNew(id);
+                return Ok(news);
             }
             else
             {
-                return Ok(new { StatusCode = 200, message = "The request has been completed successfully", data = result });
+                return NotFound();
             }
         }
 

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/profile")]
     [ApiController]
     public class ProfileController : ControllerBase
     {
@@ -74,14 +74,11 @@ namespace AstroBackEnd.Controllers
             {
                 return BadRequest(e.Message);
             }
-            
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public IActionResult UpdateProfile(int id, CreateProfileRequest request)
         {
-           
-
             try
             {
                 Profile updateProfile = _profileService.UpdateProfile(id, request);
@@ -105,8 +102,7 @@ namespace AstroBackEnd.Controllers
             catch (Exception e)
             {
                 return BadRequest(e.Message);
-            }
-            
+            } 
         }
     }
 }

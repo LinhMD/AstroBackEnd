@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/order")]
     [ApiController]
     public class OrderController : ControllerBase
     {
@@ -34,7 +34,7 @@ namespace AstroBackEnd.Controllers
                 return BadRequest(e.Message);
             }
         }
-        [HttpPut("{id}")]
+        [HttpPut]
         public IActionResult UpdateOrder(int id, CreateOrderRequest request)
         {
             try

@@ -23,12 +23,16 @@ namespace AstroBackEnd.Repositories
             Orders = new OrderRepository(dataContext);
             OrderDetails = new OrderDetailRepository(dataContext);
             Products = new ProductRepository(dataContext);
-            Catagorys = new CatagoryRepository(dataContext);
+            Categorys = new CategoryRepository(dataContext);
             Image = new ImageRepository(dataContext);
             Zodiacs = new ZodiacRepository(dataContext);
             Houses = new HouseRepository(dataContext);
             ZodiacHouses = new ZodiacHouseRepository(dataContext);
-
+            Quotes = new QuoteRepository(dataContext);
+            Horoscopes = new HoroscopeRepository(dataContext);
+            Planets = new PlanetRepository(dataContext);
+            PlanetZodiacs = new PlanetZodiacRepository(dataContext);
+            PlanetHouses = new PlanetHouseRepository(dataContext);
 
         }
 
@@ -46,7 +50,7 @@ namespace AstroBackEnd.Repositories
 
         public IOrderDetailRepository OrderDetails { get; }
 
-        public ICatagoryRepository Catagorys { get; }
+        public ICategoryRepository Categorys { get; }
 
 
         public IImageRepository Image { get; }
@@ -54,7 +58,24 @@ namespace AstroBackEnd.Repositories
         public IZodiacRepository Zodiacs { get; }
 
         public IHouseRepository Houses { get; }
+
         public IZodiacHouseRepository ZodiacHouses { get; }
+
+
+        public IHoroscopeRepository Horoscopes { get; }
+
+        public IQuoteRepository Quotes { get; }
+
+        public IPlanetRepository Planets { get; }
+
+        public IPlanetZodiacRepository PlanetZodiacs { get; }
+
+        public IPlanetHouseRepository PlanetHouses { get; }
+
+
+
+        public IZodiacRepository Zodiac { get; }
+
 
 
         public int Complete()

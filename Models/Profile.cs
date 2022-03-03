@@ -17,6 +17,10 @@ namespace AstroBackEnd.Models
 
         public string ProfilePhoto { get; set; }
 
+        public double Longitude { get; set; }
+
+        public double Latitude { get; set; }
+
         public Zodiac Zodiac { get; set; }
 
         public BirthChart BirthChart { get; set; }

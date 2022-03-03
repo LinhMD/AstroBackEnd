@@ -47,36 +47,15 @@ namespace AstroBackEnd.Services.Implement
                 
                 if(request.Id > 0 )
                 {
-                    if (p.Id > 0)
-                    {
-                        checkId = (request.Id == p.Id);
-                    }
-                    else
-                    {
-                        checkId = false;
-                    }
+                    checkId = request.Id == p.Id;
                 }
                 if(request.HouseId > 0)
                 {
-                    if(p.HouseId > 0)
-                    {
-                        checkHouseId = (request.HouseId == p.HouseId);  
-                    }
-                    else
-                    {
-                        checkHouseId= false;
-                    }
+                    checkHouseId = request.HouseId == p.HouseId;  
                 }
                 if(request.ZodiacId > 0)
                 {
-                    if (p.ZodiacId > 0)
-                    {
-                        checkZodiacId = (request.ZodiacId == p.ZodiacId);
-                    }
-                    else
-                    {
-                        checkZodiacId = false;
-                    }
+                    checkZodiacId = request.ZodiacId == p.ZodiacId;
                 }
                 if (!string.IsNullOrWhiteSpace(request.Content))
                 {
@@ -108,45 +87,23 @@ namespace AstroBackEnd.Services.Implement
                     default:
                         return _work.ZodiacHouses.FindPaging(filter, p => p.Id, pagingRequest.Page, pagingRequest.PageSize);
                 }
-            }
-
-           
+            } 
         }
-
         public ZodiacHouse UpdateZodiacHouse(int id, UpdateZodiacHouseRequest request)
         {
             ZodiacHouse zodiacHouse = _work.ZodiacHouses.Get(id);
-            if(zodiacHouse == null)
+            if(zodiacHouse != null)
             {
-                return null;
-            }
-            else
-            {
-                if(request.ZodiacId > 0)
+                if (request.ZodiacId > 0)
                 {
                     Zodiac zodiac = _work.Zodiacs.Get(request.ZodiacId);
-                    if(zodiac != null)
-                    {
-                        zodiacHouse.Zodiac = zodiac;
-                    }
-                    else
-                    {
-                        zodiacHouse.Zodiac = null;
-                    }
+                    zodiacHouse.Zodiac = zodiac != null ? zodiac : null;
                     zodiacHouse.ZodiacId = request.ZodiacId;
-
                 }
                 if (zodiacHouse.HouseId > 0)
                 {
                     House house = _work.Houses.Get(request.HouseId);
-                    if (house != null)
-                    {
-                        zodiacHouse.House = house;
-                    }
-                    else
-                    {
-                        zodiacHouse.House = null;
-                    }
+                    zodiacHouse.House = house != null ? house : null;
                     zodiacHouse.ZodiacId = request.ZodiacId;
                     zodiacHouse.HouseId = request.HouseId;
                 }
@@ -154,10 +111,13 @@ namespace AstroBackEnd.Services.Implement
                 {
                     zodiacHouse.Content = request.Content;
                 }
+                return zodiacHouse;
             }
-            return zodiacHouse;
+            else
+            {
+                return null;
+            }  
         }
-
         public ZodiacHouse DeleteZodiacHouse(int id)
         {
             ZodiacHouse zodiacHouse = _work.ZodiacHouses.Get(id);
@@ -171,7 +131,6 @@ namespace AstroBackEnd.Services.Implement
                 return null;
             }
         }
-
         public void Dispose()
         {
             this._work.Complete();

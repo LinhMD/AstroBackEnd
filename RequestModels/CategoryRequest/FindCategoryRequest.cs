@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace AstroBackEnd.RequestModels.CatagoryRequest
 {
-    public class CatagoryUpdateRequest
+    public class FindCategoryRequest
     {
-        
-
+        public int? Id { get; set; }
         public string Name { get; set; }
-        
+
+        public PagingRequest? PagingRequest { get; set; }
     }
 }

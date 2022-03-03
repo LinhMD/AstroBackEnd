@@ -2,6 +2,7 @@
 using AstroBackEnd.Models;
 using AstroBackEnd.Repositories;
 using AstroBackEnd.RequestModels;
+using AstroBackEnd.Utilities;
 using FirebaseAdmin.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,18 +19,21 @@ using System.Threading.Tasks;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/login")]
     [ApiController]
     public class Login : ControllerBase
     {
-        
+
         private IConfiguration _config;
 
-        private IUnitOfWork _unitOfWork;
-        public Login(IConfiguration config, IUnitOfWork unitOfWork)
+        private IUnitOfWork _work;
+
+        private FireabaseUtility _fbUtil;
+        public Login(IConfiguration config, IUnitOfWork unitOfWork, FireabaseUtility utility)
         {
             this._config = config;
-            this._unitOfWork = unitOfWork;
+            this._work = unitOfWork;
+            this._fbUtil = utility;
         }
 
         [HttpGet]
@@ -40,14 +44,45 @@ namespace AstroBackEnd.Controllers
             return new Random().Next();
         }
 
-       /** [HttpGet("firebase")]
-        public async Task<IActionResult> getFireBaseUser()
+        [HttpPost("firebase")]
+        public async Task<IActionResult> getFireBaseUser([FromBody] FireBaseLoginRequest request)
         {
-            UserRecord userRecord = await FirebaseAuth.DefaultInstance.GetUserAsync("xy6kJ9hYfyU7VYrW8S3AU3wYM4r2");
-            return Ok(userRecord);
-        }**/
+            try
+            {
+                UserRecord userRecord = await _fbUtil.getFireBaseUserByToken(request.Token);
+                string uid = userRecord.Uid;
+                User user = _work.Users.Find(u => u.UID == uid, u => u.Id).FirstOrDefault();
 
-        // POST api/<Login>
+                if(user == null)
+                {
+                     user = this.SignUp(userRecord);
+                }
+                
+                return Ok(Generate(user));
+
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+        }
+
+        private User SignUp(UserRecord userRecord)
+        {
+            var user = new User()
+            {
+                UID = userRecord.Uid,
+                UserName = userRecord.DisplayName,
+                Email = userRecord.Email,
+                Role = _work.Roles.Get(2),
+                PhoneNumber = userRecord.PhoneNumber,
+                Status = 1
+            };
+
+            return _work.Users.Add(user);
+        }
+
         [HttpPost]
         public IActionResult Post([FromBody] UserLogin userLogin)
         {
@@ -82,12 +117,10 @@ namespace AstroBackEnd.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-
-        //TODO: implement login
         private User Authenticate(UserLogin userLogin)
         {
-            User user = _unitOfWork.Users.Find(u => u.UserName == userLogin.UserName, u => u.UserName).FirstOrDefault();
-            user = _unitOfWork.Users.GetAllUserData(user.Id);
+            User user = _work.Users.Find(u => u.UserName == userLogin.UserName, u => u.UserName).FirstOrDefault();
+            user = _work.Users.GetAllUserData(user.Id);
             return user;
         }
 

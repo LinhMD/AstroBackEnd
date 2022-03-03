@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/detail")]
     [ApiController]
     public class OrderDetailController : ControllerBase
     {
@@ -87,7 +87,7 @@ namespace AstroBackEnd.Controllers
             return Ok(detail);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public IActionResult UpdateOrderDetail(int id, OrderDetailUpdateRequest request)
         {
             try
@@ -101,7 +101,7 @@ namespace AstroBackEnd.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult DeleteOrderDetail(int id)
         {
             try

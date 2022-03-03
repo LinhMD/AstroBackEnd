@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace AstroBackEnd.RequestModels.CatagoryRequest
 {
-    public class CatagoryCreateRequest
+    public class CatagoryUpdateRequest
     {
         public string Name { get; set; }
+        
     }
 }

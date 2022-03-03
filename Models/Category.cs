@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AstroBackEnd.Models
 {
-    public class Catagory
+    public class Category
     {
         public int Id { get; set; }
 

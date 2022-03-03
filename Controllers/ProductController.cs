@@ -83,7 +83,7 @@ namespace AstroBackEnd.Controllers
 
         }
 
-        [HttpPut("master/{id}")]
+        [HttpPut("master")]
         public IActionResult UpdateProduct(int id, MasterProductsUpdateRequest request)
         {
             try
@@ -97,7 +97,6 @@ namespace AstroBackEnd.Controllers
                 
                 return BadRequest(e.StackTrace);
             }
-           
         }
 
         [HttpGet("variant/{id}")]
@@ -105,7 +104,6 @@ namespace AstroBackEnd.Controllers
         {
             var product = _Service.GetProductVariant(id);
             return product == null ? NotFound("Product variant id {" + id + "} not found!!") : Ok(new ProductVariationView(product));
-
         }
 
         [HttpGet("variant")]
@@ -139,10 +137,9 @@ namespace AstroBackEnd.Controllers
             {
                 return BadRequest(e.Message);
             }
-
         }
 
-        [HttpPut("variant/{id}")]
+        [HttpPut("variant")]
         public IActionResult UpdateProductVariant(int id, ProductVariantUpdateRequest request)
         {
             try
@@ -154,7 +151,6 @@ namespace AstroBackEnd.Controllers
             {
                 return BadRequest(e);
             }
-
         }
 
     }

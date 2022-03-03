@@ -40,7 +40,7 @@ namespace AstroBackEnd.Migrations
                     b.ToTable("BirthCharts");
                 });
 
-            modelBuilder.Entity("AstroBackEnd.Models.Catagory", b =>
+            modelBuilder.Entity("AstroBackEnd.Models.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -52,7 +52,7 @@ namespace AstroBackEnd.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Catagories");
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("AstroBackEnd.Models.Horoscope", b =>
@@ -313,11 +313,12 @@ namespace AstroBackEnd.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CatagoryId")
+                    b.Property<int?>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Color")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -335,17 +336,19 @@ namespace AstroBackEnd.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<double?>("Price")
                         .HasColumnType("float");
 
                     b.Property<string>("Size")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CatagoryId");
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("MasterProductId");
 
@@ -364,6 +367,12 @@ namespace AstroBackEnd.Migrations
 
                     b.Property<string>("BirthPlace")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -429,6 +438,9 @@ namespace AstroBackEnd.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
@@ -437,6 +449,9 @@ namespace AstroBackEnd.Migrations
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
+
+                    b.Property<string>("UID")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
                         .IsRequired()
@@ -622,15 +637,15 @@ namespace AstroBackEnd.Migrations
 
             modelBuilder.Entity("AstroBackEnd.Models.Product", b =>
                 {
-                    b.HasOne("AstroBackEnd.Models.Catagory", "Catagory")
+                    b.HasOne("AstroBackEnd.Models.Category", "Category")
                         .WithMany()
-                        .HasForeignKey("CatagoryId");
+                        .HasForeignKey("CategoryId");
 
                     b.HasOne("AstroBackEnd.Models.Product", "MasterProduct")
                         .WithMany("ProductVariation")
                         .HasForeignKey("MasterProductId");
 
-                    b.Navigation("Catagory");
+                    b.Navigation("Category");
 
                     b.Navigation("MasterProduct");
                 });

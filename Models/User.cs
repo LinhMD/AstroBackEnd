@@ -17,10 +17,15 @@ namespace AstroBackEnd.Models
 
         public int Id { get; set; }
 
+
         [Required]
         [MaxLength(255)]
         public string UserName { set; get; }
 
+
+        public string UID { get; set; }
+
+        public string? Email { get; set; }
 
         [Required] 
         public Role Role { get; set; }

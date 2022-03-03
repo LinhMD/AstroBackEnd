@@ -2,11 +2,17 @@
 using AstroBackEnd.Models;
 using AstroBackEnd.Repositories.Core;
 
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
 namespace AstroBackEnd.Repositories.Implement
 {
-    public class ZodiacRepository : Repository<Zodiac>, IZodiacRepository
+    public class ZodiacRepository : Repository<Zodiac> ,IZodiacRepository
     {
-        public ZodiacRepository(Data.AstroDataContext dataContext) : base(dataContext)
+        public ZodiacRepository(AstroDataContext dataContext) : base(dataContext)
         {
 
         }

@@ -13,42 +13,28 @@ using AstroBackEnd.Models;
 using Microsoft.AspNetCore.Authorization;
 using AstroBackEnd.RequestModels.CatagoryRequest;
 using AstroBackEnd.ViewsModel;
+using System.ComponentModel.DataAnnotations;
+using AstroBackEnd.Utilities;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/catagory")]
     [ApiController]
     public class CatagoryController : ControllerBase
     {
-        private ICatagorysService _Service;
+        private ICategorysService _Service;
         private IUnitOfWork _work;
-        public CatagoryController(ICatagorysService service, IUnitOfWork work)
+        public CatagoryController(ICategorysService service, IUnitOfWork work)
         {
             this._Service = service;
             this._work = work;
         }
 
-        [HttpGet]
-        public IActionResult GetAllCatagory()
-        {
-            Func<Catagory, ViewsModel.CatagoryView> maping = catagory =>
-            {
-                return new CatagoryView()
-                {
-                    Id = catagory.Id,
-                    //MasterProductId = product.MasterProduct.Id,
-                    Name = catagory.Name
-
-                };
-
-            };
-            return Ok(_Service.GetAllCatagory().Select(maping));
-        }
-
+        
         [HttpGet("{id}")]
         public IActionResult GetCatagory(int id)
         {
-            var product = _Service.GetCatagory(id);
+            var product = _Service.GetCategory(id);
             if (product != null)
             {
                 return Ok(product);
@@ -60,35 +46,66 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateProduct([FromBody] CatagoryCreateRequest request)
+        public IActionResult CreateProduct([FromBody] CategoryCreateRequest request)
         {
-            return Ok(_Service.CreateCatagory(request));
-        }
-
-        [HttpPost]
-        [Route("findProduct")]
-        public IActionResult FindCatagory(FindCatagoryRequest request)
-        {
-            Func<Catagory, ViewsModel.CatagoryView> maping = catagory =>
+            try
             {
-                return new CatagoryView()
-                {
-                    Id = catagory.Id,
-                    //MasterProductId = product.MasterProduct.Id,
-                    Name = catagory.Name
-                    
-                };
-
-            };
-            return Ok(_Service.FindCatagory(request).Select(maping));
+                Validation.Validate(request);
+                return Ok(_Service.CreateCategory(request));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            
         }
 
-        [HttpPut("{id}")]
+        [HttpGet]
+        //[Route("catagory")]
+        public IActionResult FindCatagory(int id, string name, string sortBy, int page = 1, int pageSize = 20)
+        {
+            try
+            {
+                PagingRequest pagingRequest = new PagingRequest()
+                {
+                    SortBy = sortBy,
+                    Page = page,
+                    PageSize = pageSize,
+                };
+                FindCategoryRequest findCatagoryRequest = new FindCategoryRequest()
+                {
+                    Id=id,
+                    Name = name
+                };
+                return Ok(_Service.FindCategory(findCatagoryRequest));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut]
         public IActionResult UpdateProduct(int id, CatagoryUpdateRequest request)
         {
-            Catagory updateCatagory = _Service.UpdateCatagory(id, request);
+            Category updateCatagory = _Service.UpdateCategory(id, request);
 
             return Ok(updateCatagory);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteCatagory(int id)
+        {
+            Category catagory = _work.Categorys.Get(id);
+            if (catagory!=null)
+            {
+                _Service.DeleteCategory(id);
+                return Ok(catagory);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
     }

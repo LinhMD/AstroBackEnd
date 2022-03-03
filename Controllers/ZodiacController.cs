@@ -23,14 +23,14 @@ namespace AstroBackEnd.Controllers
             this._zodiacService = zodiacService;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("id")]
         public IActionResult GetZodiac(int id)
         {
             return Ok(_zodiacService.GetZodiac(id));
         }
 
         [HttpGet]
-        public IActionResult FindZodiac(string name, string sortBy, int page, int pageSize)
+        public IActionResult FindZodiac(int id, string name, string sortBy, int page = 1, int pageSize = 20)
         {
             PagingRequest pagingRequest = new PagingRequest()
             {
@@ -41,6 +41,7 @@ namespace AstroBackEnd.Controllers
 
             FindZodiacRequest request = new FindZodiacRequest()
             {
+                Id = id,
                 Name = name,
                 PagingRequest = pagingRequest,
             };
@@ -53,15 +54,11 @@ namespace AstroBackEnd.Controllers
             return Ok(_zodiacService.CreateZodiac(request));
         }
 
-
-
         [HttpDelete("{id}")]
         public IActionResult ReomoveZodiac(int id)
         {
             return Ok(_zodiacService.RemoveZodiac(id));
         }
-
-
 
         [HttpPut]
         public IActionResult UpdateZodiac(int id, UpdateZodiacRequest updateZodiac)
@@ -69,13 +66,5 @@ namespace AstroBackEnd.Controllers
             _zodiacService.UpdateZodiac(id, updateZodiac);
             return Ok();
         }
-
-
-
-
-    }
-
-
-
-    
+    } 
 }

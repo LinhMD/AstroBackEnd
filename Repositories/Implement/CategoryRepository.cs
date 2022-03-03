@@ -10,18 +10,18 @@ using System.Threading.Tasks;
 namespace AstroBackEnd.Repositories.Implement
 {
 
-    public class CatagoryRepository : Repository<Catagory>, ICatagoryRepository
+    public class CategoryRepository : Repository<Category>, ICategoryRepository
     {
-        public CatagoryRepository(AstroDataContext dataContext) : base(dataContext)
+        public CategoryRepository(AstroDataContext dataContext) : base(dataContext)
         {
 
         }
 
         private AstroDataContext AstroData { get { return base._context as AstroDataContext; } }
 
-        public Catagory GetAllCatagoryData(int id)
+        public Category GetAllCategoryData(int id)
         {
-            return AstroData.Catagories.First(u => u.Id == id);
+            return AstroData.Categories.First(u => u.Id == id);
         }
     }
 }

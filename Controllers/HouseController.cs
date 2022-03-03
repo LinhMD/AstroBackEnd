@@ -24,14 +24,14 @@ namespace AstroBackEnd.Controllers
             this._work = _work;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("id")]
         public IActionResult GetHouse(int id)
         {
             return Ok(houseService.GetHouse(id));
         }
 
         [HttpGet]
-        public IActionResult FindHouses(int id, string name, string title, string description, string tag, string mainContent, string sortBy, int page, int pageSize)
+        public IActionResult FindHouses(int id, string name, string title, string description, string tag, string mainContent, string sortBy, int page = 1, int pageSize = 20)
         {
             PagingRequest pagingRequest = new PagingRequest()
             {
@@ -60,7 +60,7 @@ namespace AstroBackEnd.Controllers
             return Ok(houseService.CreateHouse(request));
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult DeleteHouse(int id)
         {
             return Ok(houseService.DeleteHouse(id));

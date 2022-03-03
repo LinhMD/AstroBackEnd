@@ -21,7 +21,7 @@ namespace AstroBackEnd.Controllers
             this._work = _work;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("id")]
         public IActionResult GetZodiacHouse(int id)
         {
             return Ok(iZodiacHouseService.GetZodiacHouse(id));
@@ -34,7 +34,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet]
-        public IActionResult FindZodiacHouse(int id, int zodiacId, int houseId, string content, string sortBy, int page, int pagaSize)
+        public IActionResult FindZodiacHouse(int id, int zodiacId, int houseId, string content, string sortBy, int page = 1, int pagaSize = 20)
         {
             PagingRequest pagingRequest = new PagingRequest()
             {
@@ -60,7 +60,7 @@ namespace AstroBackEnd.Controllers
             return Ok(iZodiacHouseService.UpdateZodiacHouse(id, request));
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult DeleteZodiacHouse(int id)
         {
             return Ok(iZodiacHouseService.DeleteZodiacHouse(id));
