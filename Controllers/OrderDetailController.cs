@@ -24,30 +24,30 @@ namespace AstroBackEnd.Controllers
 
 
         [HttpGet]
-        public IActionResult FindOrderDetail(   int? OrderId, 
-                                                string? ProductName, 
-                                                double? TotalPriceStart,
-                                                double? TotalPriceEnd, 
-                                                int? QuantityStart,
-                                                int? QuantityEnd, 
-                                                string? ReviewMessage, 
-                                                DateTime? ReviewDateStart, 
-                                                DateTime? ReviewDateEnd,
+        public IActionResult FindOrderDetail(   int? orderId, 
+                                                string? productName, 
+                                                double? totalPriceStart,
+                                                double? totalPriceEnd, 
+                                                int? quantityStart,
+                                                int? quantityEnd, 
+                                                string? reviewMessage, 
+                                                DateTime? reviewDateStart, 
+                                                DateTime? reviewDateEnd,
                                                 string? sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
                 IEnumerable<Models.OrderDetail> details = _detailService.FindOrderDetail(new FindOrderDetailRequest() 
                 { 
-                    OrderId = OrderId,
-                    ProductName = ProductName,
-                    TotalPriceStart = TotalPriceStart,
-                    TotalPriceEnd = TotalPriceEnd,
-                    QuantityStart = QuantityStart,
-                    QuantityEnd = QuantityEnd,
-                    ReviewMessage = ReviewMessage,
-                    ReviewDateStart= ReviewDateStart,
-                    ReviewDateEnd = ReviewDateEnd,
+                    OrderId = orderId,
+                    ProductName = productName,
+                    TotalPriceStart = totalPriceStart,
+                    TotalPriceEnd = totalPriceEnd,
+                    QuantityStart = quantityStart,
+                    QuantityEnd = quantityEnd,
+                    ReviewMessage = reviewMessage,
+                    ReviewDateStart= reviewDateStart,
+                    ReviewDateEnd = reviewDateEnd,
                     Paging = new PagingRequest()
                     {
                         Page = page,

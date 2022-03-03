@@ -123,7 +123,5 @@ namespace AstroBackEnd.Controllers
             user = _work.Users.GetAllUserData(user.Id);
             return user;
         }
-
-
     }
 }

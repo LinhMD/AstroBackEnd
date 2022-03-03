@@ -10,7 +10,7 @@
 
         public string Description { get; set; }
 
-        public string? Tag { get; set; }
+        public string Tag { get; set; }
 
         public string MainContent { get; set; }
     }

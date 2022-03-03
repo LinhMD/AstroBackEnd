@@ -10,7 +10,7 @@ namespace AstroBackEnd.Services.Core
 
         public Zodiac CreateZodiac(CreateZodiacRequest request);
 
-        public string RemoveZodiac(int id);
+        public Zodiac RemoveZodiac(int id);
 
         public Zodiac UpdateZodiac(int id, UpdateZodiacRequest updateZodiac);
 
