@@ -137,7 +137,6 @@ namespace AstroBackEnd
             FirebaseApp.Create(new AppOptions()
             {
                 Credential = GoogleCredential.FromFile(Configuration["FireBaseConfig"]),
-                
             });
 
             app.UseDeveloperExceptionPage();
