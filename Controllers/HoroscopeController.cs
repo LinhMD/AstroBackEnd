@@ -24,7 +24,7 @@ namespace AstroBackEnd.Controllers
             this.horoscopeService = horoscopeService;
         }
 
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         public IActionResult GetHoroscope(int id)
         {
             Horoscope horoscope = horoscopeService.GetHoroscope(id);
