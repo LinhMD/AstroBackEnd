@@ -25,11 +25,11 @@ namespace AstroBackEnd.Controllers
         [HttpGet("id")]
         public IActionResult GetPlanet(int id)
         {
-            Planet planet = planetService.GetPlanet(id);
-            if (planet == null)
-                return NotFound();
-            else
-                return Ok(planet);
+            try
+            {
+                return Ok(planetService.GetPlanet(id));
+            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 
         [HttpGet]
@@ -52,13 +52,9 @@ namespace AstroBackEnd.Controllers
                     Tag = tag,
                     MainContent = mainContent,
                     PagingRequest = pagingRequest,
-
                 };
                 return Ok(planetService.FindPlanet(request));
-            }catch(Exception e)
-            {
-                return BadRequest(e.Message);
-            }
+            }catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 
         [HttpPost]
@@ -68,34 +64,27 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(planetService.CreatePlanet(request));
             }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
+            catch (ArgumentException e){ return BadRequest(e.Message); }
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeletePlanet(int id)
         {
-            Planet planet = _work.Planets.Get(id);
-            if (planet == null)
-                return NotFound();
-            else
+            try
             {
-                _work.Planets.Remove(planet);
-                return Ok(planet);
+                return Ok(planetService.DeletePlanet(id));
             }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 
         [HttpPut]
         public IActionResult UpdatePlanet(int id, UpdatePlanetRequest request)
         {
-            Planet planet = planetService.UpdatePlanet(id, request);
-            if (planet == null)
+            try
             {
-                return NotFound();
+                return Ok(planetService.UpdatePlanet(id, request));
             }
-            return Ok(planet);
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
     }
 }

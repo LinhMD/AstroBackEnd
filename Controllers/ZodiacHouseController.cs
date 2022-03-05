@@ -4,6 +4,7 @@ using AstroBackEnd.RequestModels;
 using AstroBackEnd.RequestModels.ZodiacHouseRequest;
 using AstroBackEnd.Services.Core;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace AstroBackEnd.Controllers
 {
@@ -24,46 +25,70 @@ namespace AstroBackEnd.Controllers
         [HttpGet("id")]
         public IActionResult GetZodiacHouse(int id)
         {
-            return Ok(iZodiacHouseService.GetZodiacHouse(id));
+            try
+            {
+                return Ok(iZodiacHouseService.GetZodiacHouse(id));
+            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            
         }
 
         [HttpPost]
         public IActionResult CreateZodiacHouse(CreateZodiacHouseRequest request)
         {
-            return Ok(iZodiacHouseService.CreateZodiacHouse(request));
+            try
+            {
+                return Ok(iZodiacHouseService.CreateZodiacHouse(request));
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpGet]
         public IActionResult FindZodiacHouse(int id, int zodiacId, int houseId, string content, string sortBy, int page = 1, int pagaSize = 20)
         {
-            PagingRequest pagingRequest = new PagingRequest()
+            try
             {
-                SortBy = sortBy,
-                Page = page,
-                PageSize = pagaSize
-            };
-            FindZodiacHouse request = new FindZodiacHouse()
-            {
-                Id = id,
-                ZodiacId = zodiacId,
-                HouseId = houseId,
-                Content = content,
-                PagingRequest = pagingRequest,
+                PagingRequest pagingRequest = new PagingRequest()
+                {
+                    SortBy = sortBy,
+                    Page = page,
+                    PageSize = pagaSize
+                };
+                FindZodiacHouse request = new FindZodiacHouse()
+                {
+                    Id = id,
+                    ZodiacId = zodiacId,
+                    HouseId = houseId,
+                    Content = content,
+                    PagingRequest = pagingRequest,
 
-            };
-            return Ok(iZodiacHouseService.FindZodiacHouse(request));
+                };
+                return Ok(iZodiacHouseService.FindZodiacHouse(request));
+            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 
         [HttpPut]
         public IActionResult UpdateZodiacHouse(int id, UpdateZodiacHouseRequest request)
         {
-            return Ok(iZodiacHouseService.UpdateZodiacHouse(id, request));
+            try
+            {
+                return Ok(iZodiacHouseService.UpdateZodiacHouse(id, request));
+            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }   
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteZodiacHouse(int id)
         {
-            return Ok(iZodiacHouseService.DeleteZodiacHouse(id));
+            try
+            {
+                return Ok(iZodiacHouseService.DeleteZodiacHouse(id));
+            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
     }
 }

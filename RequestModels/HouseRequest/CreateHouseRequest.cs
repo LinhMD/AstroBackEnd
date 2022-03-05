@@ -14,6 +14,6 @@
         public string Icon { get => icon; set => icon = value; }
         public string Description { get => description; set => description = value; }
         public string Tag { get => tag; set => tag = value; }
-        public string MainContentl { get => mainContentl; set => mainContentl = value; }
+        public string MainContent { get => mainContentl; set => mainContentl = value; }
     }
 }

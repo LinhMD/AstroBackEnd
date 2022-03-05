@@ -24,11 +24,11 @@ namespace AstroBackEnd.Controllers
         [HttpGet("id")]
         public IActionResult GetQuote(int id)
         {
-            Quote quote = quoteService.GetQuote(id);
-            if (quote != null)
-                return Ok(quote);
-            else
-                return NotFound();
+            try
+            {
+                return Ok(quoteService.GetQuote(id));
+            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 
         [HttpGet]
@@ -51,7 +51,7 @@ namespace AstroBackEnd.Controllers
                 };
                 return Ok(quoteService.FindQuote(findQuoteRequest));
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -64,7 +64,7 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(quoteService.CreateQuote(request));
             }
-            catch (Exception e)
+            catch (ArgumentException e)
             {
                 return BadRequest(e.Message);
             }
@@ -73,22 +73,21 @@ namespace AstroBackEnd.Controllers
         [HttpPut]
         public IActionResult UpdateQuote(int id, UpdateQuoteRequest request)
         {
-            Quote quote = quoteService.UpdateQuote(id, request);
-            if (quote != null)
+            try
             {
-                return Ok(quote);
+                return Ok(quoteService.UpdateQuote(id, request));
             }
-            return NotFound();
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteQuote(int id)
         {
-            Quote quote = quoteService.DeleteQuote(id);
-            if (quote != null)
-                return Ok(quote);
-            else
-                return NotFound();
+            try
+            {
+                return Ok(quoteService.DeleteQuote(id));
+            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
     }
 }

@@ -67,7 +67,7 @@ namespace AstroBackEnd.Controllers
             try
             {
                 return Ok(_zodiacService.CreateZodiac(request));
-            }catch (Exception ex)
+            }catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
             }
