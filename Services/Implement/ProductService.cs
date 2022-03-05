@@ -27,7 +27,7 @@ namespace AstroBackEnd.Services.Implement
         {
 
 
-            var cata = _work.Categorys.Get(request.CatagoryId);
+            var cata = _work.Categorys.Get(request.CategoryId);
             Product product = new Product()
             {
                 Name = request.Name,
@@ -146,13 +146,13 @@ namespace AstroBackEnd.Services.Implement
 
                 bool checkDetail = string.IsNullOrWhiteSpace(request.Detail) || (!string.IsNullOrEmpty(p.Detail) && p.Detail.Contains(request.Detail));
 
-                bool checkCatagory = request.CatagoryId == null || p.Category.Id == request.CatagoryId;
+                bool checkCategory = request.CategoryId == null || p.Category.Id == request.CategoryId;
 
                 bool zodiacIdCheck = request.ZodiacsId == null || p.Zodiacs.Select(z => z.Id).Contains(((int)request.ZodiacsId.Value));
 
                 bool variationCheck = request.ProductVariationId == null || p.ProductVariation.Select(z => z.Id).Contains(((int)request.ProductVariationId.Value));
 
-                return checkName && checkDescription && checkCatagory;
+                return checkName && checkDescription && checkCategory;
             };
 
 
@@ -168,7 +168,7 @@ namespace AstroBackEnd.Services.Implement
                     case "Description":
                         result = _work.Products.FindProducWithAllData(filter, p => p.Description, request.PagingRequest.Page, request.PagingRequest.PageSize);
                         break;
-                    case "CatagoryId":
+                    case "CategoryId":
                         result = _work.Products.FindProducWithAllData(filter, p => p.Category.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
                         break;
                     default:
@@ -208,7 +208,7 @@ namespace AstroBackEnd.Services.Implement
             var product = this.GetProduct(id);
          
 
-            var cata = _work.Categorys.Get(request.CatagoryId);
+            var cata = _work.Categorys.Get(request.CategoryId);
             if (!string.IsNullOrWhiteSpace(request.Name))
             {
                 product.Name = request.Name;
@@ -221,7 +221,7 @@ namespace AstroBackEnd.Services.Implement
             {
                 product.Detail = request.Detail;
             }
-            if (!string.IsNullOrWhiteSpace(Convert.ToString(request.CatagoryId)))
+            if (!string.IsNullOrWhiteSpace(Convert.ToString(request.CategoryId)))
             {
                 product.Category = cata;
             }

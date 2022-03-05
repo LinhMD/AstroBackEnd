@@ -24,7 +24,7 @@ namespace AstroBackEnd.Controllers
             this._zodiacService = zodiacService;
         }
 
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         public IActionResult GetZodiac(int id)
         {
             try

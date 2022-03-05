@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AstroBackEnd.RequestModels.CatagoryRequest;
+using AstroBackEnd.RequestModels.CategoryRequest;
 
 namespace AstroBackEnd.Services.Implement
 {
@@ -24,11 +24,11 @@ namespace AstroBackEnd.Services.Implement
         }
         public Category CreateCategory(CategoryCreateRequest request)
         {
-            Category catagorys = new Category()
+            Category categories = new Category()
             {
                 Name = request.Name
             };
-            return _work.Categorys.Add(catagorys);
+            return _work.Categorys.Add(categories);
         }
 
         public Category DeleteCategory(int id)
@@ -102,14 +102,14 @@ namespace AstroBackEnd.Services.Implement
             return _work.Categorys.Get(id);
         }
 
-        public Category UpdateCategory(int id, CatagoryUpdateRequest request)
+        public Category UpdateCategory(int id, CategoryUpdateRequest request)
         {
-            var catagory = _work.Categorys.Get(id);
+            var category = _work.Categorys.Get(id);
             if (!string.IsNullOrWhiteSpace(request.Name))
             {
-                catagory.Name = request.Name;
+                category.Name = request.Name;
             }
-            return catagory;
+            return category;
         }
     }
 }

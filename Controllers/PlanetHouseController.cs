@@ -22,7 +22,7 @@ namespace AstroBackEnd.Controllers
             this._work = _work;
         }
 
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         public IActionResult GetPlanetHouse(int id)
         {
             try

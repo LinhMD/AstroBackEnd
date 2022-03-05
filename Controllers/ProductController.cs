@@ -45,13 +45,13 @@ namespace AstroBackEnd.Controllers
 
         
         [HttpGet("master")]
-        public IActionResult GetAllProductMaster(int? id, string? name, string? description, string? detail, int? catagoryId, int? zodiacsId, int? productVariationId, string? sortBy, int page = 1, int pageSize = 20)
+        public IActionResult GetAllProductMaster(int? id, string? name, string? description, string? detail, int? categoryId, int? zodiacsId, int? productVariationId, string? sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
                 return Ok(_Service.FindMasterProduct(new FindMasterProductRequest() { 
                     Id = id,
-                    CatagoryId = catagoryId,
+                    CategoryId = categoryId,
                     Description = description,
                     Detail = detail,
                     Name = name,

@@ -21,7 +21,7 @@ namespace AstroBackEnd.Controllers
             this.quoteService = quoteService;
         }
 
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         public IActionResult GetQuote(int id)
         {
             try
