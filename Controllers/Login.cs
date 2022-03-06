@@ -45,11 +45,11 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPost("firebase")]
-        public async Task<IActionResult> getFireBaseUser([FromBody] FireBaseLoginRequest request)
+        public async Task<IActionResult> getFireBaseUser([FromBody] string token)
         {
             try
             {
-                UserRecord userRecord = await _fbUtil.getFireBaseUserByToken(request.Token);
+                UserRecord userRecord = await _fbUtil.getFireBaseUserByToken(token);
                 string uid = userRecord.Uid;
                 User user = _work.Users.Find(u => u.UID == uid, u => u.Id).FirstOrDefault();
 
