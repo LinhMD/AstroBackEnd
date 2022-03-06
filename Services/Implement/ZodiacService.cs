@@ -128,7 +128,7 @@ namespace AstroBackEnd.Services.Implement
                     {
                         if (!string.IsNullOrWhiteSpace(p.Name))
                         {
-                            checkName = p.Name.Contains(request.Name);
+                            checkName = p.Name.ToLower().Contains(request.Name.ToLower());
                         }
                         else
                         {

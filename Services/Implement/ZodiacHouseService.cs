@@ -3,6 +3,7 @@ using AstroBackEnd.Repositories;
 using AstroBackEnd.RequestModels;
 using AstroBackEnd.RequestModels.ZodiacHouseRequest;
 using AstroBackEnd.Services.Core;
+using AstroBackEnd.Utilities;
 using System;
 using System.Collections.Generic;
 
@@ -18,93 +19,102 @@ namespace AstroBackEnd.Services.Implement
 
         public ZodiacHouse GetZodiacHouse(int id)
         {
-            return _work.ZodiacHouses.Get(id);
+            Validation.ValidNumberThanZero(id, "Id must be than zero");
+            ZodiacHouse zodiacHouse = _work.ZodiacHouses.Get(id);
+            if (zodiacHouse != null)
+            {
+                return zodiacHouse;
+            }
+            else { throw new ArgumentException("This ZodiacHouse not found"); }
         }
         public ZodiacHouse CreateZodiacHouse(CreateZodiacHouseRequest request)
         {
-            Zodiac zodiac = _work.Zodiacs.Get(request.ZodiacId);
-            House house = _work.Houses.Get(request.HouseId);
-            ZodiacHouse zodiacHouse = new ZodiacHouse()
+            try
             {
-                HouseId = request.HouseId,
-                ZodiacId = request.ZodiacId,
-                Zodiac = zodiac,
-                House = house,
-                Content = request.Content
-            };
-            _work.ZodiacHouses.Add(zodiacHouse);
-            return zodiacHouse;
+                ZodiacHouse zodiacHouse = new ZodiacHouse()
+                {
+                    HouseId = request.HouseId,
+                    ZodiacId = request.ZodiacId,
+                    Content = request.Content
+                };
+                return _work.ZodiacHouses.Add(zodiacHouse);
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException("ZodiacHouseService : " + ex.Message);
+            }
         }
 
         public IEnumerable<ZodiacHouse>  FindZodiacHouse(FindZodiacHouse request)
         {
-            Func<ZodiacHouse, bool> filter = p =>
+            if (request.Id < 0) { throw new ArgumentException("Id must be equal or than zero"); }
+            try
             {
-                bool checkId = true;
-                bool checkZodiacId = true;
-                bool checkHouseId = true;
-                bool checkContent = true;
-                
-                if(request.Id > 0 )
+                Func<ZodiacHouse, bool> filter = p =>
                 {
-                    checkId = request.Id == p.Id;
-                }
-                if(request.HouseId > 0)
-                {
-                    checkHouseId = request.HouseId == p.HouseId;  
-                }
-                if(request.ZodiacId > 0)
-                {
-                    checkZodiacId = request.ZodiacId == p.ZodiacId;
-                }
-                if (!string.IsNullOrWhiteSpace(request.Content))
-                {
-                    if (!string.IsNullOrWhiteSpace(p.Content))
-                    {
-                        checkContent = p.Content.Contains(request.Content);
-                    }
-                    else
-                    {
-                        checkContent   = false;
-                    }
-                }
-                return checkId && checkHouseId && checkZodiacId && checkContent;
-            };
-            PagingRequest pagingRequest = request.PagingRequest;
+                    bool checkId = true;
+                    bool checkZodiacId = true;
+                    bool checkHouseId = true;
+                    bool checkContent = true;
 
-            if(pagingRequest == null || pagingRequest.SortBy == null)
-            {   
-                return _work.ZodiacHouses.Find(filter, p => p.Id);
-            }
-            else
-            {
-                switch (pagingRequest.SortBy)
+                    if (request.Id > 0)
+                    {
+                        checkId = request.Id == p.Id;
+                    }
+                    if (request.HouseId > 0)
+                    {
+                        checkHouseId = request.HouseId == p.HouseId;
+                    }
+                    if (request.ZodiacId > 0)
+                    {
+                        checkZodiacId = request.ZodiacId == p.ZodiacId;
+                    }
+                    if (!string.IsNullOrWhiteSpace(request.Content))
+                    {
+                        if (!string.IsNullOrWhiteSpace(p.Content))
+                        {
+                            checkContent = p.Content.Contains(request.Content);
+                        }
+                        else
+                        {
+                            checkContent = false;
+                        }
+                    }
+                    return checkId && checkHouseId && checkZodiacId && checkContent;
+                };
+                PagingRequest pagingRequest = request.PagingRequest;
+                Validation.ValidNumberThanZero(pagingRequest.Page, "Page must be than zero");
+                Validation.ValidNumberThanZero(pagingRequest.PageSize, "PageSize must be than zero");
+                if (pagingRequest == null || pagingRequest.SortBy == null)
                 {
-                    case "ZodiacId":
-                        return _work.ZodiacHouses.FindPaging(filter, p => p.ZodiacId, pagingRequest.Page, pagingRequest.PageSize);
-                    case "HouseId":
-                        return _work.ZodiacHouses.FindPaging(filter, p => p.HouseId, pagingRequest.Page, pagingRequest.PageSize);
-                    default:
-                        return _work.ZodiacHouses.FindPaging(filter, p => p.Id, pagingRequest.Page, pagingRequest.PageSize);
+                    return _work.ZodiacHouses.Find(filter, p => p.Id);
                 }
-            } 
+                else
+                {
+                    switch (pagingRequest.SortBy)
+                    {
+                        case "ZodiacId":
+                            return _work.ZodiacHouses.FindPaging(filter, p => p.ZodiacId, pagingRequest.Page, pagingRequest.PageSize);
+                        case "HouseId":
+                            return _work.ZodiacHouses.FindPaging(filter, p => p.HouseId, pagingRequest.Page, pagingRequest.PageSize);
+                        default:
+                            return _work.ZodiacHouses.FindPaging(filter, p => p.Id, pagingRequest.Page, pagingRequest.PageSize);
+                    }
+                }
+            } catch (Exception ex) { throw new ArgumentException("ZodiacHouseService : " + ex.Message); }
         }
         public ZodiacHouse UpdateZodiacHouse(int id, UpdateZodiacHouseRequest request)
         {
+            Validation.ValidNumberThanZero(id, "Id must be than zero");
             ZodiacHouse zodiacHouse = _work.ZodiacHouses.Get(id);
             if(zodiacHouse != null)
             {
                 if (request.ZodiacId > 0)
                 {
-                    Zodiac zodiac = _work.Zodiacs.Get(request.ZodiacId);
-                    zodiacHouse.Zodiac = zodiac != null ? zodiac : null;
                     zodiacHouse.ZodiacId = request.ZodiacId;
                 }
                 if (zodiacHouse.HouseId > 0)
                 {
-                    House house = _work.Houses.Get(request.HouseId);
-                    zodiacHouse.House = house != null ? house : null;
-                    zodiacHouse.ZodiacId = request.ZodiacId;
                     zodiacHouse.HouseId = request.HouseId;
                 }
                 if (!string.IsNullOrWhiteSpace(request.Content))
@@ -115,21 +125,19 @@ namespace AstroBackEnd.Services.Implement
             }
             else
             {
-                return null;
+                throw new ArgumentException("This ZodiacHouse not found");
             }  
         }
         public ZodiacHouse DeleteZodiacHouse(int id)
-        {
+        {           
+            Validation.ValidNumberThanZero(id, "Id must be than zero");
             ZodiacHouse zodiacHouse = _work.ZodiacHouses.Get(id);
-            if(zodiacHouse != null)
+            if (zodiacHouse != null)
             {
                 _work.ZodiacHouses.Remove(zodiacHouse);
                 return zodiacHouse;
             }
-            else
-            {
-                return null;
-            }
+            else { throw new ArgumentException("This ZodiacHouse not found"); }
         }
         public void Dispose()
         {

@@ -3,6 +3,7 @@ using AstroBackEnd.Repositories;
 using AstroBackEnd.RequestModels;
 using AstroBackEnd.RequestModels.HoroscopeRequest;
 using AstroBackEnd.Services.Core;
+using AstroBackEnd.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,133 +19,149 @@ namespace AstroBackEnd.Services.Implement
         }
         public Horoscope CreateHoroscope(CreateHoroscopeRequest request)
         {
-            if (request.NumberLuck > 0)
+            try
             {
-                Horoscope horoscope = new Horoscope()
+                if (request.NumberLuck > 0)
                 {
-                    NumberLuck = request.NumberLuck,
-                    ColorLuck = request.ColorLuck,
-                    Love = request.Love,
-                    Money = request.Money,
-                    Work = request.Work,
-                };
-                return _work.Horoscopes.Add(horoscope);
-            }
-            else
+                    Horoscope horoscope = new Horoscope()
+                    {
+                        NumberLuck = request.NumberLuck,
+                        ColorLuck = request.ColorLuck,
+                        Love = request.Love,
+                        Money = request.Money,
+                        Work = request.Work,
+                    };
+                    return _work.Horoscopes.Add(horoscope);
+                }
+                else
+                {
+                    throw new Exception("Number lukcy must be than zero");
+                }
+            }catch (Exception ex)
             {
-                throw new Exception("Number lukcy must be than zero");
+                throw new ArgumentException("HoroscopeService : " + ex.Message);
             }
         }
 
         public Horoscope DeleteHoroscope(int id)
         {
+            Validation.ValidNumberThanZero(id, "Id must be than zero");
             Horoscope horoscope = _work.Horoscopes.Get(id);
             if (horoscope != null)
             {
                 _work.Horoscopes.Remove(horoscope);
                 return horoscope;
-            }
-            else
-            {
-                return null;
-            }
+            } else { throw new ArgumentException("This Horoscope not found"); }
         }
 
         public IEnumerable<Horoscope> FindHoroscope(FindHoroscopeRequest request)
         {
-            Func<Horoscope, bool> filter = p =>
+            if (request.Id < 0) { throw new ArgumentException("Id must be equal or than zero"); }
+            try
             {
-                bool checkId = true;
-                bool checkColorLuck = true;
-                bool checkNumberLuck = true;
-                bool checkWork = true;
-                bool checkLove = true;
-                bool checkMoney = true;
-                if (request.Id != 0)
+                Func<Horoscope, bool> filter = p =>
                 {
-                    checkId = p.Id == request.Id;
-                }
-                if (!string.IsNullOrWhiteSpace(request.ColorLuck))
-                {
-                    if (!string.IsNullOrWhiteSpace(p.ColorLuck))
+                    bool checkId = true;
+                    bool checkColorLuck = true;
+                    bool checkNumberLuck = true;
+                    bool checkWork = true;
+                    bool checkLove = true;
+                    bool checkMoney = true;
+                    if (request.Id != 0)
                     {
-                        checkColorLuck = p.ColorLuck.Contains(request.ColorLuck);
+                        checkId = p.Id == request.Id;
                     }
-                    else
+                    if (!string.IsNullOrWhiteSpace(request.ColorLuck))
                     {
-                        checkColorLuck = false;
+                        if (!string.IsNullOrWhiteSpace(p.ColorLuck))
+                        {
+                            checkColorLuck = p.ColorLuck.Contains(request.ColorLuck);
+                        }
+                        else
+                        {
+                            checkColorLuck = false;
+                        }
                     }
-                }
-                if (request.NumberLuck > 0)
-                {
-                     checkNumberLuck = p.NumberLuck == request.NumberLuck;
-                }
-                if (!string.IsNullOrWhiteSpace(request.Work))
-                {
-                    if (!string.IsNullOrWhiteSpace(p.Work))
+                    if (request.NumberLuck > 0)
                     {
-                        checkWork = p.Work.Contains(request.Work);
+                        checkNumberLuck = p.NumberLuck == request.NumberLuck;
                     }
-                    else
+                    if (!string.IsNullOrWhiteSpace(request.Work))
                     {
-                        checkWork = false;
+                        if (!string.IsNullOrWhiteSpace(p.Work))
+                        {
+                            checkWork = p.Work.Contains(request.Work);
+                        }
+                        else
+                        {
+                            checkWork = false;
+                        }
                     }
-                }
-                if (!string.IsNullOrWhiteSpace(request.Love))
-                {
-                    if (!string.IsNullOrWhiteSpace(p.Love))
+                    if (!string.IsNullOrWhiteSpace(request.Love))
                     {
-                        checkLove = p.Love.Contains(request.Love);
-                    }
-                    else
-                    {
-                        checkLove = false;
-                    }
-                }
-
-                if (!string.IsNullOrWhiteSpace(request.Money))
-                {
-                    if (!string.IsNullOrWhiteSpace(p.Money))
-                    {
-                        checkMoney = p.Money.Contains(request.Money);
-                    }
-                    else
-                    {
-                        checkMoney = false;
+                        if (!string.IsNullOrWhiteSpace(p.Love))
+                        {
+                            checkLove = p.Love.Contains(request.Love);
+                        }
+                        else
+                        {
+                            checkLove = false;
+                        }
                     }
 
-                }
-                return checkId && checkColorLuck && checkNumberLuck && checkWork && checkLove && checkMoney;
-            };
+                    if (!string.IsNullOrWhiteSpace(request.Money))
+                    {
+                        if (!string.IsNullOrWhiteSpace(p.Money))
+                        {
+                            checkMoney = p.Money.Contains(request.Money);
+                        }
+                        else
+                        {
+                            checkMoney = false;
+                        }
 
-            PagingRequest paging = request.PagingRequest;
-            if (paging == null || paging.SortBy == null)
-            {
-                return _work.Horoscopes.Find(filter, p => p.Id);
-            }
-            else
-            {
-                switch (paging.SortBy)
+                    }
+                    return checkId && checkColorLuck && checkNumberLuck && checkWork && checkLove && checkMoney;
+                };
+                PagingRequest paging = request.PagingRequest;
+                Validation.ValidNumberThanZero(paging.Page, "Page must be than zero");
+                Validation.ValidNumberThanZero(paging.PageSize, "PageSize must be than zero");
+                if (paging == null || paging.SortBy == null)
                 {
-                    case "NumberLuck":
-                        return _work.Horoscopes.FindPaging(filter, p => p.NumberLuck, paging.Page, paging.PageSize);
-                    case "ColorLuck":
-                        return _work.Horoscopes.FindPaging(filter, p => p.ColorLuck, paging.Page, paging.PageSize);
-                    case "Money":
-                        return _work.Horoscopes.FindPaging(filter, p => p.Money, paging.Page, paging.PageSize);
-                    default:
-                        return _work.Horoscopes.FindPaging(filter, p => p.Id, paging.Page, paging.PageSize);
+                    return _work.Horoscopes.Find(filter, p => p.Id);
                 }
-            }
+                else
+                {
+                    switch (paging.SortBy)
+                    {
+                        case "NumberLuck":
+                            return _work.Horoscopes.FindPaging(filter, p => p.NumberLuck, paging.Page, paging.PageSize);
+                        case "ColorLuck":
+                            return _work.Horoscopes.FindPaging(filter, p => p.ColorLuck, paging.Page, paging.PageSize);
+                        case "Money":
+                            return _work.Horoscopes.FindPaging(filter, p => p.Money, paging.Page, paging.PageSize);
+                        default:
+                            return _work.Horoscopes.FindPaging(filter, p => p.Id, paging.Page, paging.PageSize);
+                    }
+                }
+            } catch (Exception ex) { throw new ArgumentException("HoroscopeService : " + ex.Message); }
         }
 
         public Horoscope GetHoroscope(int id)
         {
-            return  _work.Horoscopes.Get(id);
+            Validation.ValidNumberThanZero(id, "Id must be than zero");
+            Horoscope horoscope = _work.Horoscopes.Get(id);
+            if (horoscope != null)
+            {
+                return horoscope;
+            }
+            else { throw new ArgumentException("This Horoscope not found"); }  
         }
 
         public Horoscope UpdateHoroscope(int id, UpdateHoroscopeRequest request)
         {
+
+            Validation.ValidNumberThanZero(id, "Id must be than zero");
             Horoscope horoscope = _work.Horoscopes.Get(id);
             if (horoscope != null)
             {
@@ -166,7 +183,10 @@ namespace AstroBackEnd.Services.Implement
                 }
                 return horoscope;
             }
-            return null;
+            else
+            {
+                throw new ArgumentException("This Horoscope not found");
+            }
         }
         
         public void Dispose()

@@ -26,11 +26,11 @@ namespace AstroBackEnd.Controllers
         [HttpGet("{id}")]
         public IActionResult GetPlanetZodiac(int id)
         {
-            PlanetZodiac planetZodiac = planetZodiacService.GetPlanetZodiac(id);
-            if (planetZodiac != null)
-                return Ok(planetZodiac);
-            else
-                return NotFound();
+            try
+            {
+                return Ok(planetZodiacService.GetPlanetZodiac(id));
+            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 
         [HttpGet]
@@ -79,22 +79,21 @@ namespace AstroBackEnd.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeletePlanetZodiac(int id)
         {
-            PlanetZodiac planetZodiac = planetZodiacService.DeletePlanetZodiac(id);
-            if (planetZodiac != null)
-                return Ok(planetZodiac);
-            else
-                return NotFound();
+            try
+            {
+                return Ok(planetZodiacService.DeletePlanetZodiac(id));
+            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 
         [HttpPut]
         public IActionResult UpdatePlanet(int id, UpdatePlanetZodiacRequest request)
         {
-            PlanetZodiac planetZodiac = planetZodiacService.UpdatePlanetZodiac(id, request);
-            if (planetZodiac != null)
+            try
             {
-                return Ok(planetZodiac);
+                return Ok(planetZodiacService.UpdatePlanetZodiac(id, request));
             }
-            return NotFound();  
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
     }
 }

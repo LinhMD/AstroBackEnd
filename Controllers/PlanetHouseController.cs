@@ -25,11 +25,11 @@ namespace AstroBackEnd.Controllers
         [HttpGet("{id}")]
         public IActionResult GetPlanetHouse(int id)
         {
-            PlanetHouse planetHouse = planetHouseService.GetPlanetHouse(id);
-            if (planetHouse != null)
-                return Ok(planetHouse);
-            else
-                return NotFound();
+            try
+            {
+                return Ok(planetHouseService.GetPlanetHouse(id));
+            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 
         [HttpGet]
@@ -53,11 +53,7 @@ namespace AstroBackEnd.Controllers
                     PagingRequest = pagingRequest
                 };
                 return Ok(planetHouseService.FindPlanetHouse(findPlanetZodiacRequest));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            }catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 
         [HttpPost]
@@ -67,7 +63,7 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(planetHouseService.CreatePlanetHouse(request));
             }
-            catch (Exception e)
+            catch (ArgumentException e)
             {
                 return BadRequest(e.Message);
             }
@@ -76,22 +72,21 @@ namespace AstroBackEnd.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeletePlanetZodiac(int id)
         {
-            PlanetHouse planetHouse = planetHouseService.DeletePlanetHouse(id);
-            if (planetHouse != null)
-                return Ok(planetHouse);
-            else
-                return NotFound();
+            try
+            {
+                return Ok(planetHouseService.DeletePlanetHouse(id));
+            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 
         [HttpPut]
         public IActionResult UpdatePlanet(int id, UpdatePlanetHouseRequest request)
         {
-            PlanetHouse planetHouse = planetHouseService.UpdatePlanetHouse(id, request);
-            if (planetHouse != null)
+            try
             {
-                return Ok(planetHouse);
+                return Ok(planetHouseService.UpdatePlanetHouse(id, request));
             }
-            return NotFound();
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
     }
 }
