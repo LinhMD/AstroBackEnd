@@ -45,17 +45,18 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPost("firebase")]
-        public async Task<IActionResult> getFireBaseUser([FromBody] string token)
+        public async Task<IActionResult> getFireBaseUser([FromBody] FireBaseLoginRequest request)
         {
             try
             {
-                UserRecord userRecord = await _fbUtil.getFireBaseUserByToken(token);
+                UserRecord userRecord = await _fbUtil.getFireBaseUserByToken(request.Token);
                 string uid = userRecord.Uid;
                 User user = _work.Users.Find(u => u.UID == uid, u => u.Id).FirstOrDefault();
 
                 if(user == null)
                 {
-                     user = this.SignUp(userRecord);
+                    user = this.SignUp(userRecord);
+                   
                 }
                 
                 return Ok(Generate(user));
@@ -79,8 +80,9 @@ namespace AstroBackEnd.Controllers
                 PhoneNumber = userRecord.PhoneNumber,
                 Status = 1
             };
-
-            return _work.Users.Add(user);
+            user = _work.Users.Add(user);
+            user = _work.Users.GetAllUserData(user.Id);
+            return user;
         }
 
         [HttpPost]
@@ -106,8 +108,7 @@ namespace AstroBackEnd.Controllers
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Role, user.Role.Name),
-                new Claim(ClaimTypes.MobilePhone, user.PhoneNumber)
+                new Claim(ClaimTypes.Role, _work.Roles.Get(user.RoleId).Name)
             };
             var token = new JwtSecurityToken(_config["JwtSetting:Issuer"],
                                             _config["JwtSetting:Audience"],
