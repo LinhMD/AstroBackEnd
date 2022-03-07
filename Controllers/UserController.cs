@@ -95,13 +95,16 @@ namespace AstroBackEnd.Controllers
                     }
 
                 };
+                int total = 0;
 
-                var users = _userService.FindUsers(request);
+                var users = _userService.FindUsers(request, out total);
+
                 PagingView view = new PagingView()
                 {
                     Payload = users,
-                    Total = 2
+                    Total = total
                 };
+
                 return Ok(view);
             }
             catch (Exception e)
