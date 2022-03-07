@@ -78,7 +78,7 @@ namespace AstroBackEnd.Controllers
         /// there is no summary
         /// </summary>
         [HttpGet]
-        public IActionResult FindUsers(string? name, string? phone, string? sortBy,int status = 1,  int page = 1, int pageSize = 20)
+        public IActionResult FindUsers(string? name, string? phone, string? sortBy, int? status,  int page = 1, int pageSize = 20)
         {
             try
             {
