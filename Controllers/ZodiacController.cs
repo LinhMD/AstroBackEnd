@@ -7,6 +7,7 @@ using AstroBackEnd.ViewsModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace AstroBackEnd.Controllers
@@ -17,11 +18,12 @@ namespace AstroBackEnd.Controllers
     {
         private IUnitOfWork _work;
         private IZodiacService _zodiacService;
-
-        public ZodiacController(IUnitOfWork _work, IZodiacService zodiacService)
+        private AstrologyUtil Astrology;
+        public ZodiacController(IUnitOfWork _work, IZodiacService zodiacService, AstrologyUtil astrology)
         {
             this._work = _work;
             this._zodiacService = zodiacService;
+            Astrology = astrology;
         }
 
         [HttpGet("{id}")]
@@ -91,6 +93,18 @@ namespace AstroBackEnd.Controllers
                 return Ok(_zodiacService.UpdateZodiac(id, updateZodiac));
             }
             catch (ArgumentException ex) { return BadRequest(ex.Message); }
+        }
+        [HttpGet("natal")]
+        public IActionResult getBirthChart(DateTime date, double longtitude, double latitude)
+        {
+            try
+            {
+                return Ok(Astrology.GetHousePosOfPlanets(date, longtitude, latitude));
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     } 
 }

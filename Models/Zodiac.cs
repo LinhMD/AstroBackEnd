@@ -25,5 +25,7 @@ namespace AstroBackEnd.Models
         public IList<Horoscope> Horoscopes { get; set; }
 
         public IList<Product> Products { get; set; }
+
+        public int MainHouse { get; set; }
     }
 }
