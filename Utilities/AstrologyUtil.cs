@@ -48,8 +48,6 @@ namespace AstroBackEnd.Utilities
             double julianDay = _swiss.swe_julday(date.Year, date.Month, date.Day, date.Hour, SwissEph.SE_GREG_CAL);
             long iflgret;
             double diff = 0d; //the diffirent of zodiac and house
-            double armc = 15 * (date.Hour + (date.Minute / 60D) + (date.Second / 3600D));
-            int angleOfSet = 0;
             double[] ascmc = new double[10];
             double[] cusps = new double[13];
 
@@ -69,7 +67,7 @@ namespace AstroBackEnd.Utilities
                 planetPos[0] = xx[0];
                 planetPos[1] = xx[1];
 
-                double houseOfPlanet = _swiss.swe_house_pos(armc, latitude, 23.437404, 'A', planetPos, ref error);
+                double houseOfPlanet = _swiss.swe_house_pos(ascmc[2], latitude, 23.437404, 'A', planetPos, ref error);
 
                 houseOfPlanet = (houseOfPlanet + houseOffSet) % 12D;
 
@@ -77,7 +75,6 @@ namespace AstroBackEnd.Utilities
                 {
                     diff = houseOfPlanet - xx[0] / 30;
                     diff = (diff + 12) % 12;
-                    angleOfSet = (int)Math.Round(diff);
                     natalChartView.zodiac = this._work.Zodiacs.Find(z => z.MainHouse == (int)Math.Ceiling(xx[0] / 30), z => z.MainHouse).FirstOrDefault();
                 }
 
