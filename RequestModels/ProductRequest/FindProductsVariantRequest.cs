@@ -17,6 +17,8 @@ namespace AstroBackEnd.RequestModels.ProductRequest
 
         public string? Color { get; set; }
 
+        public int? Status { get; set; }
+
         public PagingRequest? PagingRequest { get; set; }
     }
 }
