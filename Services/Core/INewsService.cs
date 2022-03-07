@@ -19,7 +19,7 @@ namespace AstroBackEnd.Services.Core
 
         public News DeleteNew(int id);
 
-        public void UpdateNew(int id, NewsUpdateRequest request);
+        public News UpdateNew(int id, NewsUpdateRequest request);
 
         public News CreateNew(NewsCreateRequest news);
 
