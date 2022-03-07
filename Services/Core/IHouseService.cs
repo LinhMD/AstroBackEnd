@@ -9,7 +9,7 @@ namespace AstroBackEnd.Services.Core
         public House GetHouse(int id);
         public House CreateHouse(CreateHouseRequest request);
 
-        public IEnumerable<House> FindHouse(FindHouseRequest request);
+        public IEnumerable<House> FindHouse(FindHouseRequest request, out int total);
 
         public House UpdateHouse(int id, UpdateHouseRequest request);
 

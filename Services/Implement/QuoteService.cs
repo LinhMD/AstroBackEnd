@@ -6,6 +6,7 @@ using AstroBackEnd.RequestModels.QuoteRequest;
 using AstroBackEnd.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AstroBackEnd.Services.Implement
 {
@@ -41,7 +42,7 @@ namespace AstroBackEnd.Services.Implement
             }
         }
 
-        public IEnumerable<Quote> FindQuote(FindQuoteRequest request)
+        public IEnumerable<Quote> FindQuote(FindQuoteRequest request, out int total)
         {
             if (request.Id < 0) { throw new ArgumentException("Id must be equal or than zero"); }
             try
@@ -59,7 +60,7 @@ namespace AstroBackEnd.Services.Implement
                     {
                         if (!string.IsNullOrWhiteSpace(p.Content))
                         {
-                            checkContent = p.Content.Contains(request.Content);
+                            checkContent = p.Content.ToLower().Contains(request.Content.ToLower());
                         }
                         else
                         {
@@ -72,22 +73,24 @@ namespace AstroBackEnd.Services.Implement
                     }
                     return checkId && checkContent && checkHoroscopeId;
                 };
-                PagingRequest paging = request.PagingRequest;
-                Validation.ValidNumberThanZero(paging.Page, "Page must be than zero");
-                Validation.ValidNumberThanZero(paging.PageSize, "PageSize must be than zero");
-                if (paging == null || paging.SortBy == null)
+                PagingRequest pagingRequest = request.PagingRequest;
+                Validation.ValidNumberThanZero(pagingRequest.Page, "Page must be than zero");
+                Validation.ValidNumberThanZero(pagingRequest.PageSize, "PageSize must be than zero");
+                if (pagingRequest != null)
                 {
-                    return _work.Quotes.Find(filter, p => p.Id);
+                    switch (pagingRequest.SortBy)
+                    {
+                        case "HoroscopeId":
+                            return _work.Quotes.FindPaging(filter, p => p.HoroscopeId, out total, pagingRequest.Page, pagingRequest.PageSize);
+                        default:
+                            return _work.Quotes.FindPaging(filter, p => p.Id, out total, pagingRequest.Page, pagingRequest.PageSize);
+                    }
                 }
                 else
                 {
-                    switch (paging.SortBy)
-                    {
-                        case "HoroscopeId":
-                            return _work.Quotes.FindPaging(filter, p => p.HoroscopeId, paging.Page, paging.PageSize);
-                        default:
-                            return _work.Quotes.FindPaging(filter, p => p.Id, paging.Page, paging.PageSize);
-                    }
+                    IEnumerable<Quote> result = _work.Quotes.Find(filter, p => p.Id);
+                    total = result.Count();
+                    return result;
                 }
             } catch (Exception ex) { throw new ArgumentException("QuoteService : " + ex.Message); }
         }

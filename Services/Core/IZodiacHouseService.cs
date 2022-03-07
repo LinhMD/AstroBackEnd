@@ -9,7 +9,7 @@ namespace AstroBackEnd.Services.Core
         public ZodiacHouse GetZodiacHouse(int id);
         public ZodiacHouse CreateZodiacHouse(CreateZodiacHouseRequest request);
 
-        public IEnumerable<ZodiacHouse> FindZodiacHouse(FindZodiacHouse request);
+        public IEnumerable<ZodiacHouse> FindZodiacHouse(FindZodiacHouse request, out int total);
 
         public ZodiacHouse UpdateZodiacHouse(int id, UpdateZodiacHouseRequest request);
 

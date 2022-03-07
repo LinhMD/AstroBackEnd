@@ -3,6 +3,7 @@ using AstroBackEnd.Repositories;
 using AstroBackEnd.RequestModels;
 using AstroBackEnd.RequestModels.PlanetHouseRequest;
 using AstroBackEnd.Services.Core;
+using AstroBackEnd.ViewsModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -37,6 +38,7 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
+                int total = 0;
                 PagingRequest pagingRequest = new PagingRequest()
                 {
                     SortBy = sortBy,
@@ -52,7 +54,13 @@ namespace AstroBackEnd.Controllers
                     HouseId = HouseId,
                     PagingRequest = pagingRequest
                 };
-                return Ok(planetHouseService.FindPlanetHouse(findPlanetZodiacRequest));
+                var findResult = planetHouseService.FindPlanetHouse(findPlanetZodiacRequest, out total);
+                PagingView pagingView = new PagingView()
+                {
+                    Payload = findResult,
+                    Total = total
+                };
+                return Ok(pagingView);
             }catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 

@@ -3,6 +3,7 @@ using AstroBackEnd.Repositories;
 using AstroBackEnd.Repositories.Core;
 using AstroBackEnd.RequestModels;
 using AstroBackEnd.RequestModels.QuoteRequest;
+using AstroBackEnd.ViewsModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -36,6 +37,7 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
+                int total = 0;
                 PagingRequest pagingRequest = new PagingRequest()
                 {
                     SortBy = sortBy,
@@ -49,7 +51,13 @@ namespace AstroBackEnd.Controllers
                     HoroscopeId = horoscopeId,
                     PagingRequest = pagingRequest
                 };
-                return Ok(quoteService.FindQuote(findQuoteRequest));
+                var findResult = quoteService.FindQuote(findQuoteRequest, out total);
+                PagingView pagingView = new PagingView()
+                {
+                    Payload = findResult,
+                    Total = total
+                };
+                return Ok(pagingView);
             }
             catch (ArgumentException ex)
             {

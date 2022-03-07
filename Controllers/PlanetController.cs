@@ -3,6 +3,7 @@ using AstroBackEnd.Repositories;
 using AstroBackEnd.RequestModels;
 using AstroBackEnd.RequestModels.PlanetRequest;
 using AstroBackEnd.Services.Core;
+using AstroBackEnd.ViewsModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -37,6 +38,7 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
+                int total = 0;
                 PagingRequest pagingRequest = new PagingRequest()
                 {
                     SortBy = sortBy,
@@ -53,7 +55,13 @@ namespace AstroBackEnd.Controllers
                     MainContent = mainContent,
                     PagingRequest = pagingRequest,
                 };
-                return Ok(planetService.FindPlanet(request));
+                var findResult = planetService.FindPlanet(request, out total);
+                PagingView pagingView = new PagingView()
+                {
+                    Payload = findResult,
+                    Total = total
+                };
+                return Ok(pagingView);
             }catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 
