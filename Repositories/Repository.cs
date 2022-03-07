@@ -46,7 +46,20 @@ namespace AstroBackEnd.Repositories
                 .Take(pageSize + 1); // pageSize + 1 for hasNext - if have more than page size then hasNext = true
         }
 
-        
+        public IEnumerable<TModel> FindPaging<TOrderBy>(Func<TModel, bool> predicate, Func<TModel, TOrderBy> orderby, out int total, int page = 1, int pageSize = 20)
+        {
+            IOrderedEnumerable<TModel> models = _context.Set<TModel>()
+                .Where(predicate)
+                .OrderBy(orderby);
+
+            total = models.Count();
+
+            return models
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize + 1); // pageSize + 1 for hasNext - if have more than page size then hasNext = true
+        }
+
+
         public TModel Add(TModel model)
         {
             _context.Set<TModel>().Add(model);

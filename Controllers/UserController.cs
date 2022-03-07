@@ -13,6 +13,7 @@ using AstroBackEnd.Models;
 using Microsoft.AspNetCore.Authorization;
 using AstroBackEnd.Utilities;
 using AstroBackEnd.RequestModels.UserRequest;
+using AstroBackEnd.ViewsModel;
 
 namespace AstroBackEnd.Controllers
 {
@@ -96,7 +97,12 @@ namespace AstroBackEnd.Controllers
                 };
 
                 var users = _userService.FindUsers(request);
-                return Ok(users);
+                PagingView view = new PagingView()
+                {
+                    Pageload = users,
+                    Total = 2
+                };
+                return Ok(view);
             }
             catch (Exception e)
             {

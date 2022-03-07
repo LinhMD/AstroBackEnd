@@ -20,6 +20,8 @@ namespace AstroBackEnd.Services.Core
 
         public IEnumerable<Product> FindProductVariant(FindProductsVariantRequest Request);
 
+        public IEnumerable<Product> FindProductVariant(FindProductsVariantRequest Request, out int total);
+
         public IEnumerable<Product> FindMasterProduct(FindMasterProductRequest request);
 
         public void DeleteProduct(int id);

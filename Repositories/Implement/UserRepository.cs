@@ -20,7 +20,21 @@ namespace AstroBackEnd.Repositories.Implement
 
         public User GetAllUserData(int id)
         {
-            return AstroData.Users.Include("Role").Include("Profiles").Include("Orders").FirstOrDefault(u => u.Id == id);
+            return AstroData.Users
+                .Include(u => u.Role)
+                .Include(u => u.Profiles)
+                .Include(u => u.Orders)
+                    .ThenInclude(o => o.OrderDetails)
+                .FirstOrDefault(u => u.Id == id);
+        }
+
+        public IQueryable WithAllData()
+        {
+            return AstroData.Users
+                .Include(u => u.Role)
+                .Include(u => u.Profiles)
+                .Include(u => u.Orders)
+                    .ThenInclude(o => o.OrderDetails);
         }
 
     }

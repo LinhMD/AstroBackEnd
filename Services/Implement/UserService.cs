@@ -80,7 +80,7 @@ namespace AstroBackEnd.Services.Implement
 
         public User GetUser(int id)
         {
-            User user = _work.Users.Get(id);
+            User user = _work.Users.GetAllUserData(id);
 
             if (user == null) throw new ArgumentException("User Id not found");
 

@@ -110,14 +110,24 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
-                return Ok(_Service.FindProductVariant(new FindProductsVariantRequest() { 
+                int total = 0;
+
+                var products = _Service.FindProductVariant(new FindProductsVariantRequest() { 
                     Color = Color,
                     Gender = Gender,
                     Price = Price,
                     Size = Size,
                     PagingRequest =  new PagingRequest() { Page = Page, PageSize = pageSize, SortBy = SortBy }
 
-                }).Select(p => new ProductVariationView(p)));
+                }, out total).Select(p => new ProductVariationView(p));
+
+                PagingView pagingView = new PagingView()
+                {
+                    Pageload = products,
+                    Total = total
+                };
+
+                return Ok(pagingView);
             }
             catch (Exception e)
             {
@@ -130,6 +140,7 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
+
                 return Ok(new ProductVariationView(_Service.CreateProductVariant(request)));
             }
             catch (Exception e)

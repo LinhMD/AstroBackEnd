@@ -32,6 +32,8 @@ namespace AstroBackEnd.Models
 
         public Product? MasterProduct { get; set; }
 
+        public int? MasterProductId { get; set; }
+
         [MaxLength(255)]
         public string? Size { get; set; }
 
