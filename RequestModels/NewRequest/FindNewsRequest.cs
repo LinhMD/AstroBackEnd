@@ -8,7 +8,7 @@ namespace AstroBackEnd.RequestModels.NewRequest
 {
     public class FindNewsRequest
     {
-        
+        public int? Id { get; set; }
         public string? Title { get; set; }
 
         public string? Description { get; set; }
