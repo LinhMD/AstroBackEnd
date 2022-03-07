@@ -16,6 +16,8 @@ namespace AstroBackEnd.Services.Core
 
         public IEnumerable<OrderDetail> FindOrderDetail(FindOrderDetailRequest request);
 
+        public IEnumerable<OrderDetail> FindOrderDetail(FindOrderDetailRequest request, out int total);
+
         public OrderDetail CreateOrderDetail(OrderDetailCreateRequest request);
 
         public OrderDetail UpdateOrderDetail(int id, OrderDetailUpdateRequest request);

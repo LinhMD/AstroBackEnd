@@ -29,7 +29,7 @@ namespace AstroBackEnd.Repositories
         {
             return _context.Set<TModel>()
                 .Skip((page - 1) * pageSize)
-                .Take(pageSize + 1); // pageSize + 1 for hasNext - if have more than page size then hasNext = true
+                .Take(pageSize ); 
         }
         public IEnumerable<TModel> Find<TOrderBy>(Func<TModel, bool> predicate, Func<TModel, TOrderBy> orderBy)
         {
@@ -43,10 +43,23 @@ namespace AstroBackEnd.Repositories
                 .Where(predicate)
                 .OrderBy(orderby)
                 .Skip((page - 1) * pageSize)
-                .Take(pageSize + 1); // pageSize + 1 for hasNext - if have more than page size then hasNext = true
+                .Take(pageSize); 
         }
 
-        
+        public IEnumerable<TModel> FindPaging<TOrderBy>(Func<TModel, bool> predicate, Func<TModel, TOrderBy> orderby, out int total, int page = 1, int pageSize = 20)
+        {
+            IOrderedEnumerable<TModel> models = _context.Set<TModel>()
+                .Where(predicate)
+                .OrderBy(orderby);
+
+            total = models.Count();
+
+            return models
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize); 
+        }
+
+
         public TModel Add(TModel model)
         {
             _context.Set<TModel>().Add(model);
@@ -69,10 +82,6 @@ namespace AstroBackEnd.Repositories
         {
             _context.Set<TModel>().RemoveRange(models);
         }
-
-
-
-       
 
         
     }

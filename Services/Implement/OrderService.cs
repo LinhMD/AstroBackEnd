@@ -65,8 +65,12 @@ namespace AstroBackEnd.Services.Implement
                 bool statusCheck = request.Status == null || order.Status == request.Status;
 
                 bool totalStartCheck = request.TotalCostStart == null || order.TotalCost >= request.TotalCostStart;
-                bool totalEndCheck = request.TotalCostEnd == null || order.TotalCost >= request.TotalCostEnd;
+                bool totalEndCheck = request.TotalCostEnd == null || order.TotalCost <= request.TotalCostEnd;
                 bool totalCostCheck = totalStartCheck && totalEndCheck;
+
+                bool orderStartCheck = request.OrderTimeStart == null || order.OrderTime >= request.OrderTimeStart;
+                bool orderEndCheck = request.OrderTimeEnd == null || order.OrderTime <= request.OrderTimeEnd;
+                bool orderCheck = totalStartCheck && totalEndCheck;
 
                 bool addressCheck = string.IsNullOrWhiteSpace(request.DeliveryAdress) || order.DeliveryAdress.Contains(request.DeliveryAdress);
 
@@ -89,6 +93,50 @@ namespace AstroBackEnd.Services.Implement
                     "DeliveryAdress"    => _work.Orders.FindPaging(filter, o => o.DeliveryAdress, paging.Page, paging.PageSize),
                     "DeleveryPhone"     => _work.Orders.FindPaging(filter, o => o.DeleveryPhone, paging.Page, paging.PageSize),
                     _                   => _work.Orders.FindPaging(filter, o => o.OrderTime, paging.Page, paging.PageSize),
+                };
+            }
+        }
+
+        public IEnumerable<Order> FindOrder(FindOrderRequest request, out int total)
+        {
+
+            bool filter(Order order)
+            {
+                bool userCheck = request.UserId == null || order.UserId == request.UserId;
+
+                bool statusCheck = request.Status == null || order.Status == request.Status;
+
+                bool totalStartCheck = request.TotalCostStart == null || order.TotalCost >= request.TotalCostStart;
+                bool totalEndCheck = request.TotalCostEnd == null || order.TotalCost <= request.TotalCostEnd;
+                bool totalCostCheck = totalStartCheck && totalEndCheck;
+
+                bool orderStartCheck = request.OrderTimeStart == null || order.OrderTime >= request.OrderTimeStart;
+                bool orderEndCheck = request.OrderTimeEnd == null || order.OrderTime <= request.OrderTimeEnd;
+                bool orderCheck = totalStartCheck && totalEndCheck;
+
+                bool addressCheck = string.IsNullOrWhiteSpace(request.DeliveryAdress) || order.DeliveryAdress.Contains(request.DeliveryAdress);
+
+                bool phoneCheck = string.IsNullOrWhiteSpace(request.DeleveryPhone) || order.DeleveryPhone.Contains(request.DeleveryPhone);
+
+                return userCheck && statusCheck && totalCostCheck && addressCheck && phoneCheck;
+            }
+            PagingRequest paging = request.PagingRequest;
+
+            if (paging == null || paging.SortBy == null)
+            {
+                IEnumerable<Order> orders = _work.Orders.Find(filter, o => o.OrderTime);
+                total = orders.Count();
+                return orders;
+            }
+            else
+            {
+                return paging.SortBy switch
+                {
+                    "OrderTime" => _work.Orders.FindPaging(filter, o => o.OrderTime, out total, paging.Page, paging.PageSize),
+                    "TotalCost" => _work.Orders.FindPaging(filter, o => o.TotalCost, out total, paging.Page, paging.PageSize),
+                    "DeliveryAdress" => _work.Orders.FindPaging(filter, o => o.DeliveryAdress, out total, paging.Page, paging.PageSize),
+                    "DeleveryPhone" => _work.Orders.FindPaging(filter, o => o.DeleveryPhone, out total, paging.Page, paging.PageSize),
+                    _ => _work.Orders.FindPaging(filter, o => o.OrderTime, out total, paging.Page, paging.PageSize),
                 };
             }
         }

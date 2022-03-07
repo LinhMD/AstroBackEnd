@@ -15,12 +15,15 @@ namespace AstroBackEnd.Services.Core
 
         public IEnumerable<News> GetAllNew();
 
-        public IEnumerable<News> FindNews(FindNewsRequest newRequest);
+        public IEnumerable<News> FindNews(FindNewsRequest Request);
 
-        public void DeleteNew(int id);
+        public IEnumerable<News> FindNews(FindNewsRequest Request, out int total);
 
-        public void UpdateNew(int id, NewsUpdateRequest request);
+        public News DeleteNew(int id);
+
+        public News UpdateNew(int id, NewsUpdateRequest request);
 
         public News CreateNew(NewsCreateRequest news);
+
     }
 }

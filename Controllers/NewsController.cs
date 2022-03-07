@@ -9,84 +9,92 @@ using AstroBackEnd.Data;
 using AstroBackEnd.Models;
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.RequestModels.NewRequest;
+using AstroBackEnd.RequestModels;
+using AstroBackEnd.Repositories;
+using AstroBackEnd.ViewsModel;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/news")]
     [ApiController]
     public class NewsController : ControllerBase
     {
-        private readonly INewsService _Service;
-
-        public NewsController(INewsService newService)
+        private INewsService _Service;
+        private IUnitOfWork _work;
+        public NewsController(INewsService service, IUnitOfWork work)
         {
-            this._Service = newService;
-        }
-        [HttpGet]
-        public IActionResult GetAllNew()
-        {
-            return Ok(_Service.GetAllNew());
+            this._Service = service;
+            this._work = work;
         }
 
         [HttpGet("{id}")]
         public IActionResult GetNew(int id)
         {
-            //return Ok(_Service.GetNews(id));
-            var result = _Service.GetNews(id);
-            if (result==null)
+            try
             {
-                return BadRequest(new { StatusCodes = 404, Message = "New not found" }); // ok
+                return Ok(_Service.GetNews(id));
             }
-            else
-            {
-                return Ok(new { StatusCode = 200, message = "The request has been completed successfully", data = result }); 
-            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
 
         }
 
         [HttpPost]
         public IActionResult CreateNew([FromBody] NewsCreateRequest request)
         {
-            var result = _Service.CreateNew(request);
-            if (result == null)
+            try
             {
-                return BadRequest(new { StatusCodes = 404, Message = "Can't create New" }); 
+                return Ok(_Service.CreateNew(request));
             }
-            else
-            {
-                return Ok(new { StatusCode = 200, message = "The request has been completed successfully", data = result });
-            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public IActionResult UpdateNew(int id, [FromBody] NewsUpdateRequest request)
         {
-            
-            var checkFindNew = _Service.GetNews(id);
-            if (checkFindNew==null)
+
+            try
             {
-                return BadRequest(new { StatusCodes = 404, Message = "Can't find New" });
+                return Ok(_Service.UpdateNew(id, request));
             }
-            else
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+        }
+
+        [HttpGet]
+        public IActionResult FindNews(string title, string description, string tag,
+            string sortBy, int page = 1, int pageSize = 20)
+        {
+            try
             {
-                _Service.UpdateNew(id, request);
-                return Ok(new { StatusCode = 200, message = "The request has been completed successfully" });
+                PagingRequest pagingRequest = new PagingRequest()
+                {
+                    SortBy = sortBy,
+                    Page = page,
+                    PageSize = pageSize,
+                };
+                FindNewsRequest findNewsRequest = new FindNewsRequest()
+                {
+                    Title = title,
+                    Description = description,
+                    Tag = tag
+                };
+                int total = 0;
+                IEnumerable<News> links = _Service.FindNews(findNewsRequest, out total);
+                return Ok(new PagingView() { Payload = links, Total = total });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
 
-        [HttpPost]
-        [Route("findNew")]
-        public IActionResult FindNew([FromBody] FindNewsRequest request)
+        [HttpDelete("{id}")]
+        public IActionResult DeleteNews(int id)
         {
-            var result = _Service.FindNews(request);
-            if (result == null || !result.Any() )
+            try
             {
-                return BadRequest(new { StatusCodes = 404, Message = "Can't find" });
+                return Ok(_Service.DeleteNew(id));
             }
-            else
-            {
-                return Ok(new { StatusCode = 200, message = "The request has been completed successfully", data = result });
-            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 
     }

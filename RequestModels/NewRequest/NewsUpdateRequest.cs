@@ -5,8 +5,15 @@ using System.Threading.Tasks;
 
 namespace AstroBackEnd.RequestModels.NewRequest
 {
+ 
+    /// <summary>
+    /// News Update request Model
+    /// </summary>
     public class NewsUpdateRequest
     {
+        /// <summary>
+        /// title Nà
+        /// </summary>
         public string? Title { get; set; }
 
         public string? Description { get; set; }

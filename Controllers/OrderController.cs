@@ -1,5 +1,6 @@
 ﻿using AstroBackEnd.RequestModels.OrderRequest;
 using AstroBackEnd.Services.Core;
+using AstroBackEnd.ViewsModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/order")]
     [ApiController]
     public class OrderController : ControllerBase
     {
@@ -19,12 +20,6 @@ namespace AstroBackEnd.Controllers
         public OrderController(IOrderService orderService)
         {
             this._orderService = orderService;
-        }
-        [HttpGet]
-        public IActionResult GetAllOrder()
-        {
-
-            return Ok(_orderService.GetAllOrders());
         }
 
         [HttpPost]
@@ -40,7 +35,7 @@ namespace AstroBackEnd.Controllers
                 return BadRequest(e.Message);
             }
         }
-        [HttpPut("{id}")]
+        [HttpPut]
         public IActionResult UpdateOrder(int id, CreateOrderRequest request)
         {
             try
@@ -82,13 +77,36 @@ namespace AstroBackEnd.Controllers
                 return BadRequest(e.Message);
             }
         }
-        [HttpPost("f")]
-        public IActionResult FindOrder(FindOrderRequest request)
+        [HttpGet]
+        public IActionResult FindOrder( int? status, 
+                                        DateTime? orderTimeStart, DateTime? orderTimeEnd,
+                                        double? totalCostStart, double? totalCostEnd, 
+                                        string? deliveryAdress, 
+                                        string? deleveryPhone, 
+                                        int? userId,
+                                        string? sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
-                var orders = _orderService.FindOrder(request);
-                return Ok(orders);
+                int total = 0;
+                var orders = _orderService.FindOrder(new FindOrderRequest() { 
+                    Status = status,
+                    OrderTimeEnd = orderTimeEnd,
+                    OrderTimeStart = orderTimeStart,
+                    TotalCostEnd = totalCostEnd,
+                    TotalCostStart = totalCostStart,
+                    DeliveryAdress = deliveryAdress,
+                    DeleveryPhone = deleveryPhone,
+                    UserId = userId,
+
+                    PagingRequest = new RequestModels.PagingRequest()
+                    {
+                        Page = page,
+                        PageSize = pageSize,
+                        SortBy = sortBy
+                    }               
+                }, out total);
+                return Ok(new PagingView() { Payload = orders, Total = total});
             }
             catch (Exception e)
             {

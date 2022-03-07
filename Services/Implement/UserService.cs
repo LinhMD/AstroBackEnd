@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AstroBackEnd.RequestModels.UserRequest;
 
 namespace AstroBackEnd.Services.Implement
 {
@@ -17,18 +18,17 @@ namespace AstroBackEnd.Services.Implement
         private readonly IUnitOfWork _work;
 
         private readonly AstroDataContext _astroData;
-        public UserService(IUnitOfWork work, AstroDataContext astroData)
+
+        private readonly IProductService _productService;
+        public UserService(IUnitOfWork work, AstroDataContext astroData, IProductService productService)
         {
             this._work = work;
             this._astroData = astroData;
+            this._productService = productService;
         }
 
         public User CreateUser(UserCreateRequest request)
         {
-            if (this._work.Users.Find(u => u.UserName == request.UserName, u => u.UserName).Any())
-            {
-                throw new ArgumentException("Username already exist");
-            }
 
             User user = new User()
             {
@@ -63,28 +63,64 @@ namespace AstroBackEnd.Services.Implement
                     checkPhoneNumber = user.PhoneNumber.Contains(userRequest.Phone);
                 }
 
-                checkStatus = user.Status == userRequest.Status;
+
+                if (userRequest.Status.HasValue)
+                {
+                    checkStatus = user.Status == userRequest.Status;
+                }
+
                 
                 return checkUserName && checkStatus && checkPhoneNumber;
             };
-
-
 
             IEnumerable<User> users = _work.Users.FindPaging<String>(filter, u => u.UserName, userRequest.PagingRequest.Page, userRequest.PagingRequest.PageSize);
 
             return users;
         }
 
+        public IEnumerable<User> FindUsers(FindUserRequest userRequest, out int total)
+        {
+            Func<User, bool> filter = user =>
+            {
+                bool checkUserName = true;
+                bool checkPhoneNumber = true;
+                bool checkStatus = true;
+
+                if (!string.IsNullOrWhiteSpace(userRequest.Name))
+                {
+                    checkUserName = user.UserName.Contains(userRequest.Name);
+                }
+
+                if (!string.IsNullOrWhiteSpace(userRequest.Phone))
+                {
+                    checkPhoneNumber = user.PhoneNumber.Contains(userRequest.Phone);
+                }
+
+
+                if (userRequest.Status.HasValue)
+                {
+                    checkStatus = user.Status == userRequest.Status;
+                }
+
+
+                return checkUserName && checkStatus && checkPhoneNumber;
+            };
+
+            IEnumerable<User> users = _work.Users.FindPaging<String>(filter, u => u.UserName, out total, userRequest.PagingRequest.Page, userRequest.PagingRequest.PageSize);
+
+            return users;
+        }
+
         public User GetUser(int id)
         {
-            User user = _work.Users.Get(id);
+            User user = _work.Users.GetAllUserData(id);
 
             if (user == null) throw new ArgumentException("User Id not found");
 
             return user;
         }
 
-        public void UpdateUser(int id, UserCreateRequest request)
+        public void UpdateUser(int id, UserUpdateRequest request)
         {
             var userUpdate = GetUser(id);
 
@@ -97,6 +133,11 @@ namespace AstroBackEnd.Services.Implement
             {
                 userUpdate.PhoneNumber = request.PhoneNumber;
             }
+
+            if(request.Status != null)
+            {
+                userUpdate.Status = request.Status.Value;
+            }
         }
 
         public void Dispose()
@@ -108,5 +149,47 @@ namespace AstroBackEnd.Services.Implement
         {
             return _work.Users.GetAll(u => u.UserName);
         }
+
+        public Order getCart(int userId)
+        {
+
+            var cart = _work.Orders.FindWithAllInfo(o => o.UserId == userId && o.Status == 0, o => o.Id).FirstOrDefault(o => true);
+
+            if(cart == null)
+            {
+                cart = new Order()
+                {
+                    Status = 0,
+                    OrderTime = DateTime.Now,
+                    UserId = userId
+                };
+                cart = this._work.Orders.Add(cart);
+            }
+
+            return cart;
+        }
+
+        public Order AddToCart(int userId, AddToCartRequest request)
+        {
+            var cart = this.getCart(userId);
+            Product product = _productService.GetProductVariant(request.ProductId);
+
+            if (product == null ) throw new ArgumentException("Product Id Not found");
+
+            OrderDetail detail = new OrderDetail()
+            {
+                OrderId = cart.Id,
+                ProductId = request.ProductId,
+                Quantity = product.Id,
+                TotalPrice = (double)(request.Quantity * product.Price)
+            };
+            cart.OrderDetails.Add(detail);
+
+            this._work.OrderDetails.Add(detail);
+
+            return cart;
+        }
+
+        
     }
 }

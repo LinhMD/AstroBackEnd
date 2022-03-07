@@ -12,16 +12,31 @@ namespace AstroBackEnd.Services.Core
     {
         public Product GetProduct(int id);
 
+        public Product GetMasterProduct(int id);
+
+        public Product GetProductVariant(int id);
+
         public IEnumerable<Product> GetAllProduct();
 
-        public IEnumerable<Product> FindProducts(FindProductsRequest Request);
+        public IEnumerable<Product> FindProductVariant(FindProductsVariantRequest Request);
+
+        public IEnumerable<Product> FindProductVariant(FindProductsVariantRequest Request, out int total);
+
+        public IEnumerable<Product> FindMasterProduct(FindMasterProductRequest request);
+
+        public IEnumerable<Product> FindMasterProduct(FindMasterProductRequest request, out int total);
 
         public void DeleteProduct(int id);
 
-        public Product UpdateProduct(int id, ProductsUpdateRequest request);
+        public Product UpdateMasterProduct(int id, MasterProductsUpdateRequest request);
 
-        public Product CreateProduct(ProductsCreateRequest Product);
+        public Product UpdateProductVariant(int id, ProductVariantUpdateRequest request);
+
+
+        public Product CreateProductVariant(ProductVariantCreateRequest Product);
 
         public Product CreateMasterProduct(MasterProductCreateRequest Product);
+
+        
     }
 }

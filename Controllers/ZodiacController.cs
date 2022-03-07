@@ -2,98 +2,109 @@
 using AstroBackEnd.Repositories;
 using AstroBackEnd.RequestModels;
 using AstroBackEnd.Services.Core;
+using AstroBackEnd.Utilities;
 using AstroBackEnd.ViewsModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/zodiac")]
     [ApiController]
     public class ZodiacController : ControllerBase
     {
         private IUnitOfWork _work;
         private IZodiacService _zodiacService;
-
-        public ZodiacController(IUnitOfWork _work, IZodiacService zodiacService)
+        private AstrologyUtil Astrology;
+        public ZodiacController(IUnitOfWork _work, IZodiacService zodiacService, AstrologyUtil astrology)
         {
             this._work = _work;
             this._zodiacService = zodiacService;
+            Astrology = astrology;
         }
 
-        [HttpGet]
-        
+        [HttpGet("{id}")]
         public IActionResult GetZodiac(int id)
         {
-            return Ok(_zodiacService.GetZodiac(id));
+            try
+            {
+                return Ok(_zodiacService.GetZodiac(id));
+            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            
         }
 
         [HttpGet]
-        [Route("GetAllZodiac")]
-        public IActionResult GetAllZodiac()
+        public IActionResult FindZodiac(int id, string name, string sortBy, int page = 1, int pageSize = 20)
         {
-            Func<Zodiac,ZodiacView> maping = Zodiac =>
+            try
             {
-                return new ZodiacView()
+                PagingRequest pagingRequest = new PagingRequest()
                 {
-                    Id = Zodiac.Id,
-                    Name = Zodiac.Name,
-                    ZodiacDayStart = Zodiac.ZodiacDayStart,
-                    ZodiacMonthStart = Zodiac.ZodiacMonthEnd,
-                    ZodiacDayEnd = Zodiac.ZodiacDayEnd,
-                    ZodiacMonthEnd = Zodiac.ZodiacMonthEnd,
-                    Icon = Zodiac.Icon,
-                    Descreiption = Zodiac.Descreiption,
-                    MainContent = Zodiac.MainContent,
-                    
+                    SortBy = sortBy,
+                    Page = page,
+                    PageSize = pageSize
                 };
-            };
-            return Ok(_zodiacService.GetAllZodiac().Select(maping));
-        }
 
-        private void Func(Zodiac zodiac, ZodiacView zodiacView)
-        {
-            throw new NotImplementedException();
-        }
-
-        [HttpPost]
-        [Route("FindZodiac")]
-        public IActionResult FindZodiac(FindZodiacRequest request)
-        {
-            return Ok(_zodiacService.FindZodiac(request));
+                FindZodiacRequest request = new FindZodiacRequest()
+                {
+                    Id = id,
+                    Name = name,
+                    PagingRequest = pagingRequest,
+                };
+                return Ok(_zodiacService.FindZodiac(request));
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPost]
         public IActionResult CreateZodiac(CreateZodiacRequest request)
         {
-            return Ok(_zodiacService.CreateZodiac(request));
+            try
+            {
+                return Ok(_zodiacService.CreateZodiac(request));
+            }catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
-
-
 
         [HttpDelete("{id}")]
         public IActionResult ReomoveZodiac(int id)
         {
-            return Ok(_zodiacService.RemoveZodiac(id));
+            try
+            {
+                return Ok(_zodiacService.RemoveZodiac(id));
+            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
-
-
 
         [HttpPut]
         public IActionResult UpdateZodiac(int id, UpdateZodiacRequest updateZodiac)
         {
-            _zodiacService.UpdateZodiac(id, updateZodiac);
-            return Ok();
+            try
+            {
+                return Ok(_zodiacService.UpdateZodiac(id, updateZodiac));
+            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
-
-
-
-
-    }
-
-
-
-    
+        [HttpGet("natal")]
+        public IActionResult getBirthChart(DateTime date, double longtitude, double latitude)
+        {
+            try
+            {
+                return Ok(Astrology.GetHousePosOfPlanets(date, longtitude, latitude));
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+    } 
 }

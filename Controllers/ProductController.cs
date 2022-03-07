@@ -16,7 +16,7 @@ using AstroBackEnd.ViewsModel;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/product")]
     [ApiController]
     public class ProductController : ControllerBase
     {
@@ -28,96 +28,6 @@ namespace AstroBackEnd.Controllers
             this._Service = service;
             this._work = work;
         }
-        [HttpGet]
-        public IActionResult GetAllProduct()
-        {
-            Func<Product, ViewsModel.ProductView> maping = product =>
-            {
-                return new ProductView()
-                {
-                    Id = product.Id,
-                    //MasterProductId = product.MasterProduct.Id,
-                    Name = product.Name,
-                    Description = product.Description,
-                    Detail = product.Detail,
-                    //CatagoryId = product.Catagory.Id,
-                    Size = product.Size,
-                    Price = product.Price,
-                    Gender = product.Gender,
-                    Color = product.Color,
-                    Inventory = product.Inventory
-                };
-
-            };
-            return Ok(_Service.GetAllProduct().Select(maping));
-        }
-
-        [HttpGet("{id}")]
-        public IActionResult GetProduct(int id)
-        {
-            var product = _Service.GetProduct(id);
-            if (product != null)
-            {
-                return Ok(product);
-            }
-            else
-            {
-                return NotFound();
-            }
-        }
-        [HttpPost]
-        public IActionResult CreateProduct([FromBody] ProductsCreateRequest request)
-        {
-            return Ok(_Service.CreateProduct(request));
-        }
-
-        [HttpPost]
-        [Route("CreateMasterProduct")]
-        public IActionResult CreateMasterProduct([FromBody] MasterProductCreateRequest request)
-        {
-            var result = _Service.CreateMasterProduct(request);
-            if (result == null)
-            {
-                return BadRequest(new { StatusCodes = 404, Message = "Can't create product" });
-            }
-            else
-            {
-                return Ok(new { StatusCode = 200, message = "The request has been completed successfully", data = result });
-            }
-        }
-
-        [HttpPost]
-        [Route("findProduct")]
-        public IActionResult FindProduct(FindProductsRequest request)
-        {
-            Func<Product, ViewsModel.ProductView> maping = product =>
-            {
-                return new ProductView()
-                {
-                    Id = product.Id,
-                    //MasterProductId = product.MasterProduct.Id,
-                    Name = product.Name,
-                    Description = product.Description,
-                    Detail = product.Detail,
-                    //CatagoryId = product.Catagory.Id,
-                    Size = product.Size,
-                    Price = product.Price,
-                    Gender = product.Gender,
-                    Color = product.Color,
-                    Inventory = product.Inventory
-                };
-
-            };
-            return Ok(_Service.FindProducts(request).Select(maping));
-        }
-
-        [HttpPut("{id}")]
-        public IActionResult UpdateProduct(int id, ProductsUpdateRequest request)
-        {
-            Product updateProduct = _Service.UpdateProduct(id, request);
-
-            return Ok(updateProduct);
-        }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteProduct(int id)
@@ -125,5 +35,139 @@ namespace AstroBackEnd.Controllers
             _Service.DeleteProduct(id);
             return Ok();
         }
+
+        [HttpGet("master/{id}")]
+        public IActionResult GetProduct(int id)
+        {
+            var product = _Service.GetMasterProduct(id);
+            return product == null? NotFound("Master Product id {" +id + "} not found!!") : Ok(new MasterProductView(product));
+        }
+
+        
+        [HttpGet("master")]
+        public IActionResult GetAllProductMaster(int? id, string? name, string? description, string? detail, int? categoryId, int? zodiacsId, int? productVariationId, int? status, string? sortBy, int page = 1, int pageSize = 20)
+        {
+            try
+            {
+                int total = 0;
+                IEnumerable<MasterProductView> products = _Service.FindMasterProduct(new FindMasterProductRequest()
+                {
+                    Id = id,
+                    CategoryId = categoryId,
+                    Description = description,
+                    Detail = detail,
+                    Name = name,
+                    ProductVariationId = productVariationId,
+                    ZodiacsId = zodiacsId,
+                    Status = status,
+                    PagingRequest = new PagingRequest() { Page = page, PageSize = pageSize, SortBy = sortBy }
+
+                }, out total).Select(p => new MasterProductView(p));
+
+                return Ok(new PagingView() { Payload = products, Total = total });
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.StackTrace);
+            }
+        }
+
+        [HttpPost]
+        [Route("master")]
+        public IActionResult CreateMasterProduct([FromBody] MasterProductCreateRequest request)
+        {
+            try
+            {
+                return Ok(new MasterProductView(_Service.CreateMasterProduct(request)));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+        }
+
+        [HttpPut("master")]
+        public IActionResult UpdateProduct(int id, MasterProductsUpdateRequest request)
+        {
+            try
+            {
+                Product updateProduct = _Service.UpdateMasterProduct(id, request);
+
+                return Ok(new MasterProductView(updateProduct));
+            }
+            catch(Exception e)
+            {
+                
+                return BadRequest(e.StackTrace);
+            }
+        }
+
+        [HttpGet("variant/{id}")]
+        public IActionResult GetMasterProduct(int id)
+        {
+            var product = _Service.GetProductVariant(id);
+            return product == null ? NotFound("Product variant id {" + id + "} not found!!") : Ok(new ProductVariationView(product));
+        }
+
+        [HttpGet("variant")]
+        public IActionResult GetAllProductVariant(string? Size, double? Price, int? Gender, string? Color, int? status, string? SortBy, int Page = 1, int pageSize = 20)
+        {
+            try
+            {
+                int total = 0;
+
+                var products = _Service.FindProductVariant(new FindProductsVariantRequest() { 
+                    Color = Color,
+                    Gender = Gender,
+                    Price = Price,
+                    Size = Size,
+                    Status = status,
+                    PagingRequest =  new PagingRequest() { Page = Page, PageSize = pageSize, SortBy = SortBy }
+
+                }, out total).Select(p => new ProductVariationView(p));
+
+                PagingView pagingView = new PagingView()
+                {
+                    Payload = products,
+                    Total = total
+                };
+
+                return Ok(pagingView);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost("variant")]
+        public IActionResult CreateProduct([FromBody] ProductVariantCreateRequest request)
+        {
+            try
+            {
+
+                return Ok(new ProductVariationView(_Service.CreateProductVariant(request)));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPut("variant")]
+        public IActionResult UpdateProductVariant(int id, ProductVariantUpdateRequest request)
+        {
+            try
+            {
+                Product updateProduct = _Service.UpdateProductVariant(id, request);
+                return Ok(new ProductVariationView(updateProduct));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AstroBackEnd.Models;
 using AstroBackEnd.RequestModels;
 using AstroBackEnd.Services.Core;
+using AstroBackEnd.ViewsModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/profile")]
     [ApiController]
     public class ProfileController : ControllerBase
     {
@@ -20,20 +21,6 @@ namespace AstroBackEnd.Controllers
         public ProfileController(IProfileService profileService)
         {
             _profileService = profileService;
-        }
-
-        [HttpGet]
-        public IActionResult GetAllProfiles()
-        {
-            try
-            {
-                return Ok(_profileService.GetAllProfile());
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-            
         }
 
         [HttpGet("{id}")]
@@ -64,26 +51,39 @@ namespace AstroBackEnd.Controllers
             
         }
 
-        [HttpPost]
-        [Route("f")]
-        public IActionResult FindProfile(FindProfileRequest request)
+        [HttpGet]
+        public IActionResult FindProfile(string? name, DateTime? birthDateStart, DateTime? birthDateEnd, string? birthPlace, int? zodiacId, string? sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
-                return Ok(_profileService.FindProfile(request));
+                int total = 0;
+                IEnumerable<Profile> profiles = _profileService.FindProfile(new FindProfileRequest()
+                {
+                    Name = name,
+                    BirthDateStart = birthDateStart,
+                    BirthDateEnd = birthDateEnd,
+                    BirthPlace = birthPlace,
+                    ZodiacId = zodiacId,
+                    PagingRequest = new PagingRequest()
+                    {
+                        Page = page,
+                        PageSize = pageSize,
+                        SortBy = sortBy
+                    }
+                }, out total);
+
+
+                return Ok(new PagingView() { Payload = profiles, Total = total } );
             }
             catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
-            
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public IActionResult UpdateProfile(int id, CreateProfileRequest request)
         {
-           
-
             try
             {
                 Profile updateProfile = _profileService.UpdateProfile(id, request);
@@ -107,8 +107,7 @@ namespace AstroBackEnd.Controllers
             catch (Exception e)
             {
                 return BadRequest(e.Message);
-            }
-            
+            } 
         }
     }
 }

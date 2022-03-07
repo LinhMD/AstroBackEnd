@@ -32,7 +32,7 @@ namespace AstroBackEnd.Services.Implement
 
             if (product == null) throw new ArgumentException("Product ID not found");
 
-            if(product.MasterProduct != null) throw new ArgumentException("Product Must be a Product Variation");
+            if(product.MasterProductId == null) throw new ArgumentException("Product Must be a Product Variation");
 
             var detail = new OrderDetail()
             {
@@ -141,6 +141,57 @@ namespace AstroBackEnd.Services.Implement
             }
 
             return detail;
+        }
+
+        public IEnumerable<OrderDetail> FindOrderDetail(FindOrderDetailRequest request, out int total)
+        {
+            Func<OrderDetail, bool> filter = detail =>
+            {
+                bool checkID = request.OrderId == null || detail.OrderId == request.OrderId;
+
+                bool checkProductName = request.ProductName == null || _work.Products.Get(detail.ProductId).Name.Contains(request.ProductName);
+
+                bool checkTotalPriceStart = request.TotalPriceStart == null || detail.TotalPrice >= request.TotalPriceStart;
+                bool checkTotalPriceEnd = request.TotalPriceEnd == null || detail.TotalPrice <= request.TotalPriceEnd;
+
+                bool checkQuatityStart = request.QuantityStart == null || detail.Quantity >= request.QuantityStart;
+                bool checkQuatityEnd = request.QuantityEnd == null || detail.Quantity <= request.QuantityEnd;
+
+                bool checkReviewMess = !string.IsNullOrWhiteSpace(request.ReviewMessage) ?
+                                        detail.ReviewMessage == null ? false : detail.ReviewMessage.Contains(request.ReviewMessage) : true;
+
+                bool checkReviewDateStart = request.ReviewDateStart != null ? detail.ReviewDate == null ? false : detail.ReviewDate >= request.ReviewDateStart : true;
+                bool checkReviewDateEnd = request.ReviewDateEnd != null ? detail.ReviewDate == null ? false : detail.ReviewDate <= request.ReviewDateEnd : true;
+
+                return checkID
+                        && checkProductName
+                        && checkTotalPriceStart
+                        && checkTotalPriceEnd
+                        && checkQuatityStart
+                        && checkQuatityEnd
+                        && checkReviewMess
+                        && checkReviewDateStart
+                        && checkReviewDateEnd;
+            };
+
+            PagingRequest paging = request.Paging;
+
+            if (paging == null || paging.SortBy == null)
+            {
+                IEnumerable<OrderDetail> result = _work.OrderDetails.Find(filter, o => o.Id);
+                total = result.Count();
+                return result;
+            }
+            else
+            {
+                return paging.SortBy switch
+                {
+                    "Quantity" => _work.OrderDetails.FindPaging(filter, o => o.Quantity, out total, paging.Page, paging.PageSize),
+                    "ReviewDate" => _work.OrderDetails.FindPaging(filter, o => o.ReviewDate, out total, paging.Page, paging.PageSize),
+                    "TotalPrice" => _work.OrderDetails.FindPaging(filter, o => o.TotalPrice, out total, paging.Page, paging.PageSize),
+                    _ => _work.OrderDetails.FindPaging(filter, o => o.Id, out total, paging.Page, paging.PageSize)
+                };
+            }
         }
     }
 }

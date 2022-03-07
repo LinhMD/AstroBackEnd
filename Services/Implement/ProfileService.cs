@@ -97,6 +97,53 @@ namespace AstroBackEnd.Services.Implement
             return result;
         }
 
+        public IEnumerable<Profile> FindProfile(FindProfileRequest request, out int total)
+        {
+            Func<Profile, bool> filter = p =>
+            {
+                bool checkName = true;
+                if (!string.IsNullOrWhiteSpace(request.Name))
+                {
+                    checkName = p.Name.Contains(request.Name);
+                }
+
+                bool checkBirthPlace = true;
+                if (!string.IsNullOrWhiteSpace(request.BirthPlace))
+                {
+                    checkBirthPlace = p.BirthPlace.Contains(request.BirthPlace);
+                }
+
+                bool checkZodiac = request.ZodiacId == null ? true : p.Zodiac.Id == request.ZodiacId;
+
+                bool checkBirthDate = true;
+                if (request.BirthDateEnd != null && request.BirthDateStart != null)
+                {
+                    checkBirthDate = p.BirthDate <= request.BirthDateEnd && p.BirthDate >= request.BirthDateStart;
+                }
+                return checkName && checkBirthDate && checkZodiac && checkBirthPlace;
+            };
+
+            IEnumerable<Profile> result = null;
+
+            if (request.PagingRequest != null)
+            {
+                result = request.PagingRequest.SortBy switch
+                {
+                    "Name" => _work.Profiles.FindPaging(filter, p => p.Name, out total, request.PagingRequest.Page, request.PagingRequest.PageSize),
+                    "BirthDate" => _work.Profiles.FindPaging(filter, p => p.BirthDate, out total, request.PagingRequest.Page, request.PagingRequest.PageSize),
+                    "BirthPlace" => _work.Profiles.FindPaging(filter, p => p.BirthPlace, out total, request.PagingRequest.Page, request.PagingRequest.PageSize),
+                    _ => _work.Profiles.FindPaging(filter, p => p.Name, out total, request.PagingRequest.Page, request.PagingRequest.PageSize),
+                };
+            }
+            else
+            {
+                result = _work.Profiles.Find(filter, p => p.Name);
+                total = result.Count();
+            }
+
+            return result;
+        }
+
         public IEnumerable<Profile> GetAllProfile()
         {
             

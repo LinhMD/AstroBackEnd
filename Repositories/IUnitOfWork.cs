@@ -22,8 +22,28 @@ namespace AstroBackEnd.Repositories
 
         IProductRepository Products { get; }
 
-        ICatagoryRepository Catagory { get; }
+        ICategoryRepository Categorys { get; }
+
         IZodiacRepository Zodiacs { get; }
+
+        IImageRepository Image { get; }
+       
+
+        IHouseRepository Houses { get; }
+
+        IZodiacHouseRepository ZodiacHouses { get; }
+
+        IHoroscopeRepository Horoscopes { get; }
+
+        IQuoteRepository Quotes { get; }
+
+        IPlanetRepository Planets { get; }
+
+        IPlanetZodiacRepository PlanetZodiacs { get; }
+
+        IPlanetHouseRepository PlanetHouses { get; }
+
+
 
         int Complete();
 

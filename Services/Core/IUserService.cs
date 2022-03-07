@@ -1,6 +1,7 @@
 ﻿using AstroBackEnd.Models;
 using AstroBackEnd.Repositories;
 using AstroBackEnd.RequestModels;
+using AstroBackEnd.RequestModels.UserRequest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +17,16 @@ namespace AstroBackEnd.Services.Core
 
         public IEnumerable<User> FindUsers(FindUserRequest userRequest);
 
+        public IEnumerable<User> FindUsers(FindUserRequest userRequest, out int total);
+
         public void DeleteUser(int id);
 
-        public void UpdateUser(int id, UserCreateRequest request);
+        public void UpdateUser(int id, UserUpdateRequest request);
 
         public User CreateUser(UserCreateRequest user);
 
+        public Order getCart(int userId);
+
+        public Order AddToCart(int userId, AddToCartRequest request);
     }
 }

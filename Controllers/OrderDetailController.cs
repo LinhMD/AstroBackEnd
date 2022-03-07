@@ -1,5 +1,7 @@
-﻿using AstroBackEnd.RequestModels.OrderDetailRequest;
+﻿using AstroBackEnd.RequestModels;
+using AstroBackEnd.RequestModels.OrderDetailRequest;
 using AstroBackEnd.Services.Core;
+using AstroBackEnd.ViewsModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -9,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/detail")]
     [ApiController]
     public class OrderDetailController : ControllerBase
     {
@@ -21,29 +23,41 @@ namespace AstroBackEnd.Controllers
             this._detailService = detailService;
         }
 
+
         [HttpGet]
-        public IActionResult GetAllOrderDetail()
-        {
-
-            try
-            {
-                IEnumerable<Models.OrderDetail> details = _detailService.GetAllOrderDetails();
-
-                return Ok(details);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpPost("f")]
-        public IActionResult FindOrderDetail(FindOrderDetailRequest request)
+        public IActionResult FindOrderDetail(   int? orderId, 
+                                                string? productName, 
+                                                double? totalPriceStart,
+                                                double? totalPriceEnd, 
+                                                int? quantityStart,
+                                                int? quantityEnd, 
+                                                string? reviewMessage, 
+                                                DateTime? reviewDateStart, 
+                                                DateTime? reviewDateEnd,
+                                                string? sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
-                IEnumerable<Models.OrderDetail> details = _detailService.FindOrderDetail(request);
-                return Ok(details);
+                int total = 0;
+                IEnumerable<Models.OrderDetail> details = _detailService.FindOrderDetail(new FindOrderDetailRequest() 
+                { 
+                    OrderId = orderId,
+                    ProductName = productName,
+                    TotalPriceStart = totalPriceStart,
+                    TotalPriceEnd = totalPriceEnd,
+                    QuantityStart = quantityStart,
+                    QuantityEnd = quantityEnd,
+                    ReviewMessage = reviewMessage,
+                    ReviewDateStart= reviewDateStart,
+                    ReviewDateEnd = reviewDateEnd,
+                    Paging = new PagingRequest()
+                    {
+                        Page = page,
+                        PageSize = pageSize,
+                        SortBy = sortBy
+                    }
+                }, out total);
+                return Ok(new PagingView() { Payload = details, Total = total });
             }
             catch 
             {
@@ -73,7 +87,7 @@ namespace AstroBackEnd.Controllers
             return Ok(detail);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public IActionResult UpdateOrderDetail(int id, OrderDetailUpdateRequest request)
         {
             try
@@ -87,7 +101,7 @@ namespace AstroBackEnd.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult DeleteOrderDetail(int id)
         {
             try
