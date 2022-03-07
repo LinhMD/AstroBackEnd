@@ -70,12 +70,21 @@ namespace AstroBackEnd.Controllers
                     Page = page,
                     PageSize = pageSize,
                 };
+
                 FindCategoryRequest findCategoryRequest = new FindCategoryRequest()
                 {
                     Id=id,
                     Name = name
                 };
-                return Ok(_Service.FindCategory(findCategoryRequest));
+
+                int total = 0;
+
+                IEnumerable<Category> categories = _Service.FindCategory(findCategoryRequest, out total);
+                return Ok(new PagingView()
+                {
+                    Payload = categories,
+                    Total = total
+                });
             }
             catch (Exception ex)
             {

@@ -122,5 +122,45 @@ namespace AstroBackEnd.Services.Implement
             }
             return image;
         }
+
+        public IEnumerable<ImgLink> FindImage(FindImageRequest Request, out int total)
+        {
+            Func<ImgLink, bool> filter = p =>
+            {
+                bool checkLink = true;
+                if (!string.IsNullOrWhiteSpace(Request.Link))
+                {
+                    checkLink = p.Link.Contains(Request.Link);
+                }
+                bool checkProId = true;
+                checkProId = Request.ProductId == null ? true : p.ProductId == Request.ProductId;
+
+                return checkLink && checkProId;
+            };
+            IEnumerable<ImgLink> result = null;
+            if (Request.PagingRequest != null)
+            {
+                switch (Request.PagingRequest.SortBy)
+                {
+                    case "Link":
+                        result = _work.Image.FindPaging(filter, p => p.Link,out total, Request.PagingRequest.Page, Request.PagingRequest.PageSize);
+                        break;
+                    case "ProductId":
+                        result = _work.Image.FindPaging(filter, p => p.ProductId, out total, Request.PagingRequest.Page, Request.PagingRequest.PageSize);
+                        break;
+                    default:
+                        result = _work.Image.FindPaging(filter, p => p.Link, out total, Request.PagingRequest.Page, Request.PagingRequest.PageSize);
+                        break;
+
+                }
+            }
+            else
+            {
+                result = _work.Image.Find(filter, p => p.Link);
+                total = result.Count();
+            }
+
+            return result;
+        }
     }
 }

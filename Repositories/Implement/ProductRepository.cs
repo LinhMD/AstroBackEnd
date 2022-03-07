@@ -34,7 +34,25 @@ namespace AstroBackEnd.Repositories.Implement
                                         .Where(filter)
                                         .OrderBy(sortBy)
                                         .Skip((page - 1) * pageSize)
-                                        .Take(pageSize + 1);
+                                        .Take(pageSize);
+        }
+
+        public IEnumerable<Product> FindProductMasterWithAllData<TSortBy>(Func<Product, bool> filter, Func<Product, TSortBy> sortBy, out int total, int page = 1, int pageSize = 20)
+        {
+            var products = AstroData.Products
+                                        .Include("MasterProduct")
+                                        .Include("Category")
+                                        .Include("ImgLinks")
+                                        .Include("Zodiacs")
+                                        .Include("ProductVariation")
+                                        .Where(filter)
+                                        .OrderBy(sortBy);
+
+            total = products.Count();
+
+            return products
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize);
         }
     }
 }

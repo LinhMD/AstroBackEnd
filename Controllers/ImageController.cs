@@ -69,7 +69,11 @@ namespace AstroBackEnd.Controllers
                     Link = link,
                     ProductId=productId
                 };
-                return Ok(_Service.FindImage(findImageRequest));
+                int total = 0;
+                IEnumerable<ImgLink> links = _Service.FindImage(findImageRequest, out total);
+
+                
+                return Ok(new PagingView() { Payload = links, Total = total});
             }
             catch (Exception ex)
             {

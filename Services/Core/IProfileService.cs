@@ -13,6 +13,8 @@ namespace AstroBackEnd.Services.Core
 
         public IEnumerable<Profile> FindProfile(FindProfileRequest request);
 
+        public IEnumerable<Profile> FindProfile(FindProfileRequest request, out int total);
+
         public IEnumerable<Profile> GetAllProfile();
 
         public void DeleteProfile(int id);

@@ -16,6 +16,8 @@ namespace AstroBackEnd.Services.Core
 
         public IEnumerable<Order> FindOrder(FindOrderRequest request);
 
+        public IEnumerable<Order> FindOrder(FindOrderRequest request, out int total);
+
         public Order CreateOrder(CreateOrderRequest request);
 
         public Order UpdateOrder(int id, CreateOrderRequest request);

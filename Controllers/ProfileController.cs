@@ -1,6 +1,7 @@
 ﻿using AstroBackEnd.Models;
 using AstroBackEnd.RequestModels;
 using AstroBackEnd.Services.Core;
+using AstroBackEnd.ViewsModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -55,8 +56,9 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
-                return Ok(_profileService.FindProfile(new FindProfileRequest() 
-                { 
+                int total = 0;
+                IEnumerable<Profile> profiles = _profileService.FindProfile(new FindProfileRequest()
+                {
                     Name = name,
                     BirthDateStart = birthDateStart,
                     BirthDateEnd = birthDateEnd,
@@ -68,7 +70,10 @@ namespace AstroBackEnd.Controllers
                         PageSize = pageSize,
                         SortBy = sortBy
                     }
-                }));
+                }, out total);
+
+
+                return Ok(new PagingView() { Payload = profiles, Total = total } );
             }
             catch (Exception e)
             {

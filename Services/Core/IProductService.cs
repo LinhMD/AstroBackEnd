@@ -24,6 +24,8 @@ namespace AstroBackEnd.Services.Core
 
         public IEnumerable<Product> FindMasterProduct(FindMasterProductRequest request);
 
+        public IEnumerable<Product> FindMasterProduct(FindMasterProductRequest request, out int total);
+
         public void DeleteProduct(int id);
 
         public Product UpdateMasterProduct(int id, MasterProductsUpdateRequest request);

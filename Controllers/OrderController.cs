@@ -1,5 +1,6 @@
 ﻿using AstroBackEnd.RequestModels.OrderRequest;
 using AstroBackEnd.Services.Core;
+using AstroBackEnd.ViewsModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -87,6 +88,7 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
+                int total = 0;
                 var orders = _orderService.FindOrder(new FindOrderRequest() { 
                     Status = status,
                     OrderTimeEnd = orderTimeEnd,
@@ -102,8 +104,9 @@ namespace AstroBackEnd.Controllers
                         Page = page,
                         PageSize = pageSize,
                         SortBy = sortBy
-                    }                });
-                return Ok(orders);
+                    }               
+                }, out total);
+                return Ok(new PagingView() { Payload = orders, Total = total});
             }
             catch (Exception e)
             {

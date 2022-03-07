@@ -49,7 +49,9 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
-                return Ok(_Service.FindMasterProduct(new FindMasterProductRequest() { 
+                int total = 0;
+                IEnumerable<MasterProductView> products = _Service.FindMasterProduct(new FindMasterProductRequest()
+                {
                     Id = id,
                     CategoryId = categoryId,
                     Description = description,
@@ -57,13 +59,15 @@ namespace AstroBackEnd.Controllers
                     Name = name,
                     ProductVariationId = productVariationId,
                     ZodiacsId = zodiacsId,
-                    PagingRequest = new PagingRequest() {  Page = page, PageSize = pageSize , SortBy = sortBy }
-                
-                }).Select(p => new MasterProductView(p)));
+                    PagingRequest = new PagingRequest() { Page = page, PageSize = pageSize, SortBy = sortBy }
+
+                }, out total).Select(p => new MasterProductView(p));
+
+                return Ok(new PagingView() { Payload = products, Total = total });
             }
             catch(Exception e)
             {
-                return BadRequest(e.Message);
+                return BadRequest(e.StackTrace);
             }
         }
 
@@ -123,7 +127,7 @@ namespace AstroBackEnd.Controllers
 
                 PagingView pagingView = new PagingView()
                 {
-                    Pageload = products,
+                    Payload = products,
                     Total = total
                 };
 

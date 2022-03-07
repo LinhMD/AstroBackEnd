@@ -1,6 +1,7 @@
 ﻿using AstroBackEnd.RequestModels;
 using AstroBackEnd.RequestModels.OrderDetailRequest;
 using AstroBackEnd.Services.Core;
+using AstroBackEnd.ViewsModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -37,6 +38,7 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
+                int total = 0;
                 IEnumerable<Models.OrderDetail> details = _detailService.FindOrderDetail(new FindOrderDetailRequest() 
                 { 
                     OrderId = orderId,
@@ -54,10 +56,8 @@ namespace AstroBackEnd.Controllers
                         PageSize = pageSize,
                         SortBy = sortBy
                     }
-                    
-                
-                });
-                return Ok(details);
+                }, out total);
+                return Ok(new PagingView() { Payload = details, Total = total });
             }
             catch 
             {

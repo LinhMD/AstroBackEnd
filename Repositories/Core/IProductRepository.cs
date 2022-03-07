@@ -12,5 +12,7 @@ namespace AstroBackEnd.Repositories.Core
 
         public IEnumerable<Product> FindProducWithAllData<TSortBy>(Func<Product, bool> filter, Func<Product, TSortBy> sortBy, int page = 1, int pageSize = 20);
 
+
+        public IEnumerable<Product> FindProductMasterWithAllData<TSortBy>(Func<Product, bool> filter, Func<Product, TSortBy> sortBy, out int total,  int page = 1, int pageSize = 20);
     }
 }

@@ -92,6 +92,47 @@ namespace AstroBackEnd.Services.Implement
             return result;
         }
 
+        public IEnumerable<Category> FindCategory(FindCategoryRequest request, out int total)
+        {
+            Func<Category, bool> filter = p =>
+            {
+                bool checkId = request.Id == null ? true : p.Id == request.Id;
+
+                bool checkName = true;
+                if (!string.IsNullOrWhiteSpace(request.Name))
+                {
+                    checkName = p.Name.Contains(request.Name);
+                }
+
+
+                return checkName;
+            };
+            IEnumerable<Category> result = null;
+            if (request.PagingRequest != null)
+            {
+                switch (request.PagingRequest.SortBy)
+                {
+                    case "Id":
+                        result = _work.Categorys.FindPaging(filter, p => p.Id, out total, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                        break;
+                    case "Name":
+                        result = _work.Categorys.FindPaging(filter, p => p.Name, out total, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                        break;
+                    default:
+                        result = _work.Categorys.FindPaging(filter, p => p.Id, out total, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                        break;
+
+                }
+            }
+            else
+            {
+                result = _work.Categorys.Find(filter, p => p.Name);
+                total = result.Count();
+            }
+
+            return result;
+        }
+
         public IEnumerable<Category> GetAllCategory()
         {
             return _work.Categorys.GetAll<String>(p => p.Name);
