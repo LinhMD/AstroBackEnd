@@ -32,15 +32,23 @@ namespace AstroBackEnd.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteProduct(int id)
         {
-            _Service.DeleteProduct(id);
-            return Ok();
+            try
+            {
+                return Ok(_Service.DeleteProduct(id));
+            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 
         [HttpGet("master/{id}")]
         public IActionResult GetProduct(int id)
         {
-            var product = _Service.GetMasterProduct(id);
-            return product == null? NotFound("Master Product id {" +id + "} not found!!") : Ok(new MasterProductView(product));
+            //var product = _Service.GetMasterProduct(id);
+            //return product == null? NotFound("Master Product id {" +id + "} not found!!") : Ok(new MasterProductView(product));
+            try
+            {
+                return Ok(_Service.GetMasterProduct(id));
+            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 
         
@@ -61,7 +69,7 @@ namespace AstroBackEnd.Controllers
                 
                 }).Select(p => new MasterProductView(p)));
             }
-            catch(Exception e)
+            catch(ArgumentException e)
             {
                 return BadRequest(e.Message);
             }
@@ -75,7 +83,7 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(new MasterProductView(_Service.CreateMasterProduct(request)));
             }
-            catch (Exception e)
+            catch (ArgumentException e)
             {
                 return BadRequest(e.Message);
             }
@@ -91,7 +99,7 @@ namespace AstroBackEnd.Controllers
 
                 return Ok(new MasterProductView(updateProduct));
             }
-            catch(Exception e)
+            catch(ArgumentException e)
             {
                 
                 return BadRequest(e.StackTrace);
@@ -101,8 +109,13 @@ namespace AstroBackEnd.Controllers
         [HttpGet("variant/{id}")]
         public IActionResult GetMasterProduct(int id)
         {
-            var product = _Service.GetProductVariant(id);
-            return product == null ? NotFound("Product variant id {" + id + "} not found!!") : Ok(new ProductVariationView(product));
+            //var product = _Service.GetProductVariant(id);
+            //return product == null ? NotFound("Product variant id {" + id + "} not found!!") : Ok(new ProductVariationView(product));
+            try
+            {
+                return Ok(_Service.GetProductVariant(id));
+            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 
         [HttpGet("variant")]
@@ -119,7 +132,7 @@ namespace AstroBackEnd.Controllers
 
                 }).Select(p => new ProductVariationView(p)));
             }
-            catch (Exception e)
+            catch (ArgumentException e)
             {
                 return BadRequest(e.Message);
             }
@@ -132,7 +145,7 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(new ProductVariationView(_Service.CreateProductVariant(request)));
             }
-            catch (Exception e)
+            catch (ArgumentException e)
             {
                 return BadRequest(e.Message);
             }
@@ -146,9 +159,9 @@ namespace AstroBackEnd.Controllers
                 Product updateProduct = _Service.UpdateProductVariant(id, request);
                 return Ok(new ProductVariationView(updateProduct));
             }
-            catch (Exception e)
+            catch (ArgumentException e)
             {
-                return BadRequest(e);
+                return BadRequest(e.Message);
             }
         }
 
