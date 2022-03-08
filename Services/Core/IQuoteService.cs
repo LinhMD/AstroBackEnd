@@ -7,7 +7,7 @@ namespace AstroBackEnd.Repositories.Core
     public interface IQuoteService
     {
         public Quote CreateQuote(CreateQuoteRequest request);
-        public IEnumerable<Quote> FindQuote(FindQuoteRequest request);
+        public IEnumerable<Quote> FindQuote(FindQuoteRequest request, out int total);
         public Quote GetQuote(int id);
         public Quote UpdateQuote(int id, UpdateQuoteRequest request);
         public Quote DeleteQuote(int id);

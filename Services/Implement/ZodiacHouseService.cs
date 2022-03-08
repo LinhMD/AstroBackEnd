@@ -6,6 +6,7 @@ using AstroBackEnd.Services.Core;
 using AstroBackEnd.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AstroBackEnd.Services.Implement
 {
@@ -45,7 +46,7 @@ namespace AstroBackEnd.Services.Implement
             }
         }
 
-        public IEnumerable<ZodiacHouse>  FindZodiacHouse(FindZodiacHouse request)
+        public IEnumerable<ZodiacHouse>  FindZodiacHouse(FindZodiacHouse request, out int total)
         {
             if (request.Id < 0) { throw new ArgumentException("Id must be equal or than zero"); }
             try
@@ -85,21 +86,23 @@ namespace AstroBackEnd.Services.Implement
                 PagingRequest pagingRequest = request.PagingRequest;
                 Validation.ValidNumberThanZero(pagingRequest.Page, "Page must be than zero");
                 Validation.ValidNumberThanZero(pagingRequest.PageSize, "PageSize must be than zero");
-                if (pagingRequest == null || pagingRequest.SortBy == null)
-                {
-                    return _work.ZodiacHouses.Find(filter, p => p.Id);
-                }
-                else
+                if (pagingRequest != null)
                 {
                     switch (pagingRequest.SortBy)
                     {
                         case "ZodiacId":
-                            return _work.ZodiacHouses.FindPaging(filter, p => p.ZodiacId, pagingRequest.Page, pagingRequest.PageSize);
+                            return _work.ZodiacHouses.FindPaging(filter, p => p.ZodiacId, out total, pagingRequest.Page, pagingRequest.PageSize);
                         case "HouseId":
-                            return _work.ZodiacHouses.FindPaging(filter, p => p.HouseId, pagingRequest.Page, pagingRequest.PageSize);
+                            return _work.ZodiacHouses.FindPaging(filter, p => p.HouseId, out total, pagingRequest.Page, pagingRequest.PageSize);
                         default:
-                            return _work.ZodiacHouses.FindPaging(filter, p => p.Id, pagingRequest.Page, pagingRequest.PageSize);
+                            return _work.ZodiacHouses.FindPaging(filter, p => p.Id, out total, pagingRequest.Page, pagingRequest.PageSize);
                     }
+                }
+                else
+                {
+                    IEnumerable<ZodiacHouse> result = _work.ZodiacHouses.Find(filter, p => p.Id);
+                    total = result.Count();
+                    return result;
                 }
             } catch (Exception ex) { throw new ArgumentException("ZodiacHouseService : " + ex.Message); }
         }

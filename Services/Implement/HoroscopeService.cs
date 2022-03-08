@@ -7,6 +7,7 @@ using AstroBackEnd.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AstroBackEnd.Services.Implement
 {
@@ -54,7 +55,7 @@ namespace AstroBackEnd.Services.Implement
             } else { throw new ArgumentException("This Horoscope not found"); }
         }
 
-        public IEnumerable<Horoscope> FindHoroscope(FindHoroscopeRequest request)
+        public IEnumerable<Horoscope> FindHoroscope(FindHoroscopeRequest request, out int total)
         {
             if (request.Id < 0) { throw new ArgumentException("Id must be equal or than zero"); }
             try
@@ -75,7 +76,7 @@ namespace AstroBackEnd.Services.Implement
                     {
                         if (!string.IsNullOrWhiteSpace(p.ColorLuck))
                         {
-                            checkColorLuck = p.ColorLuck.Contains(request.ColorLuck);
+                            checkColorLuck = p.ColorLuck.ToLower().Contains(request.ColorLuck.ToLower());
                         }
                         else
                         {
@@ -90,7 +91,7 @@ namespace AstroBackEnd.Services.Implement
                     {
                         if (!string.IsNullOrWhiteSpace(p.Work))
                         {
-                            checkWork = p.Work.Contains(request.Work);
+                            checkWork = p.Work.ToLower().Contains(request.Work.ToLower());
                         }
                         else
                         {
@@ -101,48 +102,48 @@ namespace AstroBackEnd.Services.Implement
                     {
                         if (!string.IsNullOrWhiteSpace(p.Love))
                         {
-                            checkLove = p.Love.Contains(request.Love);
+                            checkLove = p.Love.ToLower().Contains(request.Love.ToLower());
                         }
                         else
                         {
                             checkLove = false;
                         }
                     }
-
                     if (!string.IsNullOrWhiteSpace(request.Money))
                     {
                         if (!string.IsNullOrWhiteSpace(p.Money))
                         {
-                            checkMoney = p.Money.Contains(request.Money);
+                            checkMoney = p.Money.ToLower().Contains(request.Money.ToLower());
                         }
                         else
                         {
                             checkMoney = false;
                         }
-
                     }
                     return checkId && checkColorLuck && checkNumberLuck && checkWork && checkLove && checkMoney;
                 };
-                PagingRequest paging = request.PagingRequest;
-                Validation.ValidNumberThanZero(paging.Page, "Page must be than zero");
-                Validation.ValidNumberThanZero(paging.PageSize, "PageSize must be than zero");
-                if (paging == null || paging.SortBy == null)
+                PagingRequest pagingRequest = request.PagingRequest;
+                Validation.ValidNumberThanZero(pagingRequest.Page, "Page must be than zero");
+                Validation.ValidNumberThanZero(pagingRequest.PageSize, "PageSize must be than zero");
+                if (pagingRequest != null)
                 {
-                    return _work.Horoscopes.Find(filter, p => p.Id);
+                    switch (pagingRequest.SortBy)
+                    {
+                        case "NumberLuck":
+                            return _work.Horoscopes.FindPaging(filter, p => p.NumberLuck, out total, pagingRequest.Page, pagingRequest.PageSize);
+                        case "ColorLuck":
+                            return _work.Horoscopes.FindPaging(filter, p => p.ColorLuck, out total, pagingRequest.Page, pagingRequest.PageSize);
+                        case "Money":
+                            return _work.Horoscopes.FindPaging(filter, p => p.Money, out total, pagingRequest.Page, pagingRequest.PageSize);
+                        default:
+                            return _work.Horoscopes.FindPaging(filter, p => p.Id, out total, pagingRequest.Page, pagingRequest.PageSize);
+                    }
                 }
                 else
                 {
-                    switch (paging.SortBy)
-                    {
-                        case "NumberLuck":
-                            return _work.Horoscopes.FindPaging(filter, p => p.NumberLuck, paging.Page, paging.PageSize);
-                        case "ColorLuck":
-                            return _work.Horoscopes.FindPaging(filter, p => p.ColorLuck, paging.Page, paging.PageSize);
-                        case "Money":
-                            return _work.Horoscopes.FindPaging(filter, p => p.Money, paging.Page, paging.PageSize);
-                        default:
-                            return _work.Horoscopes.FindPaging(filter, p => p.Id, paging.Page, paging.PageSize);
-                    }
+                    IEnumerable<Horoscope> result = _work.Horoscopes.Find(filter, p => p.Id);
+                    total = result.Count();
+                    return result;
                 }
             } catch (Exception ex) { throw new ArgumentException("HoroscopeService : " + ex.Message); }
         }

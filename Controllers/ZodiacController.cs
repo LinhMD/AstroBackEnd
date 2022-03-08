@@ -42,6 +42,7 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
+                int total = 0;
                 PagingRequest pagingRequest = new PagingRequest()
                 {
                     SortBy = sortBy,
@@ -55,7 +56,14 @@ namespace AstroBackEnd.Controllers
                     Name = name,
                     PagingRequest = pagingRequest,
                 };
-                return Ok(_zodiacService.FindZodiac(request));
+
+                var result = _zodiacService.FindZodiac(request, out total);
+                PagingView pagingView = new PagingView()
+                {
+                    Payload = result,
+                    Total = total,
+                };
+                return Ok(pagingView);
             }
             catch (ArgumentException e)
             {

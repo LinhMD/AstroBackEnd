@@ -5,6 +5,7 @@ using AstroBackEnd.Services.Core;
 using AstroBackEnd.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AstroBackEnd.Services.Implement
 {
@@ -111,7 +112,7 @@ namespace AstroBackEnd.Services.Implement
             }
         }
 
-        public IEnumerable<Zodiac> FindZodiac(FindZodiacRequest request)
+        public IEnumerable<Zodiac> FindZodiac(FindZodiacRequest request, out int total)
         {
             if (request.Id < 0) { throw new ArgumentException("Id must be equal or than zero"); }
             try
@@ -145,14 +146,16 @@ namespace AstroBackEnd.Services.Implement
                     switch (request.PagingRequest.SortBy)
                     {
                         case "Name":
-                            return _work.Zodiacs.FindPaging(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                            return _work.Zodiacs.FindPaging(filter, p => p.Name, out total, request.PagingRequest.Page, request.PagingRequest.PageSize);
                         default:
-                            return _work.Zodiacs.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                            return _work.Zodiacs.FindPaging(filter, p => p.Id, out total, request.PagingRequest.Page, request.PagingRequest.PageSize);
                     }
                 }
                 else
                 {
-                    return _work.Zodiacs.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                    IEnumerable<Zodiac> result = _work.Zodiacs.Find(filter, p => p.Id);
+                    total = result.Count();
+                    return result;
                 }
             }
             catch(Exception ex) { throw new ArgumentException("ZodiacService : " + ex.Message); }

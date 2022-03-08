@@ -4,6 +4,7 @@ using AstroBackEnd.RequestModels;
 using AstroBackEnd.RequestModels.PlanetZodiacRequest;
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.Utilities;
+using AstroBackEnd.ViewsModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -37,7 +38,8 @@ namespace AstroBackEnd.Controllers
         public IActionResult FindPlanetZodiac(int id, int planetId, int zodiacId, string content, string sortBy, int page = 1, int pageSize = 20)
         {
             try
-            { 
+            {
+                int total = 0;
                 PagingRequest pagingRequest = new PagingRequest()
                 {
                     SortBy = sortBy,
@@ -55,8 +57,13 @@ namespace AstroBackEnd.Controllers
                 };
 
                 Validation.Validate(findPlanetZodiacRequest);
-
-                return Ok(planetZodiacService.FindPlanetZodiac(findPlanetZodiacRequest));
+                var findResult = planetZodiacService.FindPlanetZodiac(findPlanetZodiacRequest, out total);
+                PagingView pagingView = new PagingView()
+                {
+                    Payload = findResult,
+                    Total = total
+                };
+                return Ok(pagingView);
             }
             catch (ArgumentException ex)
             {

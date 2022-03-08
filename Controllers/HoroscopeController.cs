@@ -4,6 +4,7 @@ using AstroBackEnd.RequestModels;
 using AstroBackEnd.RequestModels.HoroscopeRequest;
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.Utilities;
+using AstroBackEnd.ViewsModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -39,6 +40,7 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
+                int total = 0;
                 PagingRequest pagingRequest = new PagingRequest()
                 {
                     SortBy = sortBy,
@@ -54,7 +56,13 @@ namespace AstroBackEnd.Controllers
                     NumberLuck = numberLuck,
                     PagingRequest = pagingRequest
                 };
-                return Ok(horoscopeService.FindHoroscope(findHoroscopeRequest));
+                var findResult = horoscopeService.FindHoroscope(findHoroscopeRequest, out total);
+                PagingView pagingView = new PagingView()
+                {
+                    Payload = findResult,
+                    Total = total
+                };
+                return Ok(pagingView);
             }catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);

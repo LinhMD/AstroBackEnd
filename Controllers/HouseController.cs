@@ -39,6 +39,7 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
+                int total = 0;
                 PagingRequest pagingRequest = new PagingRequest()
                 {
                     SortBy = sortBy,
@@ -56,7 +57,13 @@ namespace AstroBackEnd.Controllers
                     PagingRequest = pagingRequest,
 
                 };
-                return Ok(houseService.FindHouse(request));
+                var finResult = houseService.FindHouse(request, out total);
+                PagingView pagingView = new PagingView()
+                {
+                    Payload = finResult,
+                    Total = total
+                };
+                return Ok(pagingView);
             }catch (ArgumentException ex) { return BadRequest(ex.Message); }
             
         }
