@@ -1,5 +1,6 @@
 ﻿using AstroBackEnd.Models;
 using AstroBackEnd.RequestModels;
+using AstroBackEnd.RequestModels.ProfileRequest;
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.ViewsModel;
 using Microsoft.AspNetCore.Http;
@@ -56,7 +57,6 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
-                int total = 0;
                 IEnumerable<Profile> profiles = _profileService.FindProfile(new FindProfileRequest()
                 {
                     Name = name,
@@ -70,7 +70,7 @@ namespace AstroBackEnd.Controllers
                         PageSize = pageSize,
                         SortBy = sortBy
                     }
-                }, out total);
+                }, out int total);
 
 
                 return Ok(new PagingView() { Payload = profiles, Total = total } );
@@ -82,7 +82,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPut]
-        public IActionResult UpdateProfile(int id, CreateProfileRequest request)
+        public IActionResult UpdateProfile(int id, UpdateProfileRequest request)
         {
             try
             {

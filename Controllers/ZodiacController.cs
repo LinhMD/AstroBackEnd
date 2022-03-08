@@ -114,5 +114,17 @@ namespace AstroBackEnd.Controllers
                 return BadRequest(e.Message);
             }
         }
+        [HttpGet("natal2")]
+        public IActionResult GetHouseSnapshot(DateTime date, double longtitude, double latitude)
+        {
+            try
+            {
+                return Ok(Astrology.GetHouseSnapshot(date, longtitude, latitude));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.StackTrace);
+            }
+        }
     } 
 }

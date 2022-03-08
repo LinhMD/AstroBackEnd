@@ -1,5 +1,6 @@
 ﻿using AstroBackEnd.Models;
 using AstroBackEnd.RequestModels;
+using AstroBackEnd.RequestModels.ProfileRequest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,6 @@ namespace AstroBackEnd.Services.Core
 
         public Profile CreateProfile(CreateProfileRequest request);
 
-        public Profile UpdateProfile(int id, CreateProfileRequest request);
+        public Profile UpdateProfile(int id, UpdateProfileRequest request);
     }
 }

@@ -2,7 +2,9 @@
 using AstroBackEnd.Models;
 using AstroBackEnd.Repositories;
 using AstroBackEnd.RequestModels;
+using AstroBackEnd.RequestModels.ProfileRequest;
 using AstroBackEnd.Services.Core;
+using AstroBackEnd.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +17,13 @@ namespace AstroBackEnd.Services.Implement
         private readonly IUnitOfWork _work;
 
         private readonly AstroDataContext _astroData;
-        public ProfileService(IUnitOfWork work, AstroDataContext astroData) 
+
+        private readonly AstrologyUtil _astro;
+        public ProfileService(IUnitOfWork work, AstroDataContext astroData, AstrologyUtil astrology) 
         {
             this._work = work;
             this._astroData = astroData;
+            this._astro = astrology;
         }
 
         public Profile CreateProfile(CreateProfileRequest request)
@@ -28,14 +33,18 @@ namespace AstroBackEnd.Services.Implement
                 Name = request.Name,
                 BirthDate = request.BirthDate,
                 BirthPlace = request.BirthPlace,
-                ProfilePhoto = request.ProfilePhoto
+                ProfilePhoto = request.ProfilePhoto,
+                Latitude = request.Latitude,
+                Longitude = request.Longtitude,
+                
             };
+
+            profile.Zodiac = _astro.GetZodiac(profile.BirthDate, profile.Longitude, profile.Latitude);
 
             var user = _work.Users.GetAllUserData(request.UserId);
             if (user == null) throw new ArgumentException("User ID not found");
 
-            user.Profiles.Add(profile);
-
+            profile.UserId = user.Id;
             _work.Profiles.Add(profile);
 
             return profile;
@@ -157,7 +166,7 @@ namespace AstroBackEnd.Services.Implement
             return profile;
         }
 
-        public Profile UpdateProfile(int id, CreateProfileRequest request)
+        public Profile UpdateProfile(int id, UpdateProfileRequest request)
         {
             var profile = GetProfile(id);
 
@@ -173,10 +182,30 @@ namespace AstroBackEnd.Services.Implement
             {
                 profile.BirthPlace = request.BirthPlace;
             }
-            if(request.BirthDate != profile.BirthDate)
+            bool checkZodiacChange = false;
+            if (request.BirthDate != profile.BirthDate)
             {
-                profile.BirthDate = request.BirthDate;
+                profile.BirthDate = (DateTime)request.BirthDate;
+                checkZodiacChange = true;
             }
+
+            if(request.Latitude != null)
+            {
+                profile.Latitude = (double)request.Latitude;
+                checkZodiacChange = true;
+            }
+
+            if(request.Longtitude != null)
+            {
+                profile.Longitude = (double)request.Longtitude;
+                checkZodiacChange = true;
+            }
+
+            if (checkZodiacChange)
+            {
+                profile.Zodiac = _astro.GetZodiac(profile.BirthDate, profile.Longitude, profile.Latitude);
+            }
+
             return profile;
         }
     }
