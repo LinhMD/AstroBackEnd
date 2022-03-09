@@ -78,7 +78,7 @@ namespace AstroBackEnd.Controllers
         /// there is no summary
         /// </summary>
         [HttpGet]
-        public IActionResult FindUsers(string? name, string? phone, string? sortBy,int status = 1,  int page = 1, int pageSize = 20)
+        public IActionResult FindUsers(string? name, string? phone, string? sortBy, int? status,  int page = 1, int pageSize = 20)
         {
             try
             {
@@ -95,13 +95,16 @@ namespace AstroBackEnd.Controllers
                     }
 
                 };
+                int total = 0;
 
-                var users = _userService.FindUsers(request);
+                var users = _userService.FindUsers(request, out total);
+
                 PagingView view = new PagingView()
                 {
                     Payload = users,
-                    Total = 2
+                    Total = total
                 };
+
                 return Ok(view);
             }
             catch (Exception e)

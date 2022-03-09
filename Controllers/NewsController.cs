@@ -11,6 +11,7 @@ using AstroBackEnd.Services.Core;
 using AstroBackEnd.RequestModels.NewRequest;
 using AstroBackEnd.RequestModels;
 using AstroBackEnd.Repositories;
+using AstroBackEnd.ViewsModel;
 
 namespace AstroBackEnd.Controllers
 {
@@ -29,46 +30,33 @@ namespace AstroBackEnd.Controllers
         [HttpGet("{id}")]
         public IActionResult GetNew(int id)
         {
-            var result = _Service.GetNews(id);
-            if (result==null)
+            try
             {
-                return BadRequest(new { StatusCodes = 404, Message = "New not found" });
+                return Ok(_Service.GetNews(id));
             }
-            else
-            {
-                return Ok(new { StatusCode = 200, message = "The request has been completed successfully", data = result }); 
-            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
 
         }
 
         [HttpPost]
         public IActionResult CreateNew([FromBody] NewsCreateRequest request)
         {
-            var result = _Service.CreateNew(request);
-            if (result == null)
+            try
             {
-                return BadRequest(new { StatusCodes = 404, Message = "Can't create New" }); 
+                return Ok(_Service.CreateNew(request));
             }
-            else
-            {
-                return Ok(new { StatusCode = 200, message = "The request has been completed successfully", data = result });
-            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 
         [HttpPut]
         public IActionResult UpdateNew(int id, [FromBody] NewsUpdateRequest request)
         {
-            
-            var checkFindNew = _Service.GetNews(id);
-            if (checkFindNew==null)
+
+            try
             {
-                return BadRequest(new { StatusCodes = 404, Message = "Can't find New" });
+                return Ok(_Service.UpdateNew(id, request));
             }
-            else
-            {
-                _Service.UpdateNew(id, request);
-                return Ok(new { StatusCode = 200, message = "The request has been completed successfully" });
-            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 
         [HttpGet]
@@ -87,11 +75,13 @@ namespace AstroBackEnd.Controllers
                 {
                     Title = title,
                     Description = description,
-                    Tag =tag
+                    Tag = tag
                 };
-                return Ok(_Service.FindNews(findNewsRequest));
+                int total = 0;
+                IEnumerable<News> links = _Service.FindNews(findNewsRequest, out total);
+                return Ok(new PagingView() { Payload = links, Total = total });
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -100,16 +90,11 @@ namespace AstroBackEnd.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteNews(int id)
         {
-            News news = _work.News.Get(id);
-            if (news != null)
+            try
             {
-                _Service.DeleteNew(id);
-                return Ok(news);
+                return Ok(_Service.DeleteNew(id));
             }
-            else
-            {
-                return NotFound();
-            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 
     }

@@ -78,6 +78,39 @@ namespace AstroBackEnd.Services.Implement
             return users;
         }
 
+        public IEnumerable<User> FindUsers(FindUserRequest userRequest, out int total)
+        {
+            Func<User, bool> filter = user =>
+            {
+                bool checkUserName = true;
+                bool checkPhoneNumber = true;
+                bool checkStatus = true;
+
+                if (!string.IsNullOrWhiteSpace(userRequest.Name))
+                {
+                    checkUserName = user.UserName.Contains(userRequest.Name);
+                }
+
+                if (!string.IsNullOrWhiteSpace(userRequest.Phone))
+                {
+                    checkPhoneNumber = user.PhoneNumber.Contains(userRequest.Phone);
+                }
+
+
+                if (userRequest.Status.HasValue)
+                {
+                    checkStatus = user.Status == userRequest.Status;
+                }
+
+
+                return checkUserName && checkStatus && checkPhoneNumber;
+            };
+
+            IEnumerable<User> users = _work.Users.FindPaging<String>(filter, u => u.UserName, out total, userRequest.PagingRequest.Page, userRequest.PagingRequest.PageSize);
+
+            return users;
+        }
+
         public User GetUser(int id)
         {
             User user = _work.Users.GetAllUserData(id);
@@ -156,5 +189,7 @@ namespace AstroBackEnd.Services.Implement
 
             return cart;
         }
+
+        
     }
 }

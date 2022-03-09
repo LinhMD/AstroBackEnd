@@ -72,12 +72,9 @@ namespace AstroBackEnd
 
             services.AddScoped<IZodiacHouseService, ZodiacHouseService>();
 
-
             services.AddScoped<IQuoteService, QuoteService>();
 
             services.AddScoped<IImageService, ImageService>();
-
-            services.AddSingleton<FireabaseUtility>();
 
             services.AddScoped<IHoroscopeService, HoroscopeService>();
 
@@ -87,11 +84,15 @@ namespace AstroBackEnd
 
             services.AddScoped<IPlanetHouseService, PlanetHouseService>();
 
-
             services.AddScoped<ICategorysService,CategoryService >();
 
-            services.AddScoped <IImageService,ImageService > ();
+            services.AddScoped <IImageService,ImageService> ();
 
+            services.AddScoped<AstrologyUtil>();
+
+            services.AddSingleton<FireabaseUtility>();
+
+            
 
             services.AddDbContext<Data.AstroDataContext>();
 
