@@ -74,7 +74,7 @@ namespace AstroBackEnd.Controllers
             var user = new User()
             {
                 UID = userRecord.Uid,
-                UserName = userRecord.DisplayName,
+                UserName = userRecord.DisplayName == null? userRecord.Email: userRecord.DisplayName,
                 Email = userRecord.Email,
                 Role = _work.Roles.Get(2),
                 PhoneNumber = userRecord.PhoneNumber,

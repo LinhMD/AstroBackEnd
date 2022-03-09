@@ -124,7 +124,6 @@ namespace AstroBackEnd.Controllers
                     Size = Size,
                     Status = status,
                     PagingRequest =  new PagingRequest() { Page = Page, PageSize = pageSize, SortBy = SortBy }
-
                 }, out total).Select(p => new ProductVariationView(p));
 
                 PagingView pagingView = new PagingView()
