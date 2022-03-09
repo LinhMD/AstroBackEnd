@@ -27,14 +27,41 @@ namespace AstroBackEnd.Repositories.Implement
         public IEnumerable<Product> FindProducWithAllData<TSortBy>(Func<Product, bool> filter, Func<Product, TSortBy> sortBy, int page, int pageSize)
         {
             return AstroData.Products.Include("MasterProduct")
+                                        .Include("ImgLinks")
+                                        .Where(filter)
+                                        .OrderBy(sortBy)
+                                        .Skip((page - 1) * pageSize)
+                                        .Take(pageSize);
+        }
+
+        public IEnumerable<Product> FindProductMasterWithAllData<TSortBy>(Func<Product, bool> filter, Func<Product, TSortBy> sortBy, out int total, int page = 1, int pageSize = 20)
+        {
+            var products = AstroData.Products
                                         .Include("Category")
                                         .Include("ImgLinks")
                                         .Include("Zodiacs")
                                         .Include("ProductVariation")
                                         .Where(filter)
-                                        .OrderBy(sortBy)
-                                        .Skip((page - 1) * pageSize)
-                                        .Take(pageSize + 1);
+                                        .OrderBy(sortBy);
+
+            total = products.Count();
+
+            return products
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize);
+        }
+
+        public IEnumerable<Product> FindProducWithAllData<TSortBy>(Func<Product, bool> filter, Func<Product, TSortBy> sortBy, out int total, int page = 1, int pageSize = 20)
+        {
+            var products = AstroData.Products.Include("MasterProduct")
+                                        .Include("ImgLinks")
+                                        .Where(filter)
+                                        .OrderBy(sortBy);
+
+            total = products.Count();
+
+            return products.Skip((page - 1) * pageSize)
+                            .Take(pageSize);
         }
     }
 }

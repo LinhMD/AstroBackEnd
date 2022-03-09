@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AstroBackEnd.RequestModels.ImageRequest;
+using AstroBackEnd.Utilities;
 
 namespace AstroBackEnd.Services.Implement
 {
@@ -32,17 +33,24 @@ namespace AstroBackEnd.Services.Implement
 
         public ImgLink CreateImage(ImageCreateRequest request)
         {
-            var pro = _work.Products.Get(request.ProductId);
-            ImgLink image = new ImgLink()
+            try
             {
-                Link = request.Link,
-                ProductId = request.ProductId
-            };
-            return _work.Image.Add(image);
+                ImgLink image = new ImgLink()
+                {
+                    Link = request.Link,
+                    ProductId = request.ProductId
+                };
+                return _work.Image.Add(image);
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException("ImageService : " + ex.Message);
+            }
         }
 
         public ImgLink DeleteImage(int id)
         {
+            Validation.ValidNumberThanZero(id, "Id must be than zero");
             ImgLink imgLink = _work.Image.Get(id);
             if (imgLink != null)
             {
@@ -51,7 +59,7 @@ namespace AstroBackEnd.Services.Implement
             }
             else
             {
-                return null;
+                throw new ArgumentException("This ZodiacHouse not found");
             }
         }
 
@@ -62,41 +70,46 @@ namespace AstroBackEnd.Services.Implement
 
         public IEnumerable<ImgLink> FindImage(FindImageRequest Request)
         {
-            Func<ImgLink, bool> filter = p =>
+            if (Request.Id < 0) { throw new ArgumentException("Id must be equal or than zero"); }
+            try
             {
-                bool checkLink = true;
-                if (!string.IsNullOrWhiteSpace(Request.Link))
+                Func<ImgLink, bool> filter = p =>
                 {
-                    checkLink = p.Link.Contains(Request.Link);
-                }
-                bool checkProId = true;
-                checkProId = Request.ProductId == null ? true : p.ProductId == Request.ProductId;
+                    bool checkLink = true;
+                    if (!string.IsNullOrWhiteSpace(Request.Link))
+                    {
+                        checkLink = p.Link.Contains(Request.Link);
+                    }
+                    bool checkProId = true;
+                    checkProId = Request.ProductId == null ? true : p.ProductId == Request.ProductId;
 
-                return checkLink && checkProId;
-            };
-            IEnumerable<ImgLink> result = null;
-            if (Request.PagingRequest != null)
-            {
-                switch (Request.PagingRequest.SortBy)
+                    return checkLink && checkProId;
+                };
+                IEnumerable<ImgLink> result = null;
+                if (Request.PagingRequest != null)
                 {
-                    case "Link":
-                        result = _work.Image.FindPaging(filter, p => p.Link, Request.PagingRequest.Page, Request.PagingRequest.PageSize);
-                        break;
-                    case "ProductId":
-                        result = _work.Image.FindPaging(filter, p => p.ProductId, Request.PagingRequest.Page, Request.PagingRequest.PageSize);
-                        break;
-                    default:
-                        result = _work.Image.FindPaging(filter, p => p.Link, Request.PagingRequest.Page, Request.PagingRequest.PageSize);
-                        break;
+                    switch (Request.PagingRequest.SortBy)
+                    {
+                        case "Link":
+                            result = _work.Image.FindPaging(filter, p => p.Link, Request.PagingRequest.Page, Request.PagingRequest.PageSize);
+                            break;
+                        case "ProductId":
+                            result = _work.Image.FindPaging(filter, p => p.ProductId, Request.PagingRequest.Page, Request.PagingRequest.PageSize);
+                            break;
+                        default:
+                            result = _work.Image.FindPaging(filter, p => p.Link, Request.PagingRequest.Page, Request.PagingRequest.PageSize);
+                            break;
 
+                    }
                 }
-            }
-            else
-            {
-                result = _work.Image.Find(filter, p => p.Link);
-            }
+                else
+                {
+                    result = _work.Image.Find(filter, p => p.Link);
+                }
 
-            return result;
+                return result;
+            }
+            catch (Exception ex) { throw new ArgumentException("ImageService : " + ex.Message); }
         }
 
         public IEnumerable<ImgLink> GetAllImage()
@@ -106,21 +119,80 @@ namespace AstroBackEnd.Services.Implement
 
         public ImgLink GetImage(int id)
         {
-            return _work.Image.Get(id);
+            Validation.ValidNumberThanZero(id, "Id must be than zero");
+            ImgLink imgLink = _work.Image.Get(id);
+            if (imgLink != null)
+            {
+                return imgLink;
+            }
+            else { throw new ArgumentException("This imgLink not found"); }
         }
 
         public ImgLink UpdateImage(int id, ImageUpdateRequest request)
         {
-            var image = _work.Image.Get(id);
-            if (!string.IsNullOrWhiteSpace(request.Link))
+            Validation.ValidNumberThanZero(id, "Id must be than zero");
+            ImgLink imgLink = _work.Image.Get(id);
+            if (imgLink != null)
             {
-                image.Link = request.Link;
+                if (!string.IsNullOrWhiteSpace(request.Link))
+                {
+                    imgLink.Link = request.Link;
+                }
+                if (!string.IsNullOrWhiteSpace(Convert.ToString(request.ProductId)))
+                {
+                    imgLink.ProductId = request.ProductId;
+                }
+                return imgLink;
             }
-            if (!string.IsNullOrWhiteSpace(Convert.ToString(request.ProductId)))
+            else
             {
-                image.ProductId = request.ProductId;
+                throw new ArgumentException("This imgLink not found");
             }
-            return image;
+        }
+
+        public IEnumerable<ImgLink> FindImage(FindImageRequest Request, out int total)
+        {
+            if (Request.Id < 0) { throw new ArgumentException("Id must be equal or than zero"); }
+            try
+            {
+                Func<ImgLink, bool> filter = p =>
+                {
+                    bool checkLink = true;
+                    if (!string.IsNullOrWhiteSpace(Request.Link))
+                    {
+                        checkLink = p.Link.Contains(Request.Link);
+                    }
+                    bool checkProId = true;
+                    checkProId = Request.ProductId == null ? true : p.ProductId == Request.ProductId;
+
+                    return checkLink && checkProId;
+                };
+                IEnumerable<ImgLink> result = null;
+                if (Request.PagingRequest != null)
+                {
+                    switch (Request.PagingRequest.SortBy)
+                    {
+                        case "Link":
+                            result = _work.Image.FindPaging(filter, p => p.Link, Request.PagingRequest.Page, Request.PagingRequest.PageSize);
+                            break;
+                        case "ProductId":
+                            result = _work.Image.FindPaging(filter, p => p.ProductId, Request.PagingRequest.Page, Request.PagingRequest.PageSize);
+                            break;
+                        default:
+                            result = _work.Image.FindPaging(filter, p => p.Link, Request.PagingRequest.Page, Request.PagingRequest.PageSize);
+                            break;
+
+                    }
+                }
+                else
+                {
+                    result = _work.Image.Find(filter, p => p.Link);
+                    total = result.Count();
+                }
+                total = result.Count();
+                return result;
+            }
+            catch (Exception ex) { throw new ArgumentException("ImageService : " + ex.Message); }
         }
     }
 }

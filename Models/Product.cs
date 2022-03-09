@@ -52,6 +52,6 @@ namespace AstroBackEnd.Models
         //both will have imgLink
         public IList<ImgLink> ImgLinks { get; set; }
 
-       
+       public int Status { get; set; }
     }
 }

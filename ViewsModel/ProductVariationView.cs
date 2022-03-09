@@ -15,13 +15,14 @@ namespace AstroBackEnd.ViewsModel
         public ProductVariationView(Product p)
         {
             Id = p.Id;
-            MasterId = p.Id;
+            MasterId = (int)p.MasterProductId;
             Color = p.Color;
             Gender = p.Gender;
             Inventory = p.Inventory;
             Price = p.Price;
             Size = p.Size;
             ImgLinks = p.ImgLinks?.Select(i => i.Link).ToArray();
+            Status = p.Status;
         }
 
         public int Id { get; set; }
@@ -41,5 +42,7 @@ namespace AstroBackEnd.ViewsModel
 
         //both will have imgLink
         public IList<string> ImgLinks { get; set; }
+
+        public int Status { get; set; }
     }
 }

@@ -17,6 +17,8 @@ namespace AstroBackEnd.Services.Core
 
         public IEnumerable<User> FindUsers(FindUserRequest userRequest);
 
+        public IEnumerable<User> FindUsers(FindUserRequest userRequest, out int total);
+
         public void DeleteUser(int id);
 
         public void UpdateUser(int id, UserUpdateRequest request);

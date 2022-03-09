@@ -25,5 +25,7 @@ namespace AstroBackEnd.Models
 
         public BirthChart BirthChart { get; set; }
 
+        public int UserId { get; set; }
+
     }
 }

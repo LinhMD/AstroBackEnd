@@ -21,6 +21,10 @@ namespace AstroBackEnd.RequestModels.ProductRequest
 
         public int? ProductVariationId { get; set; }
 
+        public int? Status { get; set; }
+
         public PagingRequest? PagingRequest { get; set; }
+
+        
     }
 }

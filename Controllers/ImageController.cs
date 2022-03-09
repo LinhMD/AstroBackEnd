@@ -1,5 +1,5 @@
 
-﻿
+
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.RequestModels;
 
@@ -35,25 +35,25 @@ namespace AstroBackEnd.Controllers
         [HttpGet("{id}")]
         public IActionResult GetImage(int id)
         {
-            var image = _Service.GetImage(id);
-            if (image != null)
+            try
             {
-                return Ok(image);
+                return Ok(_Service.GetImage(id));
             }
-            else
-            {
-                return NotFound();
-            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 
         [HttpPost]
         public IActionResult CreateImage([FromBody] ImageCreateRequest request)
         {
-            return Ok(_Service.CreateImage(request));
+            try
+            {
+                return Ok(_Service.CreateImage(request));
+            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 
         [HttpGet]
-        public IActionResult FindImage(int id, string link,int productId, string sortBy, int page = 1, int pageSize = 20)
+        public IActionResult FindImage(int id, string link, int productId, string sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
@@ -67,11 +67,13 @@ namespace AstroBackEnd.Controllers
                 {
                     Id = id,
                     Link = link,
-                    ProductId=productId
+                    ProductId = productId
                 };
-                return Ok(_Service.FindImage(findImageRequest));
+                int total = 0;
+                IEnumerable<ImgLink> links = _Service.FindImage(findImageRequest, out total);
+                return Ok(new PagingView() { Payload = links, Total = total });
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -80,24 +82,23 @@ namespace AstroBackEnd.Controllers
         [HttpPut]
         public IActionResult UpdateImage(int id, ImageUpdateRequest request)
         {
-            ImgLink updateImage = _Service.UpdateImage(id, request);
+            try
+            {
+                ImgLink updateImage = _Service.UpdateImage(id, request);
 
-            return Ok(updateImage);
+                return Ok(updateImage);
+            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteImage(int id)
         {
-            ImgLink imgLink = _work.Image.Get(id);
-            if (imgLink != null)
+            try
             {
-                _Service.DeleteImage(id);
-                return Ok(imgLink);
+                return Ok(_Service.DeleteImage(id));
             }
-            else
-            {
-                return NotFound();
-            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
         private readonly IImageService _imageService;
 

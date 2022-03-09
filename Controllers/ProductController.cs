@@ -45,11 +45,13 @@ namespace AstroBackEnd.Controllers
 
         
         [HttpGet("master")]
-        public IActionResult GetAllProductMaster(int? id, string? name, string? description, string? detail, int? categoryId, int? zodiacsId, int? productVariationId, string? sortBy, int page = 1, int pageSize = 20)
+        public IActionResult GetAllProductMaster(int? id, string? name, string? description, string? detail, int? categoryId, int? zodiacsId, int? productVariationId, int? status, string? sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
-                return Ok(_Service.FindMasterProduct(new FindMasterProductRequest() { 
+                int total = 0;
+                IEnumerable<MasterProductView> products = _Service.FindMasterProduct(new FindMasterProductRequest()
+                {
                     Id = id,
                     CategoryId = categoryId,
                     Description = description,
@@ -57,13 +59,16 @@ namespace AstroBackEnd.Controllers
                     Name = name,
                     ProductVariationId = productVariationId,
                     ZodiacsId = zodiacsId,
-                    PagingRequest = new PagingRequest() {  Page = page, PageSize = pageSize , SortBy = sortBy }
-                
-                }).Select(p => new MasterProductView(p)));
+                    Status = status,
+                    PagingRequest = new PagingRequest() { Page = page, PageSize = pageSize, SortBy = sortBy }
+
+                }, out total).Select(p => new MasterProductView(p));
+
+                return Ok(new PagingView() { Payload = products, Total = total });
             }
             catch(Exception e)
             {
-                return BadRequest(e.Message);
+                return BadRequest(e.StackTrace);
             }
         }
 
@@ -106,7 +111,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet("variant")]
-        public IActionResult GetAllProductVariant(string? Size, double? Price, int? Gender, string? Color, string? SortBy, int Page = 1, int pageSize = 20)
+        public IActionResult GetAllProductVariant(string? Size, double? Price, int? Gender, string? Color, int? status, string? SortBy, int Page = 1, int pageSize = 20)
         {
             try
             {
@@ -117,6 +122,7 @@ namespace AstroBackEnd.Controllers
                     Gender = Gender,
                     Price = Price,
                     Size = Size,
+                    Status = status,
                     PagingRequest =  new PagingRequest() { Page = Page, PageSize = pageSize, SortBy = SortBy }
 
                 }, out total).Select(p => new ProductVariationView(p));

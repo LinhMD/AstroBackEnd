@@ -22,5 +22,6 @@ namespace AstroBackEnd.Models
 
         public string MainContent { get; set; }
 
+        
     }
 }
