@@ -34,7 +34,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet]
-        public IActionResult FindPlanet(int id, string name, string title, string description, string tag, string mainContent, string sortBy, int page = 1, int pageSize = 20)
+        public IActionResult FindPlanet(int id, string name, string title, string icon, string description, string tag, string sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
@@ -50,9 +50,9 @@ namespace AstroBackEnd.Controllers
                     Id = id,
                     Name = name,
                     Title = title,
+                    Icon = icon,
                     Description = description,
                     Tag = tag,
-                    MainContent = mainContent,
                     PagingRequest = pagingRequest,
                 };
                 var findResult = planetService.FindPlanet(request, out total);

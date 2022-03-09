@@ -14,8 +14,6 @@
 
         public string Tag { get; set; }
 
-        public string MainContent { get; set; }
-
         public PagingRequest PagingRequest { get; set; }
     }
 }
