@@ -7,10 +7,11 @@ using AstroBackEnd.ViewsModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/v1/planethouse")]
+    [Route("api/v1/planethouses")]
     [ApiController]
     public class PlanetHouseController : ControllerBase
     {
@@ -28,13 +29,13 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
-                return Ok(planetHouseService.GetPlanetHouse(id));
+                return Ok(new PlanetHouseView(planetHouseService.GetPlanetHouse(id)));
             }
             catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 
         [HttpGet]
-        public IActionResult FindPlanetZodiac(int id, int planetId, int HouseId, string content, string sortBy, int page = 1, int pageSize = 20)
+        public IActionResult FindPlanetZodiac(int id, int planetId, int HouseId, string sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
@@ -49,12 +50,11 @@ namespace AstroBackEnd.Controllers
                 FindPlanetHouseRequest findPlanetZodiacRequest = new FindPlanetHouseRequest()
                 {
                     Id = id,
-                    Content = content,
                     PlanetId = planetId,
                     HouseId = HouseId,
                     PagingRequest = pagingRequest
                 };
-                var findResult = planetHouseService.FindPlanetHouse(findPlanetZodiacRequest, out total);
+                var findResult = planetHouseService.FindPlanetHouse(findPlanetZodiacRequest, out total).Select(ph => new PlanetHouseView(ph));
                 PagingView pagingView = new PagingView()
                 {
                     Payload = findResult,

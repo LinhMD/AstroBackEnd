@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ViewsModel\PlanetZodiac.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FirebaseAdmin" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.0" />

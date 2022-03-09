@@ -16,7 +16,7 @@ using AstroBackEnd.ViewsModel;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/v1/product")]
+    [Route("api/v1/products")]
     [ApiController]
     public class ProductController : ControllerBase
     {
@@ -123,7 +123,7 @@ namespace AstroBackEnd.Controllers
 
                 PagingView pagingView = new PagingView()
                 {
-                    Pageload = products,
+                    Payload = products,
                     Total = total
                 };
 

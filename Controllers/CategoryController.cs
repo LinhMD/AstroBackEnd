@@ -18,7 +18,7 @@ using AstroBackEnd.Utilities;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/v1/category")]
+    [Route("api/v1/categorys")]
     [ApiController]
     public class CategoryController : ControllerBase
     {

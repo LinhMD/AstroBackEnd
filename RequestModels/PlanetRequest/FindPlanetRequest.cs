@@ -10,11 +10,7 @@
 
         public string Icon { get; set; }
 
-        public string Description { get; set; }
-
         public string Tag { get; set; }
-
-        public string MainContent { get; set; }
 
         public PagingRequest PagingRequest { get; set; }
     }

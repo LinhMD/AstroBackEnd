@@ -40,10 +40,7 @@ namespace AstroBackEnd.Services.Implement
                     bool checkName = true;
                     bool checkTitle = true;
                     bool chceckIcon = true;
-                    bool checkDescription = true;
                     bool checkTag = true;
-                    bool checkMainContent = true;
-
                     if (request.Id > 0)
                     {
                         checkId = p.Id == request.Id;
@@ -81,28 +78,6 @@ namespace AstroBackEnd.Services.Implement
                             chceckIcon = false;
                         }
                     }
-                    if (!string.IsNullOrWhiteSpace(request.Description))
-                    {
-                        if (!string.IsNullOrWhiteSpace(p.Decription))
-                        {
-                            checkDescription = p.Decription.ToLower().Contains(request.Description.ToLower());
-                        }
-                        else
-                        {
-                            checkDescription = false;
-                        }
-                    }
-                    if (!string.IsNullOrWhiteSpace(request.MainContent))
-                    {
-                        if (!string.IsNullOrWhiteSpace(p.MainContent))
-                        {
-                            checkMainContent = p.MainContent.ToLower().Contains(request.MainContent.ToLower());
-                        }
-                        else
-                        {
-                            checkMainContent = false;
-                        }
-                    }
                     if (!string.IsNullOrWhiteSpace(request.Tag))
                     {
                         if (!string.IsNullOrWhiteSpace(p.Tag))
@@ -114,7 +89,7 @@ namespace AstroBackEnd.Services.Implement
                             checkTag = false;
                         }
                     }
-                    return checkId && checkName && checkDescription && checkMainContent && checkTag && checkTitle;
+                    return checkId && checkName && checkTag && checkTitle;
                 };
                 PagingRequest pagingRequest = request.PagingRequest;
                 Validation.ValidNumberThanZero(pagingRequest.Page, "Page must be than zero");

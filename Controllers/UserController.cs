@@ -17,7 +17,7 @@ using AstroBackEnd.ViewsModel;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/v1/user")]
+    [Route("api/v1/users")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -99,7 +99,7 @@ namespace AstroBackEnd.Controllers
                 var users = _userService.FindUsers(request);
                 PagingView view = new PagingView()
                 {
-                    Pageload = users,
+                    Payload = users,
                     Total = 2
                 };
                 return Ok(view);
