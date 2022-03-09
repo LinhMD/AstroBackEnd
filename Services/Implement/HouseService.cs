@@ -61,6 +61,8 @@ namespace AstroBackEnd.Services.Implement
                     bool checkId = true;
                     bool checkNameHouse = true;
                     bool checkTitleHouse = true;
+                    bool checkIcon = true;
+                    bool checkDescription = true;
                     bool checkTag = true;
                     if (request.Id > 0)
                     {
@@ -88,6 +90,28 @@ namespace AstroBackEnd.Services.Implement
                             checkTitleHouse = false;
                         }
                     }
+                    if (!string.IsNullOrWhiteSpace(request.Icon))
+                    {
+                        if (!string.IsNullOrWhiteSpace(p.Icon))
+                        {
+                            checkIcon = p.Icon.ToLower().Contains(request.Icon.ToLower());
+                        }
+                        else
+                        {
+                            checkIcon = false;
+                        }
+                    }
+                    if (!string.IsNullOrWhiteSpace(request.Decription))
+                    {
+                        if (!string.IsNullOrWhiteSpace(p.Title))
+                        {
+                            checkDescription = p.Decription.ToLower().Contains(request.Decription.ToLower());
+                        }
+                        else
+                        {
+                            checkDescription = false;
+                        }
+                    }
                     if (!string.IsNullOrWhiteSpace(request.Tag))
                     {
                         if (!string.IsNullOrWhiteSpace(p.Tag))
@@ -100,7 +124,7 @@ namespace AstroBackEnd.Services.Implement
                         }
 
                     }
-                    return checkId && checkNameHouse && checkTag && checkTitleHouse;
+                    return checkId && checkNameHouse && checkTag && checkTitleHouse && checkDescription && checkIcon;
                 };
                 PagingRequest pagingRequest = request.PagingRequest;
                 Validation.ValidNumberThanZero(pagingRequest.Page, "Page must be than zero");

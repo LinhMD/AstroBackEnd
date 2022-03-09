@@ -39,7 +39,8 @@ namespace AstroBackEnd.Services.Implement
                     bool checkId = true;
                     bool checkName = true;
                     bool checkTitle = true;
-                    bool chceckIcon = true;
+                    bool checkIcon = true;
+                    bool checkDescription = true;
                     bool checkTag = true;
                     if (request.Id > 0)
                     {
@@ -71,11 +72,22 @@ namespace AstroBackEnd.Services.Implement
                     {
                         if (!string.IsNullOrWhiteSpace(p.Icon))
                         {
-                            chceckIcon = p.Icon.ToLower().Contains(request.Icon.ToLower());
+                            checkIcon = p.Icon.ToLower().Contains(request.Icon.ToLower());
                         }
                         else
                         {
-                            chceckIcon = false;
+                            checkIcon = false;
+                        }
+                    }
+                    if (!string.IsNullOrWhiteSpace(request.Decription))
+                    {
+                        if (!string.IsNullOrWhiteSpace(p.Decription))
+                        {
+                            checkDescription = p.Decription.ToLower().Contains(request.Decription.ToLower());
+                        }
+                        else
+                        {
+                            checkDescription = false;
                         }
                     }
                     if (!string.IsNullOrWhiteSpace(request.Tag))
@@ -89,7 +101,7 @@ namespace AstroBackEnd.Services.Implement
                             checkTag = false;
                         }
                     }
-                    return checkId && checkName && checkTag && checkTitle;
+                    return checkId && checkName && checkTag && checkTitle && checkDescription && checkIcon;
                 };
                 PagingRequest pagingRequest = request.PagingRequest;
                 Validation.ValidNumberThanZero(pagingRequest.Page, "Page must be than zero");
