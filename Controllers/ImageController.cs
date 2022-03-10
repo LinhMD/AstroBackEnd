@@ -20,7 +20,7 @@ using AstroBackEnd.ViewsModel;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/v1/image")]
+    [Route("api/v1/images")]
     [ApiController]
     public class ImageController : ControllerBase
     {

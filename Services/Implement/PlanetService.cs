@@ -79,11 +79,11 @@ namespace AstroBackEnd.Services.Implement
                             checkIcon = false;
                         }
                     }
-                    if (!string.IsNullOrWhiteSpace(request.Description))
+                    if (!string.IsNullOrWhiteSpace(request.Decription))
                     {
                         if (!string.IsNullOrWhiteSpace(p.Decription))
                         {
-                            checkDescription = p.Decription.ToLower().Contains(request.Description.ToLower());
+                            checkDescription = p.Decription.ToLower().Contains(request.Decription.ToLower());
                         }
                         else
                         {
@@ -101,7 +101,9 @@ namespace AstroBackEnd.Services.Implement
                             checkTag = false;
                         }
                     }
+
                     return checkId && checkName && checkDescription && checkIcon && checkTag && checkTitle;
+
                 };
                 PagingRequest pagingRequest = request.PagingRequest;
                 Validation.ValidNumberThanZero(pagingRequest.Page, "Page must be than zero");

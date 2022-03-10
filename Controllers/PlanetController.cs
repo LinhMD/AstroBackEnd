@@ -10,7 +10,7 @@ using System;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/v1/planet")]
+    [Route("api/v1/planets")]
     [ApiController]
     public class PlanetController : ControllerBase
     {
@@ -51,7 +51,9 @@ namespace AstroBackEnd.Controllers
                     Name = name,
                     Title = title,
                     Icon = icon,
+
                     Description = description,
+
                     Tag = tag,
                     PagingRequest = pagingRequest,
                 };

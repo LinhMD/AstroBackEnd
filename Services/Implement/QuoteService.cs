@@ -50,28 +50,16 @@ namespace AstroBackEnd.Services.Implement
                 Func<Quote, bool> filter = p =>
                 {
                     bool checkId = true;
-                    bool checkContent = true;
                     bool checkHoroscopeId = true;
                     if (request.Id > 0)
                     {
                         checkId = p.Id == request.Id;
                     }
-                    if (!string.IsNullOrWhiteSpace(request.Content))
-                    {
-                        if (!string.IsNullOrWhiteSpace(p.Content))
-                        {
-                            checkContent = p.Content.ToLower().Contains(request.Content.ToLower());
-                        }
-                        else
-                        {
-                            checkContent = false;
-                        }
-                    }
                     if (request.HoroscopeId > 0)
                     {
                         checkHoroscopeId = p.HoroscopeId == request.HoroscopeId;
                     }
-                    return checkId && checkContent && checkHoroscopeId;
+                    return checkId && checkHoroscopeId;
                 };
                 PagingRequest pagingRequest = request.PagingRequest;
                 Validation.ValidNumberThanZero(pagingRequest.Page, "Page must be than zero");

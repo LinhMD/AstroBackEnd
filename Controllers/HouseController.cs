@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/v1/house")]
+    [Route("api/v1/houses")]
     [ApiController]
     public class HouseController : ControllerBase
     {
@@ -52,7 +52,10 @@ namespace AstroBackEnd.Controllers
                     Name = name,
                     Title = title,
                     Icon = icon,
-                    Description = description,
+
+                   
+                    Decription = description,
+
                     Tag = tag,
                     PagingRequest = pagingRequest,
 
