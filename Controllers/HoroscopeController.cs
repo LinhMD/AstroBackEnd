@@ -12,7 +12,7 @@ using System.Collections.Generic;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/v1/horoscope")]
+    [Route("api/v1/horoscopes")]
     [ApiController]
     public class HoroscopeController : ControllerBase
     {

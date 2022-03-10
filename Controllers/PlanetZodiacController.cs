@@ -8,10 +8,11 @@ using AstroBackEnd.ViewsModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/v1/planetzodiac")]
+    [Route("api/v1/planetzodiacs")]
     [ApiController]
     public class PlanetZodiacController : ControllerBase
     {
@@ -29,13 +30,15 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
-                return Ok(planetZodiacService.GetPlanetZodiac(id));
+                var planetZodiac = planetZodiacService.GetPlanetZodiac(id);
+               
+                return Ok(new PlanetZodiacView(planetZodiac));
             }
             catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 
         [HttpGet]
-        public IActionResult FindPlanetZodiac(int id, int planetId, int zodiacId, string content, string sortBy, int page = 1, int pageSize = 20)
+        public IActionResult FindPlanetZodiac(int id, int planetId, int zodiacId, string sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
@@ -50,14 +53,13 @@ namespace AstroBackEnd.Controllers
                 FindPlanetZodiacRequest findPlanetZodiacRequest = new FindPlanetZodiacRequest()
                 {
                     Id = id,
-                    Content = content,
                     PlanetId = planetId,
                     ZodiacId = zodiacId,
                     PagingRequest = pagingRequest
                 };
 
                 Validation.Validate(findPlanetZodiacRequest);
-                var findResult = planetZodiacService.FindPlanetZodiac(findPlanetZodiacRequest, out total);
+                var findResult = planetZodiacService.FindPlanetZodiac(findPlanetZodiacRequest, out total).Select(pl => new PlanetZodiacView(pl));
                 PagingView pagingView = new PagingView()
                 {
                     Payload = findResult,

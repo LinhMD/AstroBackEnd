@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/v1/house")]
+    [Route("api/v1/houses")]
     [ApiController]
     public class HouseController : ControllerBase
     {
@@ -35,7 +35,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet]
-        public IActionResult FindHouses(int id, string name, string title, string description, string tag, string mainContent, string sortBy, int page = 1, int pageSize = 20)
+        public IActionResult FindHouses(int id, string name, string title, string icon, string description, string tag, string sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
@@ -51,9 +51,9 @@ namespace AstroBackEnd.Controllers
                     Id = id,
                     Name = name,
                     Title = title,
-                    Description = description,
+                    Icon = icon,
+                    Decription = description,
                     Tag = tag,
-                    MainContent = mainContent,
                     PagingRequest = pagingRequest,
 
                 };

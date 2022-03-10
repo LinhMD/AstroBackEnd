@@ -21,10 +21,10 @@ namespace AstroBackEnd.Services.Implement
         public ZodiacHouse GetZodiacHouse(int id)
         {
             Validation.ValidNumberThanZero(id, "Id must be than zero");
-            ZodiacHouse zodiacHouse = _work.ZodiacHouses.Get(id);
-            if (zodiacHouse != null)
+            ZodiacHouse checkZodiacHouse = _work.ZodiacHouses.Get(id);
+            if (checkZodiacHouse != null)
             {
-                return zodiacHouse;
+                return _work.ZodiacHouses.GetZodiacHouseWithAllData(id);
             }
             else { throw new ArgumentException("This ZodiacHouse not found"); }
         }
@@ -56,8 +56,6 @@ namespace AstroBackEnd.Services.Implement
                     bool checkId = true;
                     bool checkZodiacId = true;
                     bool checkHouseId = true;
-                    bool checkContent = true;
-
                     if (request.Id > 0)
                     {
                         checkId = request.Id == p.Id;
@@ -70,18 +68,7 @@ namespace AstroBackEnd.Services.Implement
                     {
                         checkZodiacId = request.ZodiacId == p.ZodiacId;
                     }
-                    if (!string.IsNullOrWhiteSpace(request.Content))
-                    {
-                        if (!string.IsNullOrWhiteSpace(p.Content))
-                        {
-                            checkContent = p.Content.Contains(request.Content);
-                        }
-                        else
-                        {
-                            checkContent = false;
-                        }
-                    }
-                    return checkId && checkHouseId && checkZodiacId && checkContent;
+                    return checkId && checkHouseId && checkZodiacId;
                 };
                 PagingRequest pagingRequest = request.PagingRequest;
                 Validation.ValidNumberThanZero(pagingRequest.Page, "Page must be than zero");
@@ -91,17 +78,16 @@ namespace AstroBackEnd.Services.Implement
                     switch (pagingRequest.SortBy)
                     {
                         case "ZodiacId":
-                            return _work.ZodiacHouses.FindPaging(filter, p => p.ZodiacId, out total, pagingRequest.Page, pagingRequest.PageSize);
+                            return _work.ZodiacHouses.FindPPagingZodiacHouseWithAllData(filter, p => p.ZodiacId, out total, pagingRequest.Page, pagingRequest.PageSize);
                         case "HouseId":
-                            return _work.ZodiacHouses.FindPaging(filter, p => p.HouseId, out total, pagingRequest.Page, pagingRequest.PageSize);
+                            return _work.ZodiacHouses.FindPPagingZodiacHouseWithAllData(filter, p => p.HouseId, out total, pagingRequest.Page, pagingRequest.PageSize);
                         default:
-                            return _work.ZodiacHouses.FindPaging(filter, p => p.Id, out total, pagingRequest.Page, pagingRequest.PageSize);
+                            return _work.ZodiacHouses.FindPPagingZodiacHouseWithAllData(filter, p => p.Id, out total, pagingRequest.Page, pagingRequest.PageSize);
                     }
                 }
                 else
                 {
-                    IEnumerable<ZodiacHouse> result = _work.ZodiacHouses.Find(filter, p => p.Id);
-                    total = result.Count();
+                    IEnumerable<ZodiacHouse> result = _work.ZodiacHouses.FindZodiacHouseWithAllData(filter, p => p.Id, out total);
                     return result;
                 }
             } catch (Exception ex) { throw new ArgumentException("ZodiacHouseService : " + ex.Message); }

@@ -6,10 +6,11 @@ using AstroBackEnd.Services.Core;
 using AstroBackEnd.ViewsModel;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/v1/zodiachouse")]
+    [Route("api/v1/zodiachouses")]
     [ApiController]
     public class ZodiacHouseController : Controller
     {
@@ -28,7 +29,7 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
-                return Ok(iZodiacHouseService.GetZodiacHouse(id));
+                return Ok(new ZodiacHouseView(iZodiacHouseService.GetZodiacHouse(id)));
             }
             catch (ArgumentException ex) { return BadRequest(ex.Message); }
             
@@ -48,7 +49,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet]
-        public IActionResult FindZodiacHouse(int id, int zodiacId, int houseId, string content, string sortBy, int page = 1, int pagaSize = 20)
+        public IActionResult FindZodiacHouse(int id, int zodiacId, int houseId, string sortBy, int page = 1, int pagaSize = 20)
         {
             try
             {
@@ -64,11 +65,10 @@ namespace AstroBackEnd.Controllers
                     Id = id,
                     ZodiacId = zodiacId,
                     HouseId = houseId,
-                    Content = content,
                     PagingRequest = pagingRequest,
 
                 };
-                var findResult = iZodiacHouseService.FindZodiacHouse(request, out total);
+                var findResult = iZodiacHouseService.FindZodiacHouse(request, out total).Select(zh => new ZodiacHouseView(zh));
                 PagingView pagingView = new PagingView()
                 {
                     Payload = findResult,

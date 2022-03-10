@@ -39,11 +39,9 @@ namespace AstroBackEnd.Services.Implement
                     bool checkId = true;
                     bool checkName = true;
                     bool checkTitle = true;
-                    bool chceckIcon = true;
+                    bool checkIcon = true;
                     bool checkDescription = true;
                     bool checkTag = true;
-                    bool checkMainContent = true;
-
                     if (request.Id > 0)
                     {
                         checkId = p.Id == request.Id;
@@ -74,33 +72,22 @@ namespace AstroBackEnd.Services.Implement
                     {
                         if (!string.IsNullOrWhiteSpace(p.Icon))
                         {
-                            chceckIcon = p.Icon.ToLower().Contains(request.Icon.ToLower());
+                            checkIcon = p.Icon.ToLower().Contains(request.Icon.ToLower());
                         }
                         else
                         {
-                            chceckIcon = false;
+                            checkIcon = false;
                         }
                     }
-                    if (!string.IsNullOrWhiteSpace(request.Description))
+                    if (!string.IsNullOrWhiteSpace(request.Decription))
                     {
                         if (!string.IsNullOrWhiteSpace(p.Decription))
                         {
-                            checkDescription = p.Decription.ToLower().Contains(request.Description.ToLower());
+                            checkDescription = p.Decription.ToLower().Contains(request.Decription.ToLower());
                         }
                         else
                         {
                             checkDescription = false;
-                        }
-                    }
-                    if (!string.IsNullOrWhiteSpace(request.MainContent))
-                    {
-                        if (!string.IsNullOrWhiteSpace(p.MainContent))
-                        {
-                            checkMainContent = p.MainContent.ToLower().Contains(request.MainContent.ToLower());
-                        }
-                        else
-                        {
-                            checkMainContent = false;
                         }
                     }
                     if (!string.IsNullOrWhiteSpace(request.Tag))
@@ -114,7 +101,7 @@ namespace AstroBackEnd.Services.Implement
                             checkTag = false;
                         }
                     }
-                    return checkId && checkName && checkDescription && checkMainContent && checkTag && checkTitle;
+                    return checkId && checkName && checkTag && checkTitle && checkDescription && checkIcon;
                 };
                 PagingRequest pagingRequest = request.PagingRequest;
                 Validation.ValidNumberThanZero(pagingRequest.Page, "Page must be than zero");
