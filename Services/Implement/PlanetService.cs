@@ -101,7 +101,9 @@ namespace AstroBackEnd.Services.Implement
                             checkTag = false;
                         }
                     }
-                    return checkId && checkName && checkTag && checkTitle && checkDescription && checkIcon;
+
+                    return checkId && checkName && checkDescription && checkIcon && checkTag && checkTitle;
+
                 };
                 PagingRequest pagingRequest = request.PagingRequest;
                 Validation.ValidNumberThanZero(pagingRequest.Page, "Page must be than zero");

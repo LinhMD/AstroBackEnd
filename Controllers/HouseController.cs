@@ -52,7 +52,10 @@ namespace AstroBackEnd.Controllers
                     Name = name,
                     Title = title,
                     Icon = icon,
+
+                   
                     Decription = description,
+
                     Tag = tag,
                     PagingRequest = pagingRequest,
 
