@@ -10,7 +10,7 @@ using System;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/v1/quote")]
+    [Route("api/v1/quotes")]
     [ApiController]
     public class QuoteController : ControllerBase
     {
@@ -33,7 +33,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet]
-        public IActionResult FindQuote(int id, string content, int horoscopeId, string sortBy, int page = 1, int pageSize = 20)
+        public IActionResult FindQuote(int id, int horoscopeId, string sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
@@ -47,7 +47,6 @@ namespace AstroBackEnd.Controllers
                 FindQuoteRequest findQuoteRequest = new FindQuoteRequest()
                 {
                     Id = id,
-                    Content = content,
                     HoroscopeId = horoscopeId,
                     PagingRequest = pagingRequest
                 };

@@ -18,7 +18,7 @@ using AstroBackEnd.Utilities;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/v1/category")]
+    [Route("api/v1/categorys")]
     [ApiController]
     public class CategoryController : ControllerBase
     {
@@ -30,19 +30,15 @@ namespace AstroBackEnd.Controllers
             this._work = work;
         }
 
-        
+
         [HttpGet("{id}")]
         public IActionResult GetCategory(int id)
         {
-            var product = _Service.GetCategory(id);
-            if (product != null)
+            try
             {
-                return Ok(product);
+                return Ok(_Service.GetCategory(id));
             }
-            else
-            {
-                return NotFound();
-            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 
         [HttpPost]
@@ -53,7 +49,7 @@ namespace AstroBackEnd.Controllers
                 Validation.Validate(request);
                 return Ok(_Service.CreateCategory(request));
             }
-            catch (Exception e)
+            catch (ArgumentException e)
             {
                 return BadRequest(e.Message);
             }
@@ -70,15 +66,12 @@ namespace AstroBackEnd.Controllers
                     Page = page,
                     PageSize = pageSize,
                 };
-
                 FindCategoryRequest findCategoryRequest = new FindCategoryRequest()
                 {
-                    Id=id,
+                    Id = id,
                     Name = name
                 };
-
                 int total = 0;
-
                 IEnumerable<Category> categories = _Service.FindCategory(findCategoryRequest, out total);
                 return Ok(new PagingView()
                 {
@@ -86,7 +79,7 @@ namespace AstroBackEnd.Controllers
                     Total = total
                 });
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -95,24 +88,23 @@ namespace AstroBackEnd.Controllers
         [HttpPut]
         public IActionResult UpdateCategory(int id, CategoryUpdateRequest request)
         {
-            Category updateCategory = _Service.UpdateCategory(id, request);
+            try
+            {
+                Category updateCategory = _Service.UpdateCategory(id, request);
 
-            return Ok(updateCategory);
+                return Ok(updateCategory);
+            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteCategory(int id)
         {
-            Category category = _work.Categorys.Get(id);
-            if (category!=null)
+            try
             {
-                _Service.DeleteCategory(id);
-                return Ok(category);
+                return Ok(_Service.DeleteCategory(id));
             }
-            else
-            {
-                return NotFound();
-            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
-    }   
+    }
 }

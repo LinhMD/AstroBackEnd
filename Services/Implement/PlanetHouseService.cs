@@ -20,10 +20,10 @@ namespace AstroBackEnd.Services.Implement
         public PlanetHouse GetPlanetHouse(int id)
         {
             Validation.ValidNumberThanZero(id, "Id must be than zero");
-            PlanetHouse planetHouse = _work.PlanetHouses.Get(id);
-            if (planetHouse != null)
+            PlanetHouse checkPlanetHouse = _work.PlanetHouses.Get(id);
+            if (checkPlanetHouse != null)
             {
-                return planetHouse;
+                return _work.PlanetHouses.GetPlanetHouseWithAllData(id);
             }
             else { throw new ArgumentException("This PlanetHouse not found"); }
             
@@ -57,7 +57,6 @@ namespace AstroBackEnd.Services.Implement
                     bool checkId = true;
                     bool checkHouseId = true;
                     bool checkPlanetId = true;
-                    bool checkContent = true;
                     if (request.Id > 0)
                     {
                         checkId = p.Id == request.Id;
@@ -70,11 +69,7 @@ namespace AstroBackEnd.Services.Implement
                     {
                         checkPlanetId = p.PlanetId == request.PlanetId;
                     }
-                    if (!string.IsNullOrWhiteSpace(request.Content))
-                    {
-                        checkContent = !string.IsNullOrWhiteSpace(p.Content) ? p.Content.Contains(request.Content) : false;
-                    }
-                    return checkId && checkContent && checkPlanetId && checkHouseId;
+                    return checkId && checkPlanetId && checkHouseId;
                 };
                 PagingRequest pagingRequest = request.PagingRequest;
                 Validation.ValidNumberThanZero(pagingRequest.Page, "Page must be than zero");
@@ -84,16 +79,16 @@ namespace AstroBackEnd.Services.Implement
                     switch (pagingRequest.SortBy)
                     {
                         case "PlanetId":
-                            return _work.PlanetHouses.FindPaging(filter, p => p.PlanetId, out total, pagingRequest.Page, pagingRequest.PageSize);
+                            return _work.PlanetHouses.FindPPaginglanetHouseWithAllData(filter, p => p.PlanetId, out total, pagingRequest.Page, pagingRequest.PageSize);
                         case "HouseId":
-                            return _work.PlanetHouses.FindPaging(filter, p => p.HouseId, out total, pagingRequest.Page, pagingRequest.PageSize);
+                            return _work.PlanetHouses.FindPPaginglanetHouseWithAllData(filter, p => p.HouseId, out total, pagingRequest.Page, pagingRequest.PageSize);
                         default:
-                            return _work.PlanetHouses.FindPaging(filter, p => p.Id, out total, pagingRequest.Page, pagingRequest.PageSize);
+                            return _work.PlanetHouses.FindPPaginglanetHouseWithAllData(filter, p => p.Id, out total, pagingRequest.Page, pagingRequest.PageSize);
                     }
                 }
                 else
                 {
-                    IEnumerable<PlanetHouse> result = _work.PlanetHouses.Find(filter, p => p.Id);
+                    IEnumerable<PlanetHouse> result = _work.PlanetHouses.FindPlanetHouseWithAllData(filter, p => p.Id, out total);
                     total = result.Count();
                     return result;
                 }

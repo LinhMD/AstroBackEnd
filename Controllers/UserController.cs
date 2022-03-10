@@ -17,7 +17,7 @@ using AstroBackEnd.ViewsModel;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/v1/user")]
+    [Route("api/v1/users")]
     [ApiController]
     public class UserController : ControllerBase
     {

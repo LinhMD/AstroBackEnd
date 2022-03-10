@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AstroBackEnd.RequestModels.CategoryRequest;
+using AstroBackEnd.Utilities;
 
 namespace AstroBackEnd.Services.Implement
 {
@@ -24,24 +25,32 @@ namespace AstroBackEnd.Services.Implement
         }
         public Category CreateCategory(CategoryCreateRequest request)
         {
-            Category categories = new Category()
+            try
             {
-                Name = request.Name
-            };
-            return _work.Categorys.Add(categories);
+                Category categories = new Category()
+                {
+                    Name = request.Name
+                };
+                return _work.Categorys.Add(categories);
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException("CategoryService : " + ex.Message);
+            }
         }
 
         public Category DeleteCategory(int id)
-        {            
+        {
+            Validation.ValidNumberThanZero(id, "Id must be than zero");
             Category category = _work.Categorys.Get(id);
-            if(category != null)
+            if (category != null)
             {
                 _work.Categorys.Remove(GetCategory(id));
                 return category;
             }
             else
             {
-                return null;
+                throw new ArgumentException("This category not found");
             }
 
 
@@ -54,83 +63,94 @@ namespace AstroBackEnd.Services.Implement
 
         public IEnumerable<Category> FindCategory(FindCategoryRequest request)
         {
-            Func<Category, bool> filter = p =>
+            if (request.Id < 0) { throw new ArgumentException("Id must be equal or than zero"); }
+            try
             {
-                bool checkId = request.Id == null ? true : p.Id == request.Id;
-
-                bool checkName = true;
-                if (!string.IsNullOrWhiteSpace(request.Name))
+                Func<Category, bool> filter = p =>
                 {
-                    checkName = p.Name.Contains(request.Name);
+                    bool checkId = request.Id == null ? true : p.Id == request.Id;
+
+                    bool checkName = true;
+                    if (!string.IsNullOrWhiteSpace(request.Name))
+                    {
+                        checkName = p.Name.Contains(request.Name);
+                    }
+
+
+                    return checkName;
+                };
+                IEnumerable<Category> result = null;
+                if (request.PagingRequest != null)
+                {
+                    switch (request.PagingRequest.SortBy)
+                    {
+                        case "Id":
+                            result = _work.Categorys.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                            break;
+                        case "Name":
+                            result = _work.Categorys.FindPaging(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                            break;
+                        default:
+                            result = _work.Categorys.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                            break;
+
+                    }
+                }
+                else
+                {
+                    result = _work.Categorys.Find(filter, p => p.Name);
                 }
 
-                
-                return checkName ;
-            };
-            IEnumerable<Category> result = null;
-            if (request.PagingRequest != null)
-            {
-                switch (request.PagingRequest.SortBy)
-                {
-                    case "Id":
-                        result = _work.Categorys.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
-                        break;
-                    case "Name":
-                        result = _work.Categorys.FindPaging(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
-                        break;
-                    default:
-                        result = _work.Categorys.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
-                        break;
-
-                }
+                return result;
             }
-            else
-            {
-                result = _work.Categorys.Find(filter, p => p.Name);
-            }
-
-            return result;
+            catch (Exception ex) { throw new ArgumentException("CategoryService : " + ex.Message); }
         }
 
         public IEnumerable<Category> FindCategory(FindCategoryRequest request, out int total)
         {
-            Func<Category, bool> filter = p =>
+            if (request.Id < 0) { throw new ArgumentException("Id must be equal or than zero"); }
+            try
             {
-                bool checkId = request.Id == null ? true : p.Id == request.Id;
-
-                bool checkName = true;
-                if (!string.IsNullOrWhiteSpace(request.Name))
+                Func<Category, bool> filter = p =>
                 {
-                    checkName = p.Name.Contains(request.Name);
+                    bool checkId = request.Id == null ? true : p.Id == request.Id;
+
+                    bool checkName = true;
+                    if (!string.IsNullOrWhiteSpace(request.Name))
+                    {
+                        checkName = p.Name.Contains(request.Name);
+                    }
+
+
+                    return checkName;
+                };
+                IEnumerable<Category> result = null;
+                if (request.PagingRequest != null)
+                {
+                    switch (request.PagingRequest.SortBy)
+                    {
+                        case "Id":
+                            result = _work.Categorys.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                            break;
+                        case "Name":
+                            result = _work.Categorys.FindPaging(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                            break;
+                        default:
+                            result = _work.Categorys.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                            break;
+
+                    }
+                }
+                else
+                {
+                    result = _work.Categorys.Find(filter, p => p.Name);
+                    total = result.Count();
                 }
 
-
-                return checkName;
-            };
-            IEnumerable<Category> result = null;
-            if (request.PagingRequest != null)
-            {
-                switch (request.PagingRequest.SortBy)
-                {
-                    case "Id":
-                        result = _work.Categorys.FindPaging(filter, p => p.Id, out total, request.PagingRequest.Page, request.PagingRequest.PageSize);
-                        break;
-                    case "Name":
-                        result = _work.Categorys.FindPaging(filter, p => p.Name, out total, request.PagingRequest.Page, request.PagingRequest.PageSize);
-                        break;
-                    default:
-                        result = _work.Categorys.FindPaging(filter, p => p.Id, out total, request.PagingRequest.Page, request.PagingRequest.PageSize);
-                        break;
-
-                }
-            }
-            else
-            {
-                result = _work.Categorys.Find(filter, p => p.Name);
                 total = result.Count();
+                return result;
             }
-
-            return result;
+            catch (Exception ex) { throw new ArgumentException("CategoryService : " + ex.Message); }
         }
 
         public IEnumerable<Category> GetAllCategory()
@@ -140,17 +160,31 @@ namespace AstroBackEnd.Services.Implement
 
         public Category GetCategory(int id)
         {
-            return _work.Categorys.Get(id);
+            Validation.ValidNumberThanZero(id, "Id must be than zero");
+            Category category = _work.Categorys.Get(id);
+            if (category != null)
+            {
+                return category;
+            }
+            else { throw new ArgumentException("Can not find category with id(" + id + ")"); }
         }
 
         public Category UpdateCategory(int id, CategoryUpdateRequest request)
         {
-            var category = _work.Categorys.Get(id);
-            if (!string.IsNullOrWhiteSpace(request.Name))
+            Validation.ValidNumberThanZero(id, "Id must be than zero");
+            Category category = _work.Categorys.Get(id);
+            if (category != null)
             {
-                category.Name = request.Name;
+                if (!string.IsNullOrWhiteSpace(request.Name))
+                {
+                    category.Name = request.Name;
+                }
+                return category;
             }
-            return category;
+            else
+            {
+                throw new ArgumentException("This category not found");
+            }
         }
     }
 }
