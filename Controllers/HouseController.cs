@@ -51,11 +51,7 @@ namespace AstroBackEnd.Controllers
                     Id = id,
                     Name = name,
                     Title = title,
-                    Icon = icon,
-
-                   
                     Decription = description,
-
                     Tag = tag,
                     PagingRequest = pagingRequest,
 
@@ -67,7 +63,8 @@ namespace AstroBackEnd.Controllers
                     Total = total
                 };
                 return Ok(pagingView);
-            }catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            }
+            catch (ArgumentException ex) { return BadRequest(ex.Message); }
             
         }
 

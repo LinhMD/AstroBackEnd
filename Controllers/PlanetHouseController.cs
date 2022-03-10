@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/v1/planethouses")]
+    [Route("api/v1/planets/{planetName}-{planetId}/houses")]
     [ApiController]
     public class PlanetHouseController : ControllerBase
     {

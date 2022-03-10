@@ -68,22 +68,12 @@ namespace AstroBackEnd.Services.Implement
                             checkTitle = false;
                         }
                     }
-                    if (!string.IsNullOrWhiteSpace(request.Icon))
-                    {
-                        if (!string.IsNullOrWhiteSpace(p.Icon))
-                        {
-                            checkIcon = p.Icon.ToLower().Contains(request.Icon.ToLower());
-                        }
-                        else
-                        {
-                            checkIcon = false;
-                        }
-                    }
-                    if (!string.IsNullOrWhiteSpace(request.Decription))
+                    
+                    if (!string.IsNullOrWhiteSpace(request.Description))
                     {
                         if (!string.IsNullOrWhiteSpace(p.Decription))
                         {
-                            checkDescription = p.Decription.ToLower().Contains(request.Decription.ToLower());
+                            checkDescription = p.Decription.ToLower().Contains(request.Description.ToLower());
                         }
                         else
                         {

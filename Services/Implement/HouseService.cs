@@ -62,10 +62,9 @@ namespace AstroBackEnd.Services.Implement
                     bool checkNameHouse = true;
                     bool checkTitleHouse = true;
                     bool checkIcon = true;
-                    bool checkDescription = true;
+                    bool checkDescriptionHouse = true;
                     bool checkTag = true;
 
-                    bool checkIcon = true;
 
                     if (request.Id > 0)
                     {
@@ -93,23 +92,12 @@ namespace AstroBackEnd.Services.Implement
                             checkTitleHouse = false;
                         }
                     }
-                    if (!string.IsNullOrWhiteSpace(request.Icon))
-                    {
-                        if (!string.IsNullOrWhiteSpace(p.Icon))
-                        {
-                            checkIcon = p.Icon.ToLower().Contains(request.Icon.ToLower());
-                        }
-                        else
-                        {
-                            checkIcon = false;
-                        }
-                    }
 
-                    if (!string.IsNullOrWhiteSpace(request.Description))
+                    if (!string.IsNullOrWhiteSpace(request.Decription))
                     {
                         if (!string.IsNullOrWhiteSpace(p.Decription))
                         {
-                            checkDescriptionHouse = p.Decription.ToLower().Contains(request.Description.ToLower());
+                            checkDescriptionHouse = p.Decription.ToLower().Contains(request.Decription.ToLower());
                         }
                         else
                         {

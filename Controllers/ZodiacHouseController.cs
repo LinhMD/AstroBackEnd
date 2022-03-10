@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/v1/zodiachouses")]
+    [Route("api/v1/zodiacs/{zodiacName}-{zodiacId}/houses")]
     [ApiController]
     public class ZodiacHouseController : Controller
     {
