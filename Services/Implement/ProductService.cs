@@ -27,7 +27,7 @@ namespace AstroBackEnd.Services.Implement
         {
 
 
-            var cata = _work.Categorys.Get(request.CategoryId);
+            var cata = _work.Categories.Get(request.CategoryId);
             Product product = new Product()
             {
                 Name = request.Name,
@@ -67,7 +67,7 @@ namespace AstroBackEnd.Services.Implement
 
         public void DeleteProduct(int id)
         {
-            _work.Categorys.Remove(_work.Categorys.Get(id));
+            _work.Categories.Remove(_work.Categories.Get(id));
         }
 
         public void Dispose()
@@ -207,7 +207,7 @@ namespace AstroBackEnd.Services.Implement
             var product = this.GetProduct(id);
          
 
-            var cata = _work.Categorys.Get(request.CategoryId);
+            var cata = _work.Categories.Get(request.CategoryId);
             if (!string.IsNullOrWhiteSpace(request.Name))
             {
                 product.Name = request.Name;

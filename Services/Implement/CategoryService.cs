@@ -13,7 +13,7 @@ using AstroBackEnd.Utilities;
 
 namespace AstroBackEnd.Services.Implement
 {
-    public class CategoryService : ICategorysService, IDisposable
+    public class CategoryService : ICategoriesService, IDisposable
     {
         private readonly IUnitOfWork _work;
 
@@ -31,7 +31,7 @@ namespace AstroBackEnd.Services.Implement
                 {
                     Name = request.Name
                 };
-                return _work.Categorys.Add(categories);
+                return _work.Categories.Add(categories);
             }
             catch (Exception ex)
             {
@@ -42,10 +42,10 @@ namespace AstroBackEnd.Services.Implement
         public Category DeleteCategory(int id)
         {
             Validation.ValidNumberThanZero(id, "Id must be than zero");
-            Category category = _work.Categorys.Get(id);
+            Category category = _work.Categories.Get(id);
             if (category != null)
             {
-                _work.Categorys.Remove(GetCategory(id));
+                _work.Categories.Remove(GetCategory(id));
                 return category;
             }
             else
@@ -85,20 +85,20 @@ namespace AstroBackEnd.Services.Implement
                     switch (request.PagingRequest.SortBy)
                     {
                         case "Id":
-                            result = _work.Categorys.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                            result = _work.Categories.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
                             break;
                         case "Name":
-                            result = _work.Categorys.FindPaging(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                            result = _work.Categories.FindPaging(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
                             break;
                         default:
-                            result = _work.Categorys.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                            result = _work.Categories.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
                             break;
 
                     }
                 }
                 else
                 {
-                    result = _work.Categorys.Find(filter, p => p.Name);
+                    result = _work.Categories.Find(filter, p => p.Name);
                 }
 
                 return result;
@@ -130,20 +130,20 @@ namespace AstroBackEnd.Services.Implement
                     switch (request.PagingRequest.SortBy)
                     {
                         case "Id":
-                            result = _work.Categorys.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                            result = _work.Categories.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
                             break;
                         case "Name":
-                            result = _work.Categorys.FindPaging(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                            result = _work.Categories.FindPaging(filter, p => p.Name, request.PagingRequest.Page, request.PagingRequest.PageSize);
                             break;
                         default:
-                            result = _work.Categorys.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                            result = _work.Categories.FindPaging(filter, p => p.Id, request.PagingRequest.Page, request.PagingRequest.PageSize);
                             break;
 
                     }
                 }
                 else
                 {
-                    result = _work.Categorys.Find(filter, p => p.Name);
+                    result = _work.Categories.Find(filter, p => p.Name);
                     total = result.Count();
                 }
 
@@ -155,13 +155,13 @@ namespace AstroBackEnd.Services.Implement
 
         public IEnumerable<Category> GetAllCategory()
         {
-            return _work.Categorys.GetAll<String>(p => p.Name);
+            return _work.Categories.GetAll<String>(p => p.Name);
         }
 
         public Category GetCategory(int id)
         {
             Validation.ValidNumberThanZero(id, "Id must be than zero");
-            Category category = _work.Categorys.Get(id);
+            Category category = _work.Categories.Get(id);
             if (category != null)
             {
                 return category;
@@ -172,7 +172,7 @@ namespace AstroBackEnd.Services.Implement
         public Category UpdateCategory(int id, CategoryUpdateRequest request)
         {
             Validation.ValidNumberThanZero(id, "Id must be than zero");
-            Category category = _work.Categorys.Get(id);
+            Category category = _work.Categories.Get(id);
             if (category != null)
             {
                 if (!string.IsNullOrWhiteSpace(request.Name))

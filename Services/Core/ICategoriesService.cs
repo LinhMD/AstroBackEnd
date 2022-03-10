@@ -9,7 +9,7 @@ using AstroBackEnd.RequestModels.CategoryRequest;
 
 namespace AstroBackEnd.Services.Core
 {
-    public interface ICategorysService
+    public interface ICategoriesService
     {
         public Category GetCategory(int id);
 

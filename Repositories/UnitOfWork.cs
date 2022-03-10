@@ -23,7 +23,7 @@ namespace AstroBackEnd.Repositories
             Orders = new OrderRepository(dataContext);
             OrderDetails = new OrderDetailRepository(dataContext);
             Products = new ProductRepository(dataContext);
-            Categorys = new CategoryRepository(dataContext);
+            Categories = new CategoryRepository(dataContext);
             Image = new ImageRepository(dataContext);
             Zodiacs = new ZodiacRepository(dataContext);
             Houses = new HouseRepository(dataContext);
@@ -50,7 +50,7 @@ namespace AstroBackEnd.Repositories
 
         public IOrderDetailRepository OrderDetails { get; }
 
-        public ICategoryRepository Categorys { get; }
+        public ICategoryRepository Categories { get; }
 
 
         public IImageRepository Image { get; }

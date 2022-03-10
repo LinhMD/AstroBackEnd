@@ -22,7 +22,7 @@ namespace AstroBackEnd.Repositories
 
         IProductRepository Products { get; }
 
-        ICategoryRepository Categorys { get; }
+        ICategoryRepository Categories { get; }
 
         IZodiacRepository Zodiacs { get; }
 

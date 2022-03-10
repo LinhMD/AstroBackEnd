@@ -18,13 +18,13 @@ using AstroBackEnd.Utilities;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/v1/categorys")]
+    [Route("api/v1/categories")]
     [ApiController]
     public class CategoryController : ControllerBase
     {
-        private ICategorysService _Service;
+        private ICategoriesService _Service;
         private IUnitOfWork _work;
-        public CategoryController(ICategorysService service, IUnitOfWork work)
+        public CategoryController(ICategoriesService service, IUnitOfWork work)
         {
             this._Service = service;
             this._work = work;
