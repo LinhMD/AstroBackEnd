@@ -108,7 +108,7 @@ namespace AstroBackEnd.Services.Implement
                     {
                         if (!string.IsNullOrWhiteSpace(p.Tag))
                         {
-                            checkTag = p.Tag.ToLower().Contains(request.Tag.ToLower());
+                            checkTag = Utilities.Utilities.CheckTag(request.Tag, p.Tag);
                         }
                         else
                         {

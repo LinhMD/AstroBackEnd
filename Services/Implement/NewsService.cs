@@ -88,7 +88,7 @@ namespace AstroBackEnd.Services.Implement
                     }
                     if (!string.IsNullOrWhiteSpace(Request.Tag))
                     {
-                        checkDescription = news.Description.Contains(Request.Description);
+                        checkTag = Utilities.Utilities.CheckTag(Request.Tag, news.Tag);
                     }
 
                     //checkStatus = user.Status == userRequest.Status;
@@ -153,7 +153,7 @@ namespace AstroBackEnd.Services.Implement
                     }
                     if (!string.IsNullOrWhiteSpace(Request.Tag))
                     {
-                        checkDescription = news.Description.Contains(Request.Description);
+                        checkTag = Utilities.Utilities.CheckTag(Request.Tag, news.Tag);
                     }
 
                     //checkStatus = user.Status == userRequest.Status;
