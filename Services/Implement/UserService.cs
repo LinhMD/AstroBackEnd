@@ -34,6 +34,7 @@ namespace AstroBackEnd.Services.Implement
             {
                 UserName = request.UserName,
                 PhoneNumber = request.PhoneNumber,
+                AvatarLink = request.AvatarLink,                
                 Status = 1,
                 Role = _work.Roles.Get(2) // normal user
             };
@@ -133,8 +134,11 @@ namespace AstroBackEnd.Services.Implement
             {
                 userUpdate.PhoneNumber = request.PhoneNumber;
             }
-
-            if(request.Status != null)
+            if (!string.IsNullOrWhiteSpace(request.AvatarLink))
+            {
+                userUpdate.AvatarLink = request.AvatarLink;
+            }
+            if (request.Status != null)
             {
                 userUpdate.Status = request.Status.Value;
             }
