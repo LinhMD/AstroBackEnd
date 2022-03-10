@@ -34,7 +34,8 @@ namespace AstroBackEnd.Services.Implement
                     GeneratDate = DateTime.Now,
                     Content = request.Content,
                     Tag = request.Tag,
-                    HtmlContent = request.HtmlContent
+                    HtmlContent = request.HtmlContent,
+                    Banner = request.Banner
                 };
                 return _work.News.Add(news);
             }
@@ -237,6 +238,11 @@ namespace AstroBackEnd.Services.Implement
                 {
                     news.HtmlContent = request.HtmlContent;
                 }
+                if (!string.IsNullOrWhiteSpace(request.Banner))
+                {
+                    news.Banner = request.Banner;
+                }
+
                 return news;
             }
             else

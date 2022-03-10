@@ -16,6 +16,8 @@ namespace AstroBackEnd.RequestModels.NewRequest
 
         public string Content { get; set; }
 
+        public string Banner { get; set; }
+
         public string Tag { get; set; }
 
         public string HtmlContent { get; set; }
