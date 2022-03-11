@@ -42,6 +42,7 @@ namespace AstroBackEnd
                         ValidateIssuer = true,
                         ValidateAudience = true,
                         ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero,
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = Configuration["JwtSetting:Issuer"],
                         ValidAudience = Configuration["JwtSetting:Audience"],
