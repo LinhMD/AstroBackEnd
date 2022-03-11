@@ -2,15 +2,15 @@
 
 namespace AstroBackEnd.ViewsModel
 {
-    public class HouseView
+    public class PlanetView
     {
-        public HouseView(House house)
+        public PlanetView(Planet planet)
         {
-            Id = house.Id;
-            Name = house.Name;
-            Title = house.Title;
-            Icon = house.Icon;
-            Tag = house.Tag;
+            Id = planet.Id;
+            Name = planet.Name;
+            Title = planet.Title;
+            Icon = planet.Icon;
+            Tag = planet.Tag;
         }
         public int Id { get; set; }
 
@@ -21,6 +21,5 @@ namespace AstroBackEnd.ViewsModel
         public string Icon { get; set; }
 
         public string? Tag { get; set; }
-
     }
 }

@@ -40,7 +40,6 @@ namespace AstroBackEnd.Services.Implement
                     bool checkName = true;
                     bool checkTitle = true;
                     bool checkIcon = true;
-                    bool checkDescription = true;
                     bool checkTag = true;
                     if (request.Id > 0)
                     {
@@ -68,18 +67,6 @@ namespace AstroBackEnd.Services.Implement
                             checkTitle = false;
                         }
                     }
-                    
-                    if (!string.IsNullOrWhiteSpace(request.Description))
-                    {
-                        if (!string.IsNullOrWhiteSpace(p.Decription))
-                        {
-                            checkDescription = p.Decription.ToLower().Contains(request.Description.ToLower());
-                        }
-                        else
-                        {
-                            checkDescription = false;
-                        }
-                    }
                     if (!string.IsNullOrWhiteSpace(request.Tag))
                     {
                         if (!string.IsNullOrWhiteSpace(p.Tag))
@@ -92,7 +79,7 @@ namespace AstroBackEnd.Services.Implement
                         }
                     }
 
-                    return checkId && checkName && checkDescription && checkIcon && checkTag && checkTitle;
+                    return checkId && checkName && checkIcon && checkTag && checkTitle;
 
                 };
                 PagingRequest pagingRequest = request.PagingRequest;
