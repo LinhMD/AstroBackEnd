@@ -35,7 +35,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet]
-        public IActionResult FindHouses(int id, string name, string title, string icon, string description, string tag, string sortBy, int page = 1, int pageSize = 20)
+        public IActionResult FindHouses(int id, string name, string title, string icon, string tag, string sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
@@ -51,12 +51,11 @@ namespace AstroBackEnd.Controllers
                     Id = id,
                     Name = name,
                     Title = title,
-                    Decription = description,
                     Tag = tag,
                     PagingRequest = pagingRequest,
 
                 };
-                var finResult = houseService.FindHouse(request, out total);
+                var finResult = houseService.FindHouse(request, out total).Select(house => new HouseView(house));
                 PagingView pagingView = new PagingView()
                 {
                     Payload = finResult,

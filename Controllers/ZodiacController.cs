@@ -57,7 +57,7 @@ namespace AstroBackEnd.Controllers
                     PagingRequest = pagingRequest,
                 };
 
-                var result = _zodiacService.FindZodiac(request, out total);
+                var result = _zodiacService.FindZodiac(request, out total).Select(zodiac => new ZodiacView(zodiac));
                 PagingView pagingView = new PagingView()
                 {
                     Payload = result,

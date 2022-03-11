@@ -7,6 +7,7 @@ using AstroBackEnd.ViewsModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 
 namespace AstroBackEnd.Controllers
 {
@@ -34,7 +35,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet]
-        public IActionResult FindPlanet(int id, string name, string title, string icon, string description, string tag, string sortBy, int page = 1, int pageSize = 20)
+        public IActionResult FindPlanet(int id, string name, string title, string icon, string tag, string sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
@@ -50,11 +51,10 @@ namespace AstroBackEnd.Controllers
                     Id = id,
                     Name = name,
                     Title = title,
-                    Description = description,
                     Tag = tag,
                     PagingRequest = pagingRequest,
                 };
-                var findResult = planetService.FindPlanet(request, out total);
+                var findResult = planetService.FindPlanet(request, out total).Select(planet => new PlanetView(planet));
                 PagingView pagingView = new PagingView()
                 {
                     Payload = findResult,
