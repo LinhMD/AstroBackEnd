@@ -25,16 +25,16 @@ namespace AstroBackEnd.Services.Implement
 
         public Product CreateMasterProduct(MasterProductCreateRequest request)
         {
-
-
             var cata = _work.Categories.Get(request.CategoryId);
+            if (cata == null) throw new ArgumentException($"Category id {request.CategoryId} not found");
+
             Product product = new Product()
             {
                 Name = request.Name,
                 Description = request.Description,
                 Detail = request.Detail,
                 Category = cata,
-                
+                Tag = request.Tag
             };
 
             _work.Products.Add(product);
@@ -92,13 +92,13 @@ namespace AstroBackEnd.Services.Implement
 
                 bool checkCategory = request.CategoryId == null || p.Category.Id == request.CategoryId;
 
-                bool zodiacIdCheck = request.ZodiacsId == null || p.Zodiacs.Select(z => z.Id).Contains(((int)request.ZodiacsId.Value));
-
                 bool variationCheck = request.ProductVariationId == null || p.ProductVariation.Select(z => z.Id).Contains(((int)request.ProductVariationId.Value));
 
                 bool statusCheck = request.Status == null || p.Status == request.Status;
 
-                return checkName && checkDescription && checkCategory && variationCheck && zodiacIdCheck && statusCheck;
+                bool tagCheck = request.Tag == null || Utilities.Utilities.CheckTag(request.Tag, p.Tag);
+
+                return checkName && checkDescription && checkCategory && variationCheck && statusCheck && tagCheck;
             };
 
 
@@ -146,13 +146,13 @@ namespace AstroBackEnd.Services.Implement
 
                 bool checkCategory = request.CategoryId == null || p.Category.Id == request.CategoryId;
 
-                bool zodiacIdCheck = request.ZodiacsId == null || p.Zodiacs.Select(z => z.Id).Contains(((int)request.ZodiacsId.Value));
-
                 bool variationCheck = request.ProductVariationId == null || p.ProductVariation.Select(z => z.Id).Contains(((int)request.ProductVariationId.Value));
 
                 bool statusCheck = request.Status == null || p.Status == request.Status;
 
-                return checkName && checkDescription && checkCategory && variationCheck && zodiacIdCheck && statusCheck;
+                bool tagCheck = request.Tag == null || Utilities.Utilities.CheckTag(request.Tag, p.Tag);
+
+                return checkName && checkDescription && checkCategory && variationCheck  && statusCheck && tagCheck;
             };
 
 
@@ -220,6 +220,10 @@ namespace AstroBackEnd.Services.Implement
             {
                 product.Detail = request.Detail;
             }
+            if (!string.IsNullOrWhiteSpace(request.Tag))
+            {
+                product.Tag = request.Tag;
+            }
             if (!string.IsNullOrWhiteSpace(Convert.ToString(request.CategoryId)))
             {
                 product.Category = cata;
@@ -233,6 +237,8 @@ namespace AstroBackEnd.Services.Implement
             {
                 product.Status = (int)request.Status;
             }
+
+
             _work.Complete();
 
             return this.GetProduct(id);

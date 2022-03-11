@@ -4,14 +4,16 @@ using AstroBackEnd.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AstroBackEnd.Migrations
 {
     [DbContext(typeof(AstroDataContext))]
-    partial class AstroDataContextModelSnapshot : ModelSnapshot
+    [Migration("20220311025336_add_tag_remove_zodiac_in_product")]
+    partial class add_tag_remove_zodiac_in_product
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

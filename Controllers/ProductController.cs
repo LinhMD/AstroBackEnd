@@ -45,7 +45,7 @@ namespace AstroBackEnd.Controllers
 
         
         [HttpGet("master")]
-        public IActionResult GetAllProductMaster(int? id, string? name, string? description, string? detail, int? categoryId, int? zodiacsId, int? productVariationId, int? status, string? sortBy, int page = 1, int pageSize = 20)
+        public IActionResult GetAllProductMaster(int? id, string? name, string? description, string? tag,string? detail, int? categoryId, int? zodiacsId, int? productVariationId, int? status, string? sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
@@ -56,9 +56,9 @@ namespace AstroBackEnd.Controllers
                     CategoryId = categoryId,
                     Description = description,
                     Detail = detail,
+                    Tag = tag,
                     Name = name,
                     ProductVariationId = productVariationId,
-                    ZodiacsId = zodiacsId,
                     Status = status,
                     PagingRequest = new PagingRequest() { Page = page, PageSize = pageSize, SortBy = sortBy }
 
@@ -68,7 +68,7 @@ namespace AstroBackEnd.Controllers
             }
             catch(Exception e)
             {
-                return BadRequest(e.StackTrace);
+                return BadRequest(e.Message);
             }
         }
 

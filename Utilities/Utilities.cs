@@ -9,6 +9,8 @@ namespace AstroBackEnd.Utilities
     {
         public static bool CheckTag(string tags, string tagsToCompare)
         {
+            if (tags == null || tagsToCompare == null) return false;
+
             tags = tags.ToLower();
             tagsToCompare = tagsToCompare.ToLower();
 
