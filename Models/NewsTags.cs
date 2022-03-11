@@ -23,7 +23,7 @@ namespace AstroBackEnd.Models
 
         public News News { get; set; }
 
-        public int NewId { get; set; }
+        public int NewsId { get; set; }
     }
             
 }

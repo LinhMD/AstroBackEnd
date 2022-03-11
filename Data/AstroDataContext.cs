@@ -57,6 +57,8 @@ namespace AstroBackEnd.Data
 
         public DbSet<LifeAttribute> LifeAttributes { get; set; }
 
+        public DbSet<NewsTags> NewsTags { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(_config["ConnectionStrings:AstroBackEndContext"]);

@@ -26,13 +26,13 @@ namespace AstroBackEnd.Migrations
                         column: x => x.PlanetBaseId,
                         principalTable: "Planets",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Aspects_Planets_PlanetCompareId",
                         column: x => x.PlanetCompareId,
                         principalTable: "Planets",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -67,13 +67,13 @@ namespace AstroBackEnd.Migrations
                         column: x => x.AspectId,
                         principalTable: "Aspects",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_HoroscopeItems_LifeAttributes_LifeAttributeId",
                         column: x => x.LifeAttributeId,
                         principalTable: "LifeAttributes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
