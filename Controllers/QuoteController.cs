@@ -33,7 +33,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet]
-        public IActionResult FindQuote(int id, int horoscopeId, string sortBy, int page = 1, int pageSize = 20)
+        public IActionResult FindQuote(int id, int zodiacId, string sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace AstroBackEnd.Controllers
                 FindQuoteRequest findQuoteRequest = new FindQuoteRequest()
                 {
                     Id = id,
-                    HoroscopeId = horoscopeId,
+                    ZodiacId = zodiacId,
                     PagingRequest = pagingRequest
                 };
                 var findResult = quoteService.FindQuote(findQuoteRequest, out total);

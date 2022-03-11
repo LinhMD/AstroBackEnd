@@ -19,8 +19,6 @@ namespace AstroBackEnd.Models
 
         public string Money { get; set; }
 
-        public IList<Quote> Quotes { get; set; }
-
         public IList<Zodiac> Zodiacs { get; set; }
 
     }

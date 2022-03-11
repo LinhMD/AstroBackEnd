@@ -22,12 +22,12 @@ namespace AstroBackEnd.Services.Implement
         {
             try
             {
-                if (request.HoroscopeId > 0)
+                if (request.ZodiacId > 0)
                 {
                     Quote quote = new Quote()
                     {
                         Content = request.Content,
-                        HoroscopeId = request.HoroscopeId,
+                        ZodiacId = request.ZodiacId,
                     };
                     return _work.Quotes.Add(quote);
                 }
@@ -55,9 +55,9 @@ namespace AstroBackEnd.Services.Implement
                     {
                         checkId = p.Id == request.Id;
                     }
-                    if (request.HoroscopeId > 0)
+                    if (request.ZodiacId > 0)
                     {
-                        checkHoroscopeId = p.HoroscopeId == request.HoroscopeId;
+                        checkHoroscopeId = p.ZodiacId == request.ZodiacId;
                     }
                     return checkId && checkHoroscopeId;
                 };
@@ -69,7 +69,7 @@ namespace AstroBackEnd.Services.Implement
                     switch (pagingRequest.SortBy)
                     {
                         case "HoroscopeId":
-                            return _work.Quotes.FindPaging(filter, p => p.HoroscopeId, out total, pagingRequest.Page, pagingRequest.PageSize);
+                            return _work.Quotes.FindPaging(filter, p => p.ZodiacId, out total, pagingRequest.Page, pagingRequest.PageSize);
                         default:
                             return _work.Quotes.FindPaging(filter, p => p.Id, out total, pagingRequest.Page, pagingRequest.PageSize);
                     }
@@ -113,9 +113,9 @@ namespace AstroBackEnd.Services.Implement
             Quote quote = _work.Quotes.Get(id);
             if (quote != null)
             {
-                if (request.HoroscopeId > 0)
+                if (request.ZodiacId > 0)
                 {
-                    quote.HoroscopeId = request.HoroscopeId;
+                    quote.ZodiacId = request.ZodiacId;
                 }
 
                 return quote;

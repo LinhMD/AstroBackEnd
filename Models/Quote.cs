@@ -6,6 +6,6 @@
 
         public string Content { get; set; }
 
-        public int HoroscopeId { get; set; }
+        public int ZodiacId { get; set; }
     }
 }
