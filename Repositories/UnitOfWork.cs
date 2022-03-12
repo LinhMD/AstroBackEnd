@@ -33,7 +33,9 @@ namespace AstroBackEnd.Repositories
             Planets = new PlanetRepository(dataContext);
             PlanetZodiacs = new PlanetZodiacRepository(dataContext);
             PlanetHouses = new PlanetHouseRepository(dataContext);
-
+            HoroscopeItems = new HoroscopeItemRepository(dataContext);
+            Aspects = new AspectRepository(dataContext);
+            LifeAttributes = new LifeAttributeRepository(dataContext);
         }
 
         public IUserRepository Users { get; }
@@ -61,7 +63,6 @@ namespace AstroBackEnd.Repositories
 
         public IZodiacHouseRepository ZodiacHouses { get; }
 
-
         public IHoroscopeRepository Horoscopes { get; }
 
         public IQuoteRepository Quotes { get; }
@@ -72,12 +73,13 @@ namespace AstroBackEnd.Repositories
 
         public IPlanetHouseRepository PlanetHouses { get; }
 
-
-
         public IZodiacRepository Zodiac { get; }
 
+        public IHoroscopeItemRepository HoroscopeItems { get; }
 
+        public IAspectRepository Aspects { get; }
 
+        public ILifeAttributeRepository LifeAttributes { get; }
         public int Complete()
         {
             return _dataContext.SaveChanges();

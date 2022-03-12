@@ -43,10 +43,12 @@ namespace AstroBackEnd.Repositories
 
         IPlanetHouseRepository PlanetHouses { get; }
 
+        IHoroscopeItemRepository HoroscopeItems { get; }
 
+        IAspectRepository Aspects { get; }
+
+        ILifeAttributeRepository LifeAttributes { get; }
 
         int Complete();
-
-        
     }
 }
