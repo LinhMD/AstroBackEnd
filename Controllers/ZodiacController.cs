@@ -8,7 +8,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 
 namespace AstroBackEnd.Controllers
 {
@@ -107,7 +111,8 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
-                return Ok(Astrology.GetHousePosOfPlanets(date, longtitude, latitude));
+                var result = Astrology.GetHousePosOfPlanets(date, longtitude, latitude);
+                return Ok(result);
             }
             catch(Exception e)
             {
@@ -121,6 +126,27 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(Astrology.GetHouseSnapshot(date, longtitude, latitude));
             }
+            catch (Exception e)
+            {
+                return BadRequest(e.StackTrace);
+            }
+        }
+
+        [HttpGet("chart")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
+        public IActionResult GetChart(DateTime date, double longtitude, double latitude)
+        {
+            try
+            {
+                System.Drawing.Image chart = Astrology.GetChart(date, longtitude, latitude);
+                MemoryStream ms = new MemoryStream();
+                chart.Save(ms, ImageFormat.Png);
+                var file = new FileStream(@$"resource\chart-{date.DayOfYear}-{(int)longtitude}-{(int)latitude}.png", FileMode.OpenOrCreate, FileAccess.Write);
+
+                chart.Save(file, ImageFormat.Png);
+                file.Close();
+                return Ok();
+            } 
             catch (Exception e)
             {
                 return BadRequest(e.StackTrace);

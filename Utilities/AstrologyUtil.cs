@@ -4,6 +4,7 @@ using AstroBackEnd.ViewsModel;
 using SwissEphNet;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -26,7 +27,31 @@ namespace AstroBackEnd.Utilities
             {"Pluto", 10},
             {"Earth", 11}
         };
-        
+
+        public static (int X, int Y) center = (319, 317);
+
+        public static double planetRadius = 220D;
+
+        public static double pointRadius = 240D;
+
+        public static int houseOutter = 240;
+
+        public static int houseInner = 160;
+
+        private static readonly (int, int) BlueSpecialScope1 = (55, 65);
+        private static readonly (int, int) BlueSpecialScope2 = (111, 129);
+
+        private static readonly (int, int) RedSpecialScope1 = (0, 9);
+        private static readonly (int, int) RedSpecialScope2 = (81, 99);
+        private static readonly (int, int) RedSpecialScope3 = (171, 180);
+
+        private static readonly (int, int) GraySpecialScope1 = (43, 48);
+        private static readonly (int, int) GraySpecialScope2 = (133, 137);
+
+        private static readonly Pen BluePen = new(Color.Blue, 1);
+        private static readonly Pen RedPen = new(Color.Red, 1);
+        private static readonly Pen GrayPen = new(Color.Gray, 1);
+
         private readonly SwissEph _swiss;
 
         private readonly IUnitOfWork _work;
@@ -49,8 +74,10 @@ namespace AstroBackEnd.Utilities
                 ZodiacInHouse = new Dictionary<string, int>(),
                 PlanetInZodiac = new Dictionary<string, string>(),
                 PlanetInHouse = new Dictionary<string, int>(),
-                zodiac = null
+                Zodiac = null
             };
+
+            Dictionary<string, double> planetPosition = new Dictionary<string, double>();
             string error = "";
             double[] planetPos = new double[2];
 
@@ -90,17 +117,23 @@ namespace AstroBackEnd.Utilities
                 if (planet == SwissEph.SE_SUN)
                 {
                     diff = houseOfPlanet - xx[0] / 30;
-                    diff = (diff + 12) % 12;
-                    natalChartView.zodiac = this._work.Zodiacs.Find(z => z.MainHouse == (int)Math.Ceiling(xx[0] / 30), z => z.MainHouse).FirstOrDefault();
+
+                    natalChartView.Zodiac = this._work.Zodiacs.Find(z => z.MainHouse == (int)Math.Ceiling(xx[0] / 30), z => z.MainHouse).FirstOrDefault();
                 }
 
                 string planetName = _swiss.swe_get_planet_name(planet);
 
+                planetPosition[planetName] = -xx[0] + 180;
+
                 natalChartView.PlanetInHouse[planetName] = (int)Math.Round(houseOfPlanet);
+
                 int zodiacHouse = (int)Math.Ceiling((houseOfPlanet - diff + 12) % 12);
+
                 if (zodiacHouse == 0) zodiacHouse = 12;
+
                 Models.Zodiac z = _work.Zodiacs.Find(z => z.MainHouse == zodiacHouse, z => z.MainHouse).FirstOrDefault();
-                if(planet != SwissEph.SE_EARTH)
+
+                if(planet != SwissEph.SE_EARTH && z != null)
                 {
                     natalChartView.PlanetInZodiac[planetName] = z.Name;
                 }
@@ -113,9 +146,10 @@ namespace AstroBackEnd.Utilities
             {
                 int house = (zodiac.MainHouse - (int)Math.Ceiling(diff) + 12) % 12;
                 house++;
-                natalChartView.ZodiacInHouse[zodiac.Name] = house ;
+                natalChartView.ZodiacInHouse[zodiac.Name] = house;
             }
-
+            natalChartView.PlanetPositon = planetPosition;
+            natalChartView.Diff = diff * 30;
             return natalChartView;
         }
 
@@ -248,5 +282,191 @@ namespace AstroBackEnd.Utilities
 
             return planetDic;
         }
+        public  (Dictionary<string, (double X, double Y, string planetName)> planetPos, double diff) GetPlanetPosition(DateTime birthDate, double longtitude, double latitude)
+        {
+            Dictionary<string, (double, double, string planetName)> planetPosition = new Dictionary<string, (double, double, string)>();
+            string error = "";
+            double[] planetPos = new double[2];
+
+            double[] xx = new double[6]; //6 position values: longitude, latitude, distance, *long.speed, lat.speed, dist.speed 
+            double julianDay = _swiss.swe_julday(birthDate.Year, birthDate.Month, birthDate.Day, birthDate.Hour, SwissEph.SE_GREG_CAL);
+
+            
+            double diff = 0d; //the diffirent of zodiac and house
+            _swiss.swe_calc_ut(julianDay, SwissEph.SE_ECL_NUT, 0, xx, ref error);
+            double eps_true = xx[0];
+
+            for (int planet = SwissEph.SE_SUN; planet <= SwissEph.SE_PLUTO; planet++)
+            {
+                if (planet == SwissEph.SE_EARTH) continue;
+
+                _swiss.swe_calc_ut(julianDay, planet, SwissEph.SEFLG_SPEED, xx, ref error);
+                string planetName = _swiss.swe_get_planet_name(planet);
+                planetPosition[planetName] = (-xx[0] + 180, xx[1], planetName.Substring(0, 2).ToLower());
+
+                if (planet == SwissEph.SE_SUN)
+                {
+                    double houseOffSet = longtitude / 30;
+                    double[] ascmc = new double[10];
+                    double[] cusps = new double[13];
+                    _swiss.swe_houses(julianDay, latitude, longtitude, 'A', cusps, ascmc);
+
+                    double houseOfPlanet = _swiss.swe_house_pos(ascmc[2], latitude, eps_true, 'A', planetPos, ref error);
+                    diff = --houseOfPlanet * 30 - xx[0] - longtitude;
+                }
+
+            }
+            return (planetPosition, diff);
+
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
+        public Image GetChart(DateTime birthDate, double longtitude, double latitude)
+        {
+            (Dictionary<string, (double X, double Y, string planetName)> planetPosition, double diff)  = this.GetPlanetPosition(birthDate, longtitude, latitude);
+
+            Image image = Image.FromFile(@"C:\Users\USER\source\repos\swie project\resource\zodiacChart.png");
+            var g = Graphics.FromImage(image);
+            Image planetImg;
+
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            //draw house
+            g.FillEllipse(Brushes.White, (int)(center.X - houseOutter), center.Y - houseOutter, houseOutter * 2, houseOutter * 2);
+            g.DrawEllipse(new Pen(Brushes.Black) { Width = 3, DashCap = System.Drawing.Drawing2D.DashCap.Round }, center.X - houseInner, center.Y - houseInner, houseInner * 2, houseInner * 2);
+
+            double angleDiff = diff * Math.PI / 180;
+
+            for (int i = 12; i >= 1; i--)
+            {
+                angleDiff += Math.PI / 6;
+                g.DrawLine(
+                    new Pen(Brushes.Black) { Width = 2 },
+                    new Point()
+                    {
+                        X = (int)((houseInner) * Math.Cos(angleDiff)) + center.X,
+                        Y = (int)((houseInner) * Math.Sin(angleDiff)) + center.Y,
+                    },
+                    new Point()
+                    {
+                        X = (int)((houseOutter + 5) * Math.Cos(angleDiff)) + center.X,
+                        Y = (int)((houseOutter + 5) * Math.Sin(angleDiff)) + center.Y,
+                    });
+
+                g.DrawString(i.ToString(), new Font(FontFamily.GenericSansSerif, 18), Brushes.Black, new PointF()
+                {
+                    X = (float)(((houseInner + 20) * Math.Cos(angleDiff + Math.PI / 12)) + center.X - 15),
+                    Y = (float)(((houseInner + 20) * Math.Sin(angleDiff + Math.PI / 12)) + center.Y - 15),
+                });
+
+            }
+
+            //draw planet
+            foreach (var key1 in planetPosition.Keys)
+            {
+                PointF point = new PointF();
+                double angle = (planetPosition[key1].X / 180) * Math.PI;
+
+                point.X = (float)((pointRadius * Math.Cos(angle)) + center.X);
+                point.Y = (float)((pointRadius * Math.Sin(angle)) + center.Y);
+                /*g.DrawString(planetPosition[planet].planetName, new Font(FontFamily.GenericSansSerif, 12), Brushes.Black, point);*/
+                try
+                {
+                    planetImg = Image.FromFile(@$"C:\Users\USER\source\repos\swie project\resource\{planetPosition[key1].planetName}.png");
+                    planetImg = (Image)(new Bitmap(planetImg, new Size() { Width = 20, Height = 20 }));
+                    g.DrawImage(
+                            planetImg,
+                            new Point()
+                            {
+                                X = (int)((planetRadius * Math.Cos(angle)) + center.X - 15),
+                                Y = (int)((planetRadius * Math.Sin(angle)) + center.Y - 15)
+                            }
+                        );
+                }
+                catch
+                {
+
+                }
+
+                g.FillRectangle(Brushes.Crimson, (float)point.X, (float)point.Y, 2, 2);
+
+                point = new PointF()
+                {
+                    X = (float)(((houseInner) * Math.Cos(angle)) + center.X),
+                    Y = (float)(((houseInner) * Math.Sin(angle)) + center.Y),
+                };
+                g.FillRectangle(Brushes.Crimson, (float)point.X, (float)point.Y, 2, 2);
+
+                //draw aspect:
+
+                foreach (var key2 in planetPosition.Keys)
+                {
+                    if (key1 == key2) continue;
+                    var planet1 = planetPosition[key1];
+                    var planet2 = planetPosition[key2];
+
+                    double degree = Math.Abs(planet1.X - planet2.X);
+
+                    if (degree > 180)
+                    {
+                        degree = 360 - degree;
+                    }
+                    double angle1 = (planet1.X / 180) * Math.PI;
+                    double angle2 = (planet2.X / 180) * Math.PI;
+
+                    if ((degree >= BlueSpecialScope1.Item1 && degree <= BlueSpecialScope1.Item2)
+                        || (degree >= BlueSpecialScope2.Item1 && degree <= BlueSpecialScope2.Item2))
+                    {
+                        g.DrawLine(BluePen, new PointF()
+                        {
+                            X = (float)(((houseInner) * Math.Cos(angle1)) + center.X),
+                            Y = (float)(((houseInner) * Math.Sin(angle1)) + center.Y),
+                        }, new PointF()
+                        {
+                            X = (float)(((houseInner) * Math.Cos(angle2)) + center.X),
+                            Y = (float)(((houseInner) * Math.Sin(angle2)) + center.Y),
+                        });
+                    }
+                    else if ((degree >= RedSpecialScope1.Item1 && degree <= RedSpecialScope1.Item2) ||
+                              (degree >= RedSpecialScope2.Item1 && degree <= RedSpecialScope2.Item2)
+                              || (degree >= RedSpecialScope3.Item1 && degree <= RedSpecialScope3.Item2))
+                    {
+                        g.DrawLine(RedPen, new PointF()
+                        {
+                            X = (float)(((houseInner) * Math.Cos(angle1)) + center.X),
+                            Y = (float)(((houseInner) * Math.Sin(angle1)) + center.Y),
+                        }, new PointF()
+                        {
+                            X = (float)(((houseInner) * Math.Cos(angle2)) + center.X),
+                            Y = (float)(((houseInner) * Math.Sin(angle2)) + center.Y),
+                        });
+                    }
+                    else if ((degree >= GraySpecialScope1.Item1 && degree <= GraySpecialScope1.Item2)
+                              || (degree >= GraySpecialScope2.Item1 && degree <= GraySpecialScope2.Item2))
+                    {
+                        g.DrawLine(GrayPen, new PointF()
+                        {
+                            X = (float)(((houseInner) * Math.Cos(angle1)) + center.X),
+                            Y = (float)(((houseInner) * Math.Sin(angle1)) + center.Y),
+                        }, new PointF()
+                        {
+                            X = (float)(((houseInner) * Math.Cos(angle2)) + center.X),
+                            Y = (float)(((houseInner) * Math.Sin(angle2)) + center.Y),
+                        });
+                    }
+                }
+
+                Console.WriteLine($"planet: {key1} angle: {angle}, point: {point}");
+            }
+
+            //draw earth
+            planetImg = Image.FromFile(@$"C:\Users\USER\source\repos\swie project\resource\ea.png");
+            g.FillEllipse(Brushes.White, center.X - 20, center.Y - 20, 39, 39);
+            planetImg = (Image)(new Bitmap(planetImg, new Size() { Width = 40, Height = 40 }));
+            g.DrawImage(planetImg, new Point() { X = center.X - 20, Y = center.Y - 20 });
+            g.Flush();
+            
+
+            return image;
+        } 
     }
 }
