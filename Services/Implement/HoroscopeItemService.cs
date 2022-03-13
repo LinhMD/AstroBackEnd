@@ -21,6 +21,16 @@ namespace AstroBackEnd.Services.Implement
         {
             try
             {
+                LifeAttribute checkLifeAttribute = _work.LifeAttributes.Get(request.LifeAttributeId);
+                Aspect checkAspect = _work.Aspects.Get(request.AspectId);
+                if (checkLifeAttribute == null)
+                {
+                    throw new ArgumentException("LifeAttribute not exist ");
+                }
+                if (checkAspect == null)
+                {
+                    throw new ArgumentException("Aspect not exist");
+                }
                 HoroscopeItem horoscopeItem = new HoroscopeItem()
                 {
                     AspectId = request.AspectId,
@@ -117,6 +127,16 @@ namespace AstroBackEnd.Services.Implement
             try
             {
                 Validation.ValidNumberThanZero(id, "Id must be than zero");
+                LifeAttribute checkLifeAttribute = _work.LifeAttributes.Get(request.LifeAttributeId);
+                Aspect checkAspect = _work.Aspects.Get(request.AspectId);
+                if (checkLifeAttribute == null)
+                {
+                    throw new ArgumentException("LifeAttribute not exist ");
+                }
+                if (checkAspect == null)
+                {
+                    throw new ArgumentException("Aspect not exist");
+                }
                 HoroscopeItem horoscopeItem = _work.HoroscopeItems.Get(id);
                 if (horoscopeItem != null)
                 {
