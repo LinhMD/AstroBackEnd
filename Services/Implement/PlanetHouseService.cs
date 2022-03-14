@@ -110,6 +110,11 @@ namespace AstroBackEnd.Services.Implement
                 {
                     planetHouse.HouseId = request.HouseId;
                 }
+                if (!string.IsNullOrWhiteSpace(request.Content))
+                {
+                    planetHouse.Content = request.Content;
+                }
+
                 return planetHouse;
             }
             else

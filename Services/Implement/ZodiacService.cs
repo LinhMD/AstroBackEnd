@@ -148,7 +148,7 @@ namespace AstroBackEnd.Services.Implement
                         case "Name":
                             return _work.Zodiacs.FindPaging(filter, p => p.Name, out total, request.PagingRequest.Page, request.PagingRequest.PageSize);
                         default:
-                            return _work.Zodiacs.FindPaging(filter, p => p.Id, out total, request.PagingRequest.Page, request.PagingRequest.PageSize);
+                            return _work.Zodiacs.FindPaging(filter, p => p.MainHouse, out total, request.PagingRequest.Page, request.PagingRequest.PageSize);
                     }
                 }
                 else

@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 using AstroBackEnd.Utilities;
 using AstroBackEnd.RequestModels.UserRequest;
 using AstroBackEnd.ViewsModel;
+using AstroBackEnd.RequestModels.ProfileRequest;
 
 namespace AstroBackEnd.Controllers
 {
@@ -23,12 +24,14 @@ namespace AstroBackEnd.Controllers
     {
 
         private IUserService _userService;
+        private IProfileService _profileService;
         private IUnitOfWork _work;
 
-        public UserController(IUserService userService, IUnitOfWork work)
+        public UserController(IUserService userService, IUnitOfWork work, IProfileService profileService)
         {
             this._userService = userService;
             this._work = work;
+            this._profileService = profileService;
         }
 
         [HttpGet("{id}")]
@@ -120,15 +123,139 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
-                ClaimsIdentity claimsIdentity = this.User.Identity as ClaimsIdentity;
-                string userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                int id = int.Parse(userId);
+                int id = GetCurrentUserId();
+
                 User user = _work.Users.GetAllUserData(id);
                 return Ok(user);
             }
             catch (Exception e) 
             { 
                 return BadRequest(e.Message); 
+            }
+        }
+
+        private int GetCurrentUserId()
+        {
+            ClaimsIdentity claimsIdentity = this.User.Identity as ClaimsIdentity;
+            string userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            int id = int.Parse(userId);
+            return id;
+        }
+
+        [HttpGet("current/profiles")]
+        [Authorize]
+        public IActionResult GetUserProfiles()
+        {
+            
+            try
+            {
+                int id = GetCurrentUserId();
+                User user = _userService.GetUser(id);
+                return Ok(user.Profiles);
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("current/profiles/{profileId}")]
+        [Authorize]
+        public IActionResult GetUserProfile(int profileId)
+        {
+
+            try
+            {
+                int id = GetCurrentUserId();
+                User user = _userService.GetUser(id);
+                Profile profile = user.Profiles.FirstOrDefault(p => p.Id == profileId);
+                return Ok(profile);
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("current/profiles/{profileId}/chart")]
+        [Authorize]
+        public IActionResult GetUserBirthChart(int profileId)
+        {
+
+            try
+            {
+                int id = GetCurrentUserId();
+                User user = _userService.GetUser(id);
+                Profile profile = user.Profiles.FirstOrDefault(p => p.Id == profileId);
+
+                if (profile == null) 
+                    throw new ArgumentException("Profile Id not found");
+
+                BirthChartView birthChartView = _profileService.GetBirthChart(profileId);
+
+                return Ok(birthChartView);
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost("current/profiles")]
+        [Authorize]
+        public IActionResult AddProfile(CreateProfileRequest request)
+        {
+            try
+            {
+                int id = GetCurrentUserId();
+                if (request.UserId != id) throw new ArgumentException("User id diffirent with current user id");
+                Profile profile = _profileService.CreateProfile(request);
+                return Ok(profile);
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        [HttpDelete("current/profiles/{profileId}")]
+        [Authorize]
+        public IActionResult DeleteProfile(int profileId)
+        {
+            try
+            {
+                int id = GetCurrentUserId();
+                User user = _userService.GetUser(id);
+                Profile profile = user.Profiles.FirstOrDefault(p => p.Id == profileId);
+
+                if (profile == null)
+                    throw new ArgumentException("Profile Id not found");
+                _profileService.DeleteProfile(profile.Id);
+                return Ok();
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        [HttpPut("current/profiles/{profileId}")]
+        [Authorize]
+        public IActionResult UpdateProfile(UpdateProfileRequest request, int profileId)
+        {
+            try
+            {
+                int id = GetCurrentUserId();
+                User user = _userService.GetUser(id);
+                Profile profile = user.Profiles.FirstOrDefault(p => p.Id == profileId);
+
+                if (profile == null)
+                    throw new ArgumentException("Profile Id not found");
+
+                profile = _profileService.UpdateProfile(profileId, request);
+                return Ok(profile);
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(e.Message);
             }
         }
 
