@@ -22,6 +22,16 @@ namespace AstroBackEnd.Services.Implement
         {
             try
             {
+                Planet checkPlanetBase = _work.Planets.Get(request.PlanetBaseId);
+                Planet checkPlanetCompare = _work.Planets.Get(request.PlanetCompareId);
+                if (checkPlanetBase == null)
+                {
+                    throw new ArgumentException("Planet Base not exist ");
+                }
+                if (checkPlanetCompare == null)
+                {
+                    throw new ArgumentException("Planet Compare not exist");
+                }
                 Aspect aspect = new Aspect()
                 {
                     PlanetBaseId = request.PlanetBaseId,
@@ -119,6 +129,16 @@ namespace AstroBackEnd.Services.Implement
             try
             {
                 Validation.ValidNumberThanZero(id, "Id must be than zero");
+                Planet checkPlanetBase = _work.Planets.Get(request.PlanetBaseId);
+                Planet checkPlanetCompare = _work.Planets.Get(request.PlanetCompareId);
+                if (checkPlanetBase == null)
+                {
+                    throw new ArgumentException("Planet Base not exist ");
+                }
+                if (checkPlanetCompare == null)
+                {
+                    throw new ArgumentException("Planet Compare not exist");
+                }
                 Aspect aspect = _work.Aspects.Get(id);
                 if (aspect != null)
                 {
