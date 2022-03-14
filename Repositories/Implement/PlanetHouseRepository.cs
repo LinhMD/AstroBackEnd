@@ -21,6 +21,7 @@ namespace AstroBackEnd.Repositories.Implement
             var planetHouse = AstroData.PlanetHouses
                  .Include(planetHouse => planetHouse.Planet)
                  .Include(planetHouse => planetHouse.House)
+                    .ThenInclude(h => h.Icon)
                  .Where(filter)
                  .OrderBy(sortBy);
             total = planetHouse.Count();

@@ -29,6 +29,7 @@ namespace AstroBackEnd.Repositories.Implement
             var planeZodiacs = AstroDataContext.PlanetZodiacs
                 .Include(planetZodiac => planetZodiac.Planet)
                 .Include(planetZodiac => planetZodiac.Zodiac)
+                    .ThenInclude(z => z.Icon)
                                         .Where(filter)
                                         .OrderBy(sortBy);
 
