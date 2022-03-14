@@ -169,6 +169,9 @@ namespace AstroBackEnd.Controllers
                 int id = GetCurrentUserId();
                 User user = _userService.GetUser(id);
                 Profile profile = user.Profiles.FirstOrDefault(p => p.Id == profileId);
+                if (profile == null) throw new ArgumentException("Profile Id not found");
+
+                profile = _profileService.GetProfile(profileId);
                 return Ok(profile);
             }
             catch (ArgumentException e)
