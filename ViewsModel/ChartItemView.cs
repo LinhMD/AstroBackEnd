@@ -18,7 +18,7 @@ namespace AstroBackEnd.ViewsModel
 
             ZodiacId = pZodiac.ZodiacId;
             ZodiacName = pZodiac.Zodiac.Name;
-            PlanetIcon = pZodiac.Zodiac.Icon;
+            ZodiacIcon = pZodiac.Zodiac.Icon;
 
             HouseId = pHouse.HouseId;
             HouseName = pHouse.House.Name;
