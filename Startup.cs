@@ -89,6 +89,12 @@ namespace AstroBackEnd
 
             services.AddScoped <IImageService,ImageService> ();
 
+            services.AddScoped<IHoroscopeItemService,HoroscopeItemService>();
+
+            services.AddScoped<IAspectService, AspectService>();
+
+            services.AddScoped<ILifeAttributeService, LifeAttributeService>();
+
             services.AddScoped<AstrologyUtil>();
 
             services.AddSingleton<FireabaseUtility>();

@@ -88,7 +88,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPut]
-        public IActionResult UpdatePlanet(int id, UpdatePlanetHouseRequest request)
+        public IActionResult UpdatePlanetHouse(int id, UpdatePlanetHouseRequest request)
         {
             try
             {
