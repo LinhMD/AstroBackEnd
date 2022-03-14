@@ -34,7 +34,7 @@ namespace AstroBackEnd.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         public IActionResult GetHoroscopeItem(int id)
         {
             try
@@ -84,7 +84,7 @@ namespace AstroBackEnd.Controllers
             catch (ArgumentException ex) { return BadRequest(ex.Message); }
         
         }
-        [HttpDelete("id")]
+        [HttpDelete("{id}")]
         public IActionResult DeleteHoroscopeItem(int id)
         {
             try

@@ -34,7 +34,7 @@ namespace AstroBackEnd.Controllers
             }
         }
 
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         public IActionResult GetAspect(int id)
         {
             try
@@ -89,7 +89,7 @@ namespace AstroBackEnd.Controllers
             catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 
-        [HttpDelete("id")]
+        [HttpDelete("{id}")]
         public IActionResult DeleteAspect(int id)
         {
             try
