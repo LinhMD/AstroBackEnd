@@ -1,16 +1,20 @@
 ﻿using AstroBackEnd.Models;
 using AstroBackEnd.Repositories;
+using AstroBackEnd.Services.Core;
+using AstroBackEnd.Utilities;
 using AstroBackEnd.ViewsModel;
 using SwissEphNet;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AstroBackEnd.Utilities
+namespace AstroBackEnd.Services.Implement
 {
-    public class AstrologyUtil : IDisposable
+    public class AstrologyService : IAstrologyService ,IDisposable
     {
 
         public static Dictionary<string, int> PLANET_ID = new Dictionary<string, int>() //bad design but this is PRM391 not SWD391
@@ -38,6 +42,8 @@ namespace AstroBackEnd.Utilities
 
         public static int houseInner = 160;
 
+
+
         private static readonly (int, int) BlueSpecialScope1 = (55, 65);
         private static readonly (int, int) BlueSpecialScope2 = (111, 129);
 
@@ -55,12 +61,14 @@ namespace AstroBackEnd.Utilities
         private readonly SwissEph _swiss;
 
         private readonly IUnitOfWork _work;
-        public AstrologyUtil(IUnitOfWork work)
+
+        private readonly IFirebaseService _firebase;
+        public AstrologyService(IUnitOfWork work, IFirebaseService firebase)
         {
             _swiss = new SwissEph();
             _swiss.swe_set_ephe_path(null);
             _work = work;
-            
+            _firebase = firebase;
         }
 
         public void Dispose()
@@ -185,9 +193,11 @@ namespace AstroBackEnd.Utilities
             return zodiac;
         }
 
-        public Dictionary<string, PlanetPosition> GetHouseSnapshot(DateTime birthDate, double longtitude, double latitude)
+        /*public Dictionary<string, PlanetPosition> GetHouseSnapshot(DateTime birthDate, double longtitude, double latitude)
         {
             Dictionary<int, House> houseDic = new Dictionary<int, House>();
+
+            this.test(birthDate, longtitude, latitude);
 
             IEnumerable<House> houses = _work.Houses.GetAll(h => h.Id);
 
@@ -215,8 +225,8 @@ namespace AstroBackEnd.Utilities
 
             double[] xx = new double[6]; //6 position values: longitude, latitude, distance, *long.speed, lat.speed, dist.speed 
 
-            /*double birthPlace = 10.8231; // viet nam latitude
-            double longtitude = 106.6297;*/
+            *//*double birthPlace = 10.8231; // viet nam latitude
+            double longtitude = 106.6297;*//*
 
             double houseOffSet = longtitude / 30;
 
@@ -228,34 +238,32 @@ namespace AstroBackEnd.Utilities
 
             _swiss.swe_houses(julianDay, latitude, longtitude, 'A', cusps, ascmc);
 
+            _swiss.swe_calc_ut(julianDay, SwissEph.SE_ECL_NUT, 0, xx, ref error);
+            double eps_true = xx[0];
+
             for (int planet = SwissEph.SE_SUN; planet <= SwissEph.SE_PLUTO; planet++)
             {
 
                 PlanetPosition planetPosition = new PlanetPosition();
                 iflgret = _swiss.swe_calc_ut(julianDay, planet, SwissEph.SEFLG_SPEED, xx, ref error);
 
-                if (iflgret < 0)
-                {
-                    Console.WriteLine(error);
-                }
 
                 planetPos[0] = xx[0];
                 planetPos[1] = xx[1];
 
-                double houseOfPlanet = _swiss.swe_house_pos(ascmc[2], latitude, 23.437404, 'A', planetPos, ref error);
+                double houseOfPlanet = _swiss.swe_house_pos(ascmc[2], latitude, eps_true, 'A', planetPos, ref error);
 
-                houseOfPlanet = (houseOfPlanet + houseOffSet) % 12D;
+                houseOfPlanet = (houseOfPlanet - houseOffSet) % 12D;
 
                 if (planet == SwissEph.SE_SUN)
                 {
-                    diff = houseOfPlanet - xx[0] / 30;
-                    diff = (diff + 12) % 12;
+                    diff = houseOfPlanet - (xx[0]) / 30;
                     Zodiac zodiac = zodiacDic[(int)Math.Ceiling(xx[0] / 30)];
                 }
 
 
                 string planetName = _swiss.swe_get_planet_name(planet);
-                int zodiacHouse = (int)Math.Ceiling((houseOfPlanet - diff + 12) % 12);
+                int zodiacHouse = (int)(xx[0] / 30);
                 if (zodiacHouse == 0) zodiacHouse = 12;
 
                 House house = houseDic[zodiacHouse];
@@ -282,7 +290,111 @@ namespace AstroBackEnd.Utilities
 
             return planetDic;
         }
-        public  (Dictionary<string, (double X, double Y, string planetName)> planetPos, double diff) GetPlanetPosition(DateTime birthDate, double longtitude, double latitude)
+*/
+
+        public Dictionary<string, PlanetPositionView> GetPlanetPosition(DateTime birthDate, double longtitude, double latitude)
+        {
+            Dictionary<int, House> houseDic = new Dictionary<int, House>();
+
+            IEnumerable<House> houses = _work.Houses.GetAll(h => h.Id);
+
+            foreach (House house in houses)
+            {
+                int h = int.Parse(house.Tag);
+                houseDic[h] = house;
+            }
+
+            Dictionary<int, Zodiac> zodiacDic = new Dictionary<int, Zodiac>();
+
+            IEnumerable<Zodiac> zodiacs = _work.Zodiacs.GetAll(z => z.MainHouse);
+
+            foreach (var zodiac in zodiacs)
+            {
+                zodiacDic[zodiac.MainHouse] = zodiac;
+            }
+
+            Dictionary<string, Planet> planetDic = new Dictionary<string, Planet>();
+
+            IEnumerable<Planet> planets = _work.Planets.GetAll(p => p.Id);
+
+            Dictionary<string, PlanetPositionView> planetPositionDic = new Dictionary<string, PlanetPositionView>();
+
+            foreach (var planet in planets)
+            {
+                planetDic[planet.Tag.Trim().ToLower()] = planet;
+            }
+
+            string error = "";
+            double[] planetPos = new double[2];
+
+            double[] xx = new double[6]; //6 position values: longitude, latitude, distance, *long.speed, lat.speed, dist.speed 
+
+            /*double birthPlace = 10.8231; // viet nam latitude
+            double longtitude = 106.6297;*/
+
+            double houseOffSet = longtitude / 30;
+
+            double julianDay = _swiss.swe_julday(birthDate.Year, birthDate.Month, birthDate.Day, birthDate.Hour, SwissEph.SE_GREG_CAL);
+            
+            double diff = 0d; //the diffirent of zodiac and house
+            double[] ascmc = new double[10];
+            double[] cusps = new double[13];
+
+            _swiss.swe_houses(julianDay, latitude, longtitude, 'A', cusps, ascmc);
+
+            _swiss.swe_calc_ut(julianDay, SwissEph.SE_ECL_NUT, 0, xx, ref error);
+            double eps_true = xx[0];
+
+            for (int planet = SwissEph.SE_SUN; planet <= SwissEph.SE_PLUTO; planet++)
+            {
+
+                _swiss.swe_calc_ut(julianDay, planet, SwissEph.SEFLG_SPEED, xx, ref error);
+                string planetName = _swiss.swe_get_planet_name(planet);
+
+                planetPos[0] = xx[0];
+                planetPos[1] = xx[1];
+
+                double houseOfPlanet = _swiss.swe_house_pos(ascmc[2], latitude, eps_true, 'A', planetPos, ref error);
+                houseOfPlanet--;
+
+                if (planet == SwissEph.SE_SUN)
+                {
+                    diff = houseOfPlanet  - (xx[0] - longtitude) / 30;
+                    Console.WriteLine("Diff: " + diff);
+                }
+                int houseNum = (int)Math.Ceiling( xx[0] / 30 + diff);
+
+                if (houseNum <= 0) houseNum += 12;
+
+                Console.WriteLine($"planet {planetName} house {houseNum}");
+
+                House house = houseDic[houseNum];
+                PlanetPositionView planetPosition = new PlanetPositionView();
+
+                if (house != null)
+                {
+                    planetPosition.HouseId = house.Id;
+                    planetPosition.HouseName = house.Name;
+                }
+
+                int zHouse = (int)Math.Ceiling(xx[0] / 30);
+                Models.Zodiac z = zodiacDic[zHouse];
+
+                if (z != null)
+                {
+                    planetPosition.ZodiacName = z.Name;
+                    planetPosition.ZodiacId = z.Id;
+                }
+
+                Planet p = planetDic[planetName.ToLower()];
+                planetPosition.PlanetId = p.Id;
+
+                planetPositionDic[planetName] = planetPosition;
+            }
+            return planetPositionDic;
+        }
+
+        public  (Dictionary<string, (double X, double Y, string planetName)> planetPos, double diff) GetPlanetCoordinate(DateTime birthDate, double longtitude, double latitude)
         {
             Dictionary<string, (double, double, string planetName)> planetPosition = new Dictionary<string, (double, double, string)>();
             string error = "";
@@ -306,12 +418,13 @@ namespace AstroBackEnd.Utilities
 
                 if (planet == SwissEph.SE_SUN)
                 {
-                    double houseOffSet = longtitude / 30;
                     double[] ascmc = new double[10];
                     double[] cusps = new double[13];
                     _swiss.swe_houses(julianDay, latitude, longtitude, 'A', cusps, ascmc);
-
+                    planetPos[0] = xx[0];
+                    planetPos[1] = xx[1];
                     double houseOfPlanet = _swiss.swe_house_pos(ascmc[2], latitude, eps_true, 'A', planetPos, ref error);
+                    Console.WriteLine(houseOfPlanet);
                     diff = --houseOfPlanet * 30 - xx[0] - longtitude;
                 }
 
@@ -323,9 +436,9 @@ namespace AstroBackEnd.Utilities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
         public Image GetChart(DateTime birthDate, double longtitude, double latitude)
         {
-            (Dictionary<string, (double X, double Y, string planetName)> planetPosition, double diff)  = this.GetPlanetPosition(birthDate, longtitude, latitude);
+            (Dictionary<string, (double X, double Y, string planetName)> planetPosition, double diff)  = this.GetPlanetCoordinate(birthDate, longtitude, latitude);
 
-            Image image = Image.FromFile(@"C:\Users\USER\source\repos\swie project\resource\zodiacChart.png");
+            Image image = Image.FromFile(@"resource\zodiacChart.png");
             var g = Graphics.FromImage(image);
             Image planetImg;
 
@@ -352,7 +465,7 @@ namespace AstroBackEnd.Utilities
                         Y = (int)((houseOutter + 5) * Math.Sin(angleDiff)) + center.Y,
                     });
 
-                g.DrawString(i.ToString(), new Font(FontFamily.GenericSansSerif, 18), Brushes.Black, new PointF()
+                g.DrawString(i.ToString(), new Font(FontFamily.GenericSansSerif, 10), Brushes.Black, new PointF()
                 {
                     X = (float)(((houseInner + 20) * Math.Cos(angleDiff + Math.PI / 12)) + center.X - 15),
                     Y = (float)(((houseInner + 20) * Math.Sin(angleDiff + Math.PI / 12)) + center.Y - 15),
@@ -371,7 +484,7 @@ namespace AstroBackEnd.Utilities
                 /*g.DrawString(planetPosition[planet].planetName, new Font(FontFamily.GenericSansSerif, 12), Brushes.Black, point);*/
                 try
                 {
-                    planetImg = Image.FromFile(@$"C:\Users\USER\source\repos\swie project\resource\{planetPosition[key1].planetName}.png");
+                    planetImg = Image.FromFile(@$"resource\{planetPosition[key1].planetName}.png");
                     planetImg = (Image)(new Bitmap(planetImg, new Size() { Width = 20, Height = 20 }));
                     g.DrawImage(
                             planetImg,
@@ -454,19 +567,44 @@ namespace AstroBackEnd.Utilities
                         });
                     }
                 }
-
-                Console.WriteLine($"planet: {key1} angle: {angle}, point: {point}");
+/*
+                Console.WriteLine($"planet: {key1} angle: {angle}, point: {point}");*/
             }
 
             //draw earth
-            planetImg = Image.FromFile(@$"C:\Users\USER\source\repos\swie project\resource\ea.png");
+            planetImg = Image.FromFile(@$"resource\ea.png");
             g.FillEllipse(Brushes.White, center.X - 20, center.Y - 20, 39, 39);
             planetImg = (Image)(new Bitmap(planetImg, new Size() { Width = 40, Height = 40 }));
             g.DrawImage(planetImg, new Point() { X = center.X - 20, Y = center.Y - 20 });
             g.Flush();
-            
-
             return image;
-        } 
+        }
+
+        public string GetChartFile(DateTime birthDate, double longtitude, double latitude)
+        {
+            Image image = GetChart(birthDate, longtitude, latitude);
+            var stream = new MemoryStream();
+            string fileName = @$"resource\chart-{Guid.NewGuid()}.png";
+            var file = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.Write);
+            image.Save(file, ImageFormat.Png);
+            file.Close();
+            return file.Name;
+        }
+
+        public string GetChartLinkFirebase(DateTime birthDate, double longtitude, double latitude)
+        {
+
+            var fileName = this.GetChartFile(birthDate, longtitude, latitude);
+
+
+            var file = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+
+            string link =  _firebase.UploadImage(file, fileName.Split('\\').Last()).Result;
+            file.Close();
+
+            System.IO.File.Delete(fileName);
+
+            return link;
+        }
     }
 }

@@ -13,6 +13,9 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
 
 namespace AstroBackEnd.Controllers
 {
@@ -22,12 +25,15 @@ namespace AstroBackEnd.Controllers
     {
         private IUnitOfWork _work;
         private IZodiacService _zodiacService;
-        private AstrologyUtil Astrology;
-        public ZodiacController(IUnitOfWork _work, IZodiacService zodiacService, AstrologyUtil astrology)
+        private IAstrologyService _astrology;
+
+        private IFirebaseService _firebase;
+        public ZodiacController(IUnitOfWork _work, IZodiacService zodiacService, IAstrologyService astrology, IFirebaseService firebase)
         {
             this._work = _work;
             this._zodiacService = zodiacService;
-            Astrology = astrology;
+            _astrology = astrology;
+            this._firebase = firebase;
         }
 
         [HttpGet("{id}")]
@@ -111,7 +117,7 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
-                var result = Astrology.GetHousePosOfPlanets(date, longtitude, latitude);
+                var result = _astrology.GetHousePosOfPlanets(date, longtitude, latitude);
                 return Ok(result);
             }
             catch(Exception e)
@@ -124,7 +130,7 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
-                return Ok(Astrology.GetHouseSnapshot(date, longtitude, latitude));
+                return Ok(_astrology.GetPlanetPosition(date, longtitude, latitude));
             }
             catch (Exception e)
             {
@@ -134,21 +140,27 @@ namespace AstroBackEnd.Controllers
 
         [HttpGet("chart")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
-        public IActionResult GetChart(DateTime date, double longtitude, double latitude)
+        public async Task<IActionResult> GetChartAsync(DateTime date, double longtitude, double latitude)
         {
             try
             {
-                System.Drawing.Image chart = Astrology.GetChart(date, longtitude, latitude);
-                MemoryStream ms = new MemoryStream();
-                chart.Save(ms, ImageFormat.Png);
-                var file = new FileStream(@$"resource\chart-{date.DayOfYear}-{(int)longtitude}-{(int)latitude}.png", FileMode.OpenOrCreate, FileAccess.Write);
+                /* var file = this._astrology.GetChartStream(date, longtitude, latitude);*/
 
-                chart.Save(file, ImageFormat.Png);
+                var fileName = this._astrology.GetChartFile(date, longtitude, latitude);
+
+
+                var file = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+
+                string link = await _firebase.UploadImage(file, fileName.Split('\\').Last());
                 file.Close();
-                return Ok();
+                System.IO.File.Delete(fileName);
+
+                return Ok(link);
             } 
             catch (Exception e)
             {
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.GetType());
                 return BadRequest(e.StackTrace);
             }
         }

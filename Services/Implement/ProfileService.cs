@@ -5,6 +5,8 @@ using AstroBackEnd.RequestModels;
 using AstroBackEnd.RequestModels.ProfileRequest;
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.Utilities;
+using AstroBackEnd.ViewsModel;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,8 +20,8 @@ namespace AstroBackEnd.Services.Implement
 
         private readonly AstroDataContext _astroData;
 
-        private readonly AstrologyUtil _astro;
-        public ProfileService(IUnitOfWork work, AstroDataContext astroData, AstrologyUtil astrology) 
+        private readonly IAstrologyService _astro;
+        public ProfileService(IUnitOfWork work, AstroDataContext astroData, IAstrologyService astrology) 
         {
             this._work = work;
             this._astroData = astroData;
@@ -44,7 +46,16 @@ namespace AstroBackEnd.Services.Implement
             var user = _work.Users.GetAllUserData(request.UserId);
             if (user == null) throw new ArgumentException("User ID not found");
 
+            BirthChart birthChart = new BirthChart();
+
+            birthChart.ImgLink = _astro.GetChartLinkFirebase(profile.BirthDate, profile.Longitude, profile.Latitude);
+
+            birthChart.Content = JsonConvert.SerializeObject(_astro.GetPlanetPosition(profile.BirthDate, profile.Longitude, profile.Latitude));
+            
             profile.UserId = user.Id;
+
+            profile.BirthChart = birthChart;
+
             _work.Profiles.Add(profile);
 
             return profile;
@@ -161,11 +172,43 @@ namespace AstroBackEnd.Services.Implement
 
         public Profile GetProfile(int id)
         {
-            Profile profile = _work.Profiles.Get(id);
+            Profile profile = _work.Profiles.GetProfileWithAllData(id);
             if (profile == null) throw new ArgumentException("Profile not found");
             return profile;
         }
 
+        public BirthChartView GetBirthChart(int id) 
+        {
+            Profile profile = this.GetProfile(id);
+            if (profile.BirthChart == null) throw new ArgumentException("Birth Chart Not found!!");
+
+            var birthChart = new BirthChartView(profile.BirthChart);
+
+            if(!string.IsNullOrWhiteSpace(profile.BirthChart.Content))
+            {
+                var planetPositions = JsonConvert.DeserializeObject<Dictionary<string, PlanetPositionView>>(profile.BirthChart.Content);
+                foreach (var key in planetPositions.Keys)
+                {
+                    var planetPos = planetPositions[key];
+                    PlanetHouse planetHouse = _work.PlanetHouses.FindPlanetHouseWithAllData(p => p.PlanetId == planetPos.PlanetId && p.HouseId == planetPos.HouseId, p => p.Id, out int total).FirstOrDefault();
+                    PlanetZodiac planetZodiac = _work.PlanetZodiacs.FindPlanetZodiacWithAllData(pz => pz.PlanetId == planetPos.PlanetId && pz.ZodiacId == planetPos.ZodiacId, pz => pz.Id, out total).FirstOrDefault();
+                    Planet planet = _work.Planets.Get(planetPos.PlanetId);
+
+                    try
+                    {
+                        var chartItem = new ChartItemView(planetZodiac, planetHouse, planet);
+                        birthChart.Items[key] = chartItem;
+                    }
+                    catch (ArgumentException e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
+                }
+            }
+
+
+            return birthChart;
+        }
         public Profile UpdateProfile(int id, UpdateProfileRequest request)
         {
             var profile = GetProfile(id);

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AstroBackEnd.Utilities
+namespace AstroBackEnd.ViewsModel
 {
-    public class PlanetPosition
+    public class PlanetPositionView
     {
+        public int PlanetId { get; set; }
+
         public int HouseId { get; set; }
 
         public string HouseName { get; set; }
@@ -15,8 +17,5 @@ namespace AstroBackEnd.Utilities
 
         public string ZodiacName { get; set; }
          
-        public double Longtitude { get; set; }
-
-        public double Latitude { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AstroBackEnd.Data;
 using AstroBackEnd.Models;
 using AstroBackEnd.Repositories.Core;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,5 +17,9 @@ namespace AstroBackEnd.Repositories.Implement
         }
         private AstroDataContext AstroData { get { return base._context as AstroDataContext; } }
 
+        public Profile GetProfileWithAllData(int id)
+        {
+            return AstroData.Profiles.Include(p => p.Zodiac).Include(p => p.BirthChart).FirstOrDefault(p => p.Id == id);
+        }
     }
 }

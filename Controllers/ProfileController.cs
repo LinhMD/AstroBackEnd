@@ -27,14 +27,29 @@ namespace AstroBackEnd.Controllers
         [HttpGet("{id}")]
         public IActionResult GetProfile(int id)
         {
-            var profile = _profileService.GetProfile(id);
-            if(profile != null)
+            
+            try
             {
+
+                var profile = _profileService.GetProfile(id);
                 return Ok(profile);
             }
-            else
+            catch (ArgumentException e)
             {
-                return NotFound();
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("{id}/chart")]
+        public IActionResult GetBirthChart(int id)
+        {
+            try
+            {
+                return Ok(_profileService.GetBirthChart(id)); 
+            }
+            catch(ArgumentException e)
+            {
+                return BadRequest(e.Message);
             }
         }
 
@@ -45,7 +60,7 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(_profileService.CreateProfile(request));
             }
-            catch (Exception e)
+            catch (ArgumentException e)
             {
                 return BadRequest(e.Message);
             }
@@ -75,7 +90,7 @@ namespace AstroBackEnd.Controllers
 
                 return Ok(new PagingView() { Payload = profiles, Total = total } );
             }
-            catch (Exception e)
+            catch (ArgumentException e)
             {
                 return BadRequest(e.Message);
             }
@@ -90,7 +105,7 @@ namespace AstroBackEnd.Controllers
 
                 return Ok(updateProfile);
             }
-            catch (Exception e)
+            catch (ArgumentException e)
             {
                 return BadRequest(e.Message);
             }
@@ -104,7 +119,7 @@ namespace AstroBackEnd.Controllers
                 _profileService.DeleteProfile(id);
                 return Ok();
             }
-            catch (Exception e)
+            catch (ArgumentException e)
             {
                 return BadRequest(e.Message);
             } 
