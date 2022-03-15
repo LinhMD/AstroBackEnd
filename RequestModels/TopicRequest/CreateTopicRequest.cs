@@ -2,7 +2,7 @@
 {
     public class CreateTopicRequest
     {
-        public int Name { get; set; }
+        public string Name { get; set; }
 
         public int HouseId { get; set; }
     }

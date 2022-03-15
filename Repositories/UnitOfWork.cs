@@ -36,6 +36,7 @@ namespace AstroBackEnd.Repositories
             HoroscopeItems = new HoroscopeItemRepository(dataContext);
             Aspects = new AspectRepository(dataContext);
             LifeAttributes = new LifeAttributeRepository(dataContext);
+            Topics = new TopicRepository(dataContext);
         }
 
         public IUserRepository Users { get; }
@@ -80,6 +81,8 @@ namespace AstroBackEnd.Repositories
         public IAspectRepository Aspects { get; }
 
         public ILifeAttributeRepository LifeAttributes { get; }
+
+        public ITopicRepository Topics { get; }
         public int Complete()
         {
             return _dataContext.SaveChanges();

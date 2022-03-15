@@ -49,6 +49,7 @@ namespace AstroBackEnd.Repositories
 
         ILifeAttributeRepository LifeAttributes { get; }
 
+        ITopicRepository Topics { get; }
         int Complete();
     }
 }
