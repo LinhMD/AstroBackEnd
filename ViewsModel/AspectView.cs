@@ -1,4 +1,5 @@
 ﻿using AstroBackEnd.Models;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace AstroBackEnd.ViewsModel
@@ -8,10 +9,10 @@ namespace AstroBackEnd.ViewsModel
         public AspectView(Aspect aspect)
         {
             Id = aspect.Id;
-            PlanetBaseName = aspect.PlanetBase.Name;
             PlanetBaseId = aspect.PlanetBaseId;
-            PlanetCompareName = aspect.PlanetCompare.Name;
+            PlanetBaseName = aspect.PlanetBase.Name;
             PlanetCompareId = aspect.PlanetCompareId;
+            PlanetCompareName = aspect.PlanetCompare.Name;
             AngleType = aspect.AngleType;
         }
 
