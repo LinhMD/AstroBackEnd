@@ -41,7 +41,7 @@ namespace AstroBackEnd.Repositories.Implement
         {
             return AstroDataContext.Aspects
                 .Include(aspect => aspect.PlanetBase)
-                .Include(aspect => aspect.PlanetBase)
+                .Include(aspect => aspect.PlanetCompare)
                 .FirstOrDefault(obj => obj.Id == id);
         }
     }
