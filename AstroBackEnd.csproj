@@ -5,6 +5,60 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="resource\ea.png" />
+    <None Remove="resource\ju.png" />
+    <None Remove="resource\ma.png" />
+    <None Remove="resource\me.png" />
+    <None Remove="resource\mo.png" />
+    <None Remove="resource\ne.png" />
+    <None Remove="resource\pl.png" />
+    <None Remove="resource\sa.png" />
+    <None Remove="resource\su.png" />
+    <None Remove="resource\ur.png" />
+    <None Remove="resource\ve.png" />
+    <None Remove="resource\zodiacChart.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="resource\ea.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resource\ju.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resource\ma.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resource\me.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resource\mo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resource\ne.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resource\pl.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resource\sa.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resource\su.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resource\ur.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resource\ve.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resource\zodiacChart.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Firebase.Auth" Version="1.0.0" />
     <PackageReference Include="FirebaseAdmin" Version="2.2.0" />
     <PackageReference Include="FirebaseStorage.net" Version="1.0.3" />
