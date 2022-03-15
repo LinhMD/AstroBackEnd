@@ -19,7 +19,7 @@ namespace AstroBackEnd.Repositories.Implement
 
         public Profile GetProfileWithAllData(int id)
         {
-            return AstroData.Profiles.Include(p => p.Zodiac).FirstOrDefault(p => p.Id == id);
+            return AstroData.Profiles.Include(p => p.Zodiac).Include(p => p.BirthChart).FirstOrDefault(p => p.Id == id);
         }
     }
 }

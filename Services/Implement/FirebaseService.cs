@@ -37,12 +37,12 @@ namespace AstroBackEnd.Services.Implement
             {
                 link = await task.Child("userchart").Child(name).PutAsync(image);
                 
-                Console.WriteLine("Download link :{0}", link);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 Console.WriteLine(e.StackTrace);
+                throw new ArgumentException(e.Message);
             }
             
             return link;

@@ -360,13 +360,11 @@ namespace AstroBackEnd.Services.Implement
                 if (planet == SwissEph.SE_SUN)
                 {
                     diff = houseOfPlanet  - (xx[0] - longtitude) / 30;
-                    Console.WriteLine("Diff: " + diff);
                 }
                 int houseNum = (int)Math.Ceiling( xx[0] / 30 + diff);
 
                 if (houseNum <= 0) houseNum += 12;
 
-                Console.WriteLine($"planet {planetName} house {houseNum}");
 
                 House house = houseDic[houseNum];
                 PlanetPositionView planetPosition = new PlanetPositionView();
@@ -424,7 +422,7 @@ namespace AstroBackEnd.Services.Implement
                     planetPos[0] = xx[0];
                     planetPos[1] = xx[1];
                     double houseOfPlanet = _swiss.swe_house_pos(ascmc[2], latitude, eps_true, 'A', planetPos, ref error);
-                    Console.WriteLine(houseOfPlanet);
+                    
                     diff = --houseOfPlanet * 30 - xx[0] - longtitude;
                 }
 
