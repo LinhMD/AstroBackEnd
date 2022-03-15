@@ -33,6 +33,16 @@ namespace AstroBackEnd.Services.Implement
         {
             try
             {
+                Planet checkPlanet = _work.Planets.Get(request.PlanetId);
+                House checkHouse = _work.Houses.Get(request.HouseId);
+                if (checkPlanet == null)
+                {
+                    throw new ArgumentException("Planet not exist ");
+                }
+                if (checkHouse == null)
+                {
+                    throw new ArgumentException("House not exist");
+                }
                 PlanetHouse planetHouse = new PlanetHouse()
                 {
                     PlanetId = request.PlanetId,
@@ -99,6 +109,16 @@ namespace AstroBackEnd.Services.Implement
         public PlanetHouse UpdatePlanetHouse(int id, UpdatePlanetHouseRequest request)
         {
             Validation.ValidNumberThanZero(id, "Id must be than zero");
+            Planet checkPlanet = _work.Planets.Get(request.PlanetId);
+            House checkHouse = _work.Houses.Get(request.HouseId);
+            if (checkPlanet == null)
+            {
+                throw new ArgumentException("Planet not exist ");
+            }
+            if (checkHouse == null)
+            {
+                throw new ArgumentException("House not exist");
+            }
             PlanetHouse planetHouse = _work.PlanetHouses.Get(id);
             if (planetHouse != null)
             {
