@@ -6,16 +6,13 @@ using System.Threading.Tasks;
 
 namespace AstroBackEnd.Models
 {
-    public class BirthChart
+    public class Topic
     {
         public int Id { get; set; }
 
-        public string Content { get; set; }
+        public int Name { get; set; }
 
-        public string ImgLink { get; set; }
-
-        [ForeignKey("Profile")]
-        public int ProfileId { get; set; }
-
+        [ForeignKey("Zodiac")]
+        public int ZodiacId { get; set; }
     }
 }

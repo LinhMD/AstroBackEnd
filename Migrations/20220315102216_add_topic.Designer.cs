@@ -4,14 +4,16 @@ using AstroBackEnd.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AstroBackEnd.Migrations
 {
     [DbContext(typeof(AstroDataContext))]
-    partial class AstroDataContextModelSnapshot : ModelSnapshot
+    [Migration("20220315102216_add_topic")]
+    partial class add_topic
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -529,8 +531,6 @@ namespace AstroBackEnd.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ZodiacId");
-
                     b.ToTable("Quotes");
                 });
 
@@ -674,6 +674,21 @@ namespace AstroBackEnd.Migrations
                     b.HasIndex("ZodiacId");
 
                     b.ToTable("ZodiacHouses");
+                });
+
+            modelBuilder.Entity("HoroscopeZodiac", b =>
+                {
+                    b.Property<int>("HoroscopesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ZodiacsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("HoroscopesId", "ZodiacsId");
+
+                    b.HasIndex("ZodiacsId");
+
+                    b.ToTable("HoroscopeZodiac");
                 });
 
             modelBuilder.Entity("AstroBackEnd.Models.Aspect", b =>
@@ -847,15 +862,6 @@ namespace AstroBackEnd.Migrations
                     b.Navigation("Zodiac");
                 });
 
-            modelBuilder.Entity("AstroBackEnd.Models.Quote", b =>
-                {
-                    b.HasOne("AstroBackEnd.Models.Zodiac", null)
-                        .WithMany("Quotes")
-                        .HasForeignKey("ZodiacId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("AstroBackEnd.Models.Topic", b =>
                 {
                     b.HasOne("AstroBackEnd.Models.House", null)
@@ -893,6 +899,21 @@ namespace AstroBackEnd.Migrations
                     b.Navigation("Zodiac");
                 });
 
+            modelBuilder.Entity("HoroscopeZodiac", b =>
+                {
+                    b.HasOne("AstroBackEnd.Models.Horoscope", null)
+                        .WithMany()
+                        .HasForeignKey("HoroscopesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AstroBackEnd.Models.Zodiac", null)
+                        .WithMany()
+                        .HasForeignKey("ZodiacsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("AstroBackEnd.Models.House", b =>
                 {
                     b.Navigation("Topics");
@@ -920,11 +941,6 @@ namespace AstroBackEnd.Migrations
                     b.Navigation("Orders");
 
                     b.Navigation("Profiles");
-                });
-
-            modelBuilder.Entity("AstroBackEnd.Models.Zodiac", b =>
-                {
-                    b.Navigation("Quotes");
                 });
 #pragma warning restore 612, 618
         }

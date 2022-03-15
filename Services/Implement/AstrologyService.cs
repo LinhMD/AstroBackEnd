@@ -63,6 +63,7 @@ namespace AstroBackEnd.Services.Implement
         private readonly IUnitOfWork _work;
 
         private readonly IFirebaseService _firebase;
+
         public AstrologyService(IUnitOfWork work, IFirebaseService firebase)
         {
             _swiss = new SwissEph();
@@ -165,10 +166,7 @@ namespace AstroBackEnd.Services.Implement
         {
             double[] planetPos = new double[2];
 
-            double[] xx = new double[6]; //6 position values: longitude, latitude, distance, *long.speed, lat.speed, dist.speed 
-
-            /*double birthPlace = 10.8231; // viet nam latitude
-            double longtitude = 106.6297;*/
+            double[] xx = new double[6]; 
 
             double julianDay = _swiss.swe_julday(birthDate.Year, birthDate.Month, birthDate.Day, birthDate.Hour, SwissEph.SE_GREG_CAL);
             long iflgret;
@@ -193,104 +191,7 @@ namespace AstroBackEnd.Services.Implement
             return zodiac;
         }
 
-        /*public Dictionary<string, PlanetPosition> GetHouseSnapshot(DateTime birthDate, double longtitude, double latitude)
-        {
-            Dictionary<int, House> houseDic = new Dictionary<int, House>();
-
-            this.test(birthDate, longtitude, latitude);
-
-            IEnumerable<House> houses = _work.Houses.GetAll(h => h.Id);
-
-            foreach (House house in houses)
-            {
-                int h = int.Parse(house.Tag);
-                houseDic[h] = house;
-            }
-
-            Dictionary<int, Zodiac> zodiacDic = new Dictionary<int, Zodiac>();
-
-            IEnumerable<Zodiac> zodiacs = _work.Zodiacs.GetAll(z => z.MainHouse);
-
-            foreach (var zodiac in zodiacs)
-            {
-                zodiacDic[zodiac.MainHouse] = zodiac;
-            }
-
-            Dictionary<string, PlanetPosition> planetDic = new Dictionary<string, PlanetPosition>();
-
-
-
-            string error = "";
-            double[] planetPos = new double[2];
-
-            double[] xx = new double[6]; //6 position values: longitude, latitude, distance, *long.speed, lat.speed, dist.speed 
-
-            *//*double birthPlace = 10.8231; // viet nam latitude
-            double longtitude = 106.6297;*//*
-
-            double houseOffSet = longtitude / 30;
-
-            double julianDay = _swiss.swe_julday(birthDate.Year, birthDate.Month, birthDate.Day, birthDate.Hour, SwissEph.SE_GREG_CAL);
-            long iflgret;
-            double diff = 0d; //the diffirent of zodiac and house
-            double[] ascmc = new double[10];
-            double[] cusps = new double[13];
-
-            _swiss.swe_houses(julianDay, latitude, longtitude, 'A', cusps, ascmc);
-
-            _swiss.swe_calc_ut(julianDay, SwissEph.SE_ECL_NUT, 0, xx, ref error);
-            double eps_true = xx[0];
-
-            for (int planet = SwissEph.SE_SUN; planet <= SwissEph.SE_PLUTO; planet++)
-            {
-
-                PlanetPosition planetPosition = new PlanetPosition();
-                iflgret = _swiss.swe_calc_ut(julianDay, planet, SwissEph.SEFLG_SPEED, xx, ref error);
-
-
-                planetPos[0] = xx[0];
-                planetPos[1] = xx[1];
-
-                double houseOfPlanet = _swiss.swe_house_pos(ascmc[2], latitude, eps_true, 'A', planetPos, ref error);
-
-                houseOfPlanet = (houseOfPlanet - houseOffSet) % 12D;
-
-                if (planet == SwissEph.SE_SUN)
-                {
-                    diff = houseOfPlanet - (xx[0]) / 30;
-                    Zodiac zodiac = zodiacDic[(int)Math.Ceiling(xx[0] / 30)];
-                }
-
-
-                string planetName = _swiss.swe_get_planet_name(planet);
-                int zodiacHouse = (int)(xx[0] / 30);
-                if (zodiacHouse == 0) zodiacHouse = 12;
-
-                House house = houseDic[zodiacHouse];
-
-
-                if(house != null)
-                {
-                    planetPosition.HouseId = house.Id;
-                    planetPosition.HouseName = house.Name;
-                }
-
-                int zId = (int)Math.Ceiling((houseOfPlanet - diff + 12) % 12);
-                Models.Zodiac z = zodiacDic[zId];
-
-                if (z != null)
-                {
-                    planetPosition.ZodiacName = z.Name;
-
-                    planetPosition.ZodiacId = z.Id;
-                }
-
-                planetDic[planetName] = planetPosition;
-            }
-
-            return planetDic;
-        }
-*/
+       
 
         public Dictionary<string, PlanetPositionView> GetPlanetPosition(DateTime birthDate, double longtitude, double latitude)
         {

@@ -22,7 +22,7 @@ namespace AstroBackEnd.Models
 
         public string MainContent { get; set; }
 
-        public IList<Horoscope> Horoscopes { get; set; }
+        public IList<Quote> Quotes { get; set; }
 
         public int MainHouse { get; set; }
     }
