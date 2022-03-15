@@ -12,7 +12,6 @@ namespace AstroBackEnd.Models
 
         public int Name { get; set; }
 
-        [ForeignKey("Zodiac")]
-        public int ZodiacId { get; set; }
+        public int HouseId { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using AstroBackEnd.Models;
+using System.Collections.Generic;
 
 namespace AstroBackEnd.Models
 {
