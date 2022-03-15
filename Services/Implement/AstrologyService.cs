@@ -63,7 +63,6 @@ namespace AstroBackEnd.Services.Implement
         private readonly IUnitOfWork _work;
 
         private readonly IFirebaseService _firebase;
-
         public AstrologyService(IUnitOfWork work, IFirebaseService firebase)
         {
             _swiss = new SwissEph();
@@ -166,7 +165,10 @@ namespace AstroBackEnd.Services.Implement
         {
             double[] planetPos = new double[2];
 
-            double[] xx = new double[6]; 
+            double[] xx = new double[6]; //6 position values: longitude, latitude, distance, *long.speed, lat.speed, dist.speed 
+
+            /*double birthPlace = 10.8231; // viet nam latitude
+            double longtitude = 106.6297;*/
 
             double julianDay = _swiss.swe_julday(birthDate.Year, birthDate.Month, birthDate.Day, birthDate.Hour, SwissEph.SE_GREG_CAL);
             long iflgret;
@@ -190,8 +192,6 @@ namespace AstroBackEnd.Services.Implement
             Zodiac zodiac = this._work.Zodiacs.Find(z => z.MainHouse == (int)Math.Ceiling(xx[0] / 30), z => z.MainHouse).FirstOrDefault();
             return zodiac;
         }
-
-       
 
         public Dictionary<string, PlanetPositionView> GetPlanetPosition(DateTime birthDate, double longtitude, double latitude)
         {
@@ -261,11 +261,13 @@ namespace AstroBackEnd.Services.Implement
                 if (planet == SwissEph.SE_SUN)
                 {
                     diff = houseOfPlanet  - (xx[0] - longtitude) / 30;
+                    Console.WriteLine("Diff: " + diff);
                 }
-                int houseNum = (int)Math.Ceiling( xx[0] / 30 + diff);
+                int houseNum = (int)(xx[0] / 30 + diff);
 
                 if (houseNum <= 0) houseNum += 12;
 
+                Console.WriteLine($"planet {planetName} house {houseNum}");
 
                 House house = houseDic[houseNum];
                 PlanetPositionView planetPosition = new PlanetPositionView();
@@ -323,7 +325,7 @@ namespace AstroBackEnd.Services.Implement
                     planetPos[0] = xx[0];
                     planetPos[1] = xx[1];
                     double houseOfPlanet = _swiss.swe_house_pos(ascmc[2], latitude, eps_true, 'A', planetPos, ref error);
-                    
+                    Console.WriteLine(houseOfPlanet);
                     diff = --houseOfPlanet * 30 - xx[0] - longtitude;
                 }
 
