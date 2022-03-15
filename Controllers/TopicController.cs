@@ -1,33 +1,29 @@
 ﻿using AstroBackEnd.Models;
-using AstroBackEnd.Repositories;
 using AstroBackEnd.RequestModels;
-using AstroBackEnd.RequestModels.AspectRequest;
+using AstroBackEnd.RequestModels.TopicRequest;
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.ViewsModel;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Linq;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/v1/aspects")]
+    [Route("api/v1/topics")]
     [ApiController]
-    public class AspectController : ControllerBase
+    public class TopicController : ControllerBase
     {
-        private readonly IUnitOfWork _work;
-        private IAspectService aspectService;
-        public AspectController(IUnitOfWork _work, IAspectService aspectService)
+        private ITopicService topicService;
+        public TopicController(ITopicService topicService)
         {
-            this._work = _work;
-            this.aspectService = aspectService;
+            this.topicService = topicService;
         }
 
         [HttpPost]
-        public IActionResult CreateAspect([FromBody] CreateAspectRequest request)
+        public IActionResult CreateTopic([FromBody] CreateTopicRequest request)
         {
             try
             {
-                return Ok(aspectService.CreateAspect(request));
+                return Ok(topicService.CreateTopic(request));
             }
             catch (ArgumentException ex)
             {
@@ -36,13 +32,12 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetAspect(int id)
+        public IActionResult GetTopic(int id)
         {
             try
             {
-                Aspect aspect = aspectService.GetAspect(id);
-                var aspectView = new AspectView(aspect);
-                return Ok(aspectView);
+                Topic topic = topicService.GetTopic(id);
+                return Ok(topic);
             }
             catch (ArgumentException ex)
             {
@@ -51,7 +46,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet]
-        public IActionResult FindAspect(int id, int planetBaseId, int planetCompareId, int angleType, string sortBy, int page = 1, int pageSize = 20)
+        public IActionResult FindAspect(int id, string name, int houseId, string sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
@@ -62,15 +57,14 @@ namespace AstroBackEnd.Controllers
                     Page = page,
                     PageSize = pageSize,
                 };
-                FindAspectRequest request = new FindAspectRequest()
+                FindTopicRequest request = new FindTopicRequest()
                 {
                     Id = id,
-                    PlanetBaseId = planetBaseId,
-                    PlanetCompareId = planetCompareId,
-                    AngleType = angleType,
+                    Name = name,
+                    HouseId = houseId,
                     PagingRequest = pagingRequest
                 };
-                var findResult = aspectService.FindAspect(request, out total).Select(aspect => new AspectView(aspect));
+                var findResult = topicService.FindTopic(request, out total);
                 PagingView pagingView = new PagingView()
                 {
                     Payload = findResult,
@@ -82,11 +76,11 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPut]
-        public IActionResult UpdateAspect(int id, [FromBody] UpdateAspectRequest request)
+        public IActionResult UpdateAspect(int id, [FromBody] UpdateTopicRequest request)
         {
             try
             {
-                return Ok(aspectService.UpdateAspect(id, request));
+                return Ok(topicService.UpdateTopic(id, request));
             }
             catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
@@ -96,17 +90,9 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
-                return Ok(aspectService.DeleteAspect(id));
+                return Ok(topicService.DeleteTopic(id));
             }
             catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
-
-        [HttpGet("calculate")]
-        public IActionResult CalulateAspect(DateTime birthDate, DateTime compareDate)
-        {
-
-            aspectService.CalculateAspect(birthDate, compareDate);
-            return Ok();
-        } 
     }
 }
