@@ -99,6 +99,8 @@ namespace AstroBackEnd
 
             services.AddScoped<IFirebaseService, FirebaseService>();
 
+            services.AddScoped<ITopicService, TopicService>();
+
             services.AddSingleton<FireabaseUtility>();
 
             

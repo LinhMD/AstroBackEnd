@@ -22,6 +22,7 @@ namespace AstroBackEnd.Controllers
             this._work = _work;
             this.horoscopeItemService = horoscopeItemService;
         }
+
         [HttpPost]
         public IActionResult CreateHoroscope(CreateHoroscopeItemRequest request)
         {

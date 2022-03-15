@@ -43,6 +43,25 @@ namespace AstroBackEnd.Services.Implement
                 {
                     throw new ArgumentException("Zodiac not exist");
                 }
+                Func<PlanetZodiac, bool> filter = p =>
+                {
+                    bool checkZodiacId = true;
+                    bool checkPlanetId = true;
+                    if (request.ZodiacId > 0)
+                    {
+                        checkZodiacId = p.ZodiacId == request.ZodiacId;
+                    }
+                    if (request.PlanetId > 0)
+                    {
+                        checkPlanetId = p.PlanetId == request.PlanetId;
+                    }
+                    return  checkPlanetId && checkZodiacId;
+                };
+                IEnumerable<PlanetZodiac> result = _work.PlanetZodiacs.FindPaging(filter, p => p.Id);
+                if (result.Count() > 0)
+                {
+                    throw new ArgumentException("PlanetZodiac exist");
+                }
                 PlanetZodiac planetZodiac = new PlanetZodiac()
                 {
                     PlanetId = request.PlanetId,
