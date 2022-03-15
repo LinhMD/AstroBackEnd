@@ -1,4 +1,5 @@
-﻿using AstroBackEnd.Repositories;
+﻿using AstroBackEnd.Models;
+using AstroBackEnd.Repositories;
 using AstroBackEnd.RequestModels;
 using AstroBackEnd.RequestModels.AspectRequest;
 using AstroBackEnd.Services.Core;
@@ -39,7 +40,9 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
-                return Ok(new AspectView(aspectService.GetAspect(id)));
+                Aspect aspect = aspectService.GetAspect(id);
+                var aspectView = new AspectView(aspect);
+                return Ok(aspectView);
             }
             catch (ArgumentException ex)
             {
