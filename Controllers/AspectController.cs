@@ -101,5 +101,13 @@ namespace AstroBackEnd.Controllers
             }
             catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
+
+        [HttpGet("calculate")]
+        public IActionResult CalulateAspect(DateTime birthDate, DateTime compareDate)
+        {
+
+            aspectService.CalculateAspect(birthDate, compareDate);
+            return Ok();
+        } 
     }
 }

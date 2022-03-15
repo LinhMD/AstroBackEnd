@@ -38,7 +38,7 @@ namespace AstroBackEnd.Services.Implement
                 ProfilePhoto = request.ProfilePhoto,
                 Latitude = request.Latitude,
                 Longitude = request.Longtitude,
-                
+                Gender = request.Gender
             };
 
             profile.Zodiac = _astro.GetZodiac(profile.BirthDate, profile.Longitude, profile.Latitude);
@@ -224,6 +224,10 @@ namespace AstroBackEnd.Services.Implement
             if (!string.IsNullOrWhiteSpace(request.BirthPlace))
             {
                 profile.BirthPlace = request.BirthPlace;
+            }
+            if(request.Gender != null)
+            {
+                profile.Gender = request.Gender.Value;
             }
             bool checkZodiacChange = false;
             if (request.BirthDate != profile.BirthDate)

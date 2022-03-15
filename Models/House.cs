@@ -23,6 +23,5 @@ namespace AstroBackEnd.Models
         public string MainContent { get; set; }
 
         public IList<Topic> Topics { get; set; }
-        
     }
 }

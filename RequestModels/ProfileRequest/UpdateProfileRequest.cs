@@ -19,5 +19,7 @@ namespace AstroBackEnd.RequestModels.ProfileRequest
 
         public string? ProfilePhoto { get; set; }
 
+        public bool? Gender { get; set; }
+
     }
 }

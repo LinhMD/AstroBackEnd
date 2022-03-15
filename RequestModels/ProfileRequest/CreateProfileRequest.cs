@@ -15,6 +15,8 @@ namespace AstroBackEnd.RequestModels
 
         public double Latitude { get; set; }
 
+        public bool Gender { get; set; }
+
         public double Longtitude { get; set; }
 
         public string ProfilePhoto { get; set; }
