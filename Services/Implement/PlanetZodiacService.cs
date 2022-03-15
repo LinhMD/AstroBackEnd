@@ -33,6 +33,16 @@ namespace AstroBackEnd.Services.Implement
         {
             try
             {
+                Planet checkPlanet = _work.Planets.Get(request.PlanetId);
+                Zodiac checkZodiac = _work.Zodiacs.Get(request.ZodiacId);
+                if (checkPlanet == null)
+                {
+                    throw new ArgumentException("Planet not exist ");
+                }
+                if (checkZodiac == null)
+                {
+                    throw new ArgumentException("Zodiac not exist");
+                }
                 PlanetZodiac planetZodiac = new PlanetZodiac()
                 {
                     PlanetId = request.PlanetId,
@@ -98,6 +108,16 @@ namespace AstroBackEnd.Services.Implement
         public PlanetZodiac UpdatePlanetZodiac(int id, UpdatePlanetZodiacRequest request)
         {
             Validation.ValidNumberThanZero(id, "Id must be than zero");
+            Planet checkPlanet = _work.Planets.Get(request.PlanetId);
+            Zodiac checkZodiac = _work.Zodiacs.Get(request.ZodiacId);
+            if (checkPlanet == null)
+            {
+                throw new ArgumentException("Planet not exist ");
+            }
+            if (checkZodiac == null)
+            {
+                throw new ArgumentException("Zodiac not exist");
+            }
             PlanetZodiac planetZodiac = _work.PlanetZodiacs.Get(id);
             if (planetZodiac != null)
             {

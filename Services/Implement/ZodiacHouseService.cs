@@ -32,6 +32,16 @@ namespace AstroBackEnd.Services.Implement
         {
             try
             {
+                House checkHouse = _work.Houses.Get(request.HouseId);
+                Zodiac checkZodiac = _work.Zodiacs.Get(request.ZodiacId);
+                if (checkHouse == null)
+                {
+                    throw new ArgumentException("House not exist ");
+                }
+                if (checkZodiac == null)
+                {
+                    throw new ArgumentException("Zodiac not exist");
+                }
                 ZodiacHouse zodiacHouse = new ZodiacHouse()
                 {
                     HouseId = request.HouseId,
@@ -95,6 +105,16 @@ namespace AstroBackEnd.Services.Implement
         public ZodiacHouse UpdateZodiacHouse(int id, UpdateZodiacHouseRequest request)
         {
             Validation.ValidNumberThanZero(id, "Id must be than zero");
+            House checkHouse = _work.Houses.Get(request.HouseId);
+            Zodiac checkZodiac = _work.Zodiacs.Get(request.ZodiacId);
+            if (checkHouse == null)
+            {
+                throw new ArgumentException("House not exist ");
+            }
+            if (checkZodiac == null)
+            {
+                throw new ArgumentException("Zodiac not exist");
+            }
             ZodiacHouse zodiacHouse = _work.ZodiacHouses.Get(id);
             if(zodiacHouse != null)
             {
