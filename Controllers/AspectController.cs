@@ -105,8 +105,7 @@ namespace AstroBackEnd.Controllers
         public IActionResult CalulateAspect(DateTime birthDate, DateTime compareDate)
         {
 
-            aspectService.CalculateAspect(birthDate, compareDate);
-            return Ok();
+            return Ok(aspectService.CalculateAspect(birthDate, compareDate));
         } 
     }
 }

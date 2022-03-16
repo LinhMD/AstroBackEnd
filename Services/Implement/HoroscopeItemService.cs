@@ -100,13 +100,13 @@ namespace AstroBackEnd.Services.Implement
                     switch (pagingRequest.SortBy)
                     {
                         case "AspectId":
-                            return _work.HoroscopeItems.FindHoroscopeItemWithAllData(filter, p => p.AspectId, out total, pagingRequest.Page, pagingRequest.PageSize);
+                            return _work.HoroscopeItems.FindHoroscopeItemWithAllDataPaging(filter, p => p.AspectId, out total, pagingRequest.Page, pagingRequest.PageSize);
                         case "LifeAttributeId":
-                            return _work.HoroscopeItems.FindHoroscopeItemWithAllData(filter, p => p.LifeAttributeId, out total, pagingRequest.Page, pagingRequest.PageSize);
+                            return _work.HoroscopeItems.FindHoroscopeItemWithAllDataPaging(filter, p => p.LifeAttributeId, out total, pagingRequest.Page, pagingRequest.PageSize);
                         case "Value":
-                            return _work.HoroscopeItems.FindHoroscopeItemWithAllData(filter, p => p.Value, out total, pagingRequest.Page, pagingRequest.PageSize);
+                            return _work.HoroscopeItems.FindHoroscopeItemWithAllDataPaging(filter, p => p.Value, out total, pagingRequest.Page, pagingRequest.PageSize);
                         default:
-                            return _work.HoroscopeItems.FindHoroscopeItemWithAllData(filter, p => p.Id, out total, pagingRequest.Page, pagingRequest.PageSize);
+                            return _work.HoroscopeItems.FindHoroscopeItemWithAllDataPaging(filter, p => p.Id, out total, pagingRequest.Page, pagingRequest.PageSize);
                     }
                 }
                 else

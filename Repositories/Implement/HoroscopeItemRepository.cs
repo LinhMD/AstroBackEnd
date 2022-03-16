@@ -15,7 +15,7 @@ namespace AstroBackEnd.Repositories.Implement
         }
 
         private AstroDataContext AstroDataContext { get { return base._context as AstroDataContext; } }
-        public IEnumerable<HoroscopeItem> FindHoroscopeItemWithAllData<TSortBy>(Func<HoroscopeItem, bool> filter, Func<HoroscopeItem, TSortBy> sortBy, out int total, int page = 1, int pageSize = 20)
+        public IEnumerable<HoroscopeItem> FindHoroscopeItemWithAllDataPaging<TSortBy>(Func<HoroscopeItem, bool> filter, Func<HoroscopeItem, TSortBy> sortBy, out int total, int page = 1, int pageSize = 20)
         {
             var horoscopeItem = AstroDataContext.HoroscopeItems
                    .Include(horoscopeItem => horoscopeItem.Aspect)

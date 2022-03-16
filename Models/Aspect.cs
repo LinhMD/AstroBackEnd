@@ -19,7 +19,7 @@ namespace AstroBackEnd.Models
 
         public int PlanetCompareId { get; set; }
 
-        [Range(0, 10, ErrorMessage = "Angle type [0-11]")]
+        [Range(0, 10, ErrorMessage = "Angle type [0-10]")]
         public int AngleType { get; set; }
 
         public string? Description { get; set; }

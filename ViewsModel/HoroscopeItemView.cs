@@ -7,22 +7,24 @@ namespace AstroBackEnd.ViewsModel
         public HoroscopeItemView(HoroscopeItem horoscopeItem)
         {
             Id = horoscopeItem.Id;
-            AspectId = horoscopeItem.AspectId;
+            Aspect = new AspectView(horoscopeItem.Aspect);
             LifeAttributeId = horoscopeItem.LifeAttributeId;
             LifeAttributeName = horoscopeItem.LifeAttribute.Name;
             Value = horoscopeItem.Value;
+            Content = horoscopeItem.Content;
         }
+
         public int Id { get; set; }
 
-        public int AspectId { get; set; }
-
-        //public Aspect Aspect { get; set; }
+        public AspectView Aspect { get; set; }
 
         public int LifeAttributeId { get; set; }
 
         public string LifeAttributeName { get; set; }
 
         public int Value { get; set; }
+
+        public string Content { get; set; }
 
     }
 }

@@ -4,6 +4,7 @@ using AstroBackEnd.RequestModels;
 using AstroBackEnd.RequestModels.AspectRequest;
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.Utilities;
+using AstroBackEnd.ViewsModel;
 using SwissEphNet;
 using System;
 using System.Collections.Generic;
@@ -14,29 +15,29 @@ namespace AstroBackEnd.Services.Implement
     public class AspectService : IAspectService, IDisposable
     {
 
-        public static readonly (int, double, double) Conjunction = (1, 0, 8);
+        public static readonly (int, double, double) Conjunction = (0, 0, 8);
 
-        public static readonly (int, double, double) SemiSextile = (2, 28, 32);
+        public static readonly (int, double, double) SemiSextile = (1, 28, 32);
 
-        public static readonly (int, double, double) SemiSquare = (3, 43, 55);
+        public static readonly (int, double, double) SemiSquare = (2, 43, 55);
 
-        public static readonly (int, double, double) Sextile = (4, 56, 64);
+        public static readonly (int, double, double) Sextile = (3, 56, 64);
 
-        public static readonly (int, double, double) Quintile = (5, 70, 72);
+        public static readonly (int, double, double) Quintile = (4, 70, 72);
 
-        public static readonly (int, double, double) Square = (6, 82, 98);
+        public static readonly (int, double, double) Square = (5, 82, 98);
 
-        public static readonly (int, double, double) Trine = (7, 112, 128);
+        public static readonly (int, double, double) Trine = (6, 112, 128);
 
-        public static readonly (int, double, double) Sesquiquadrate = (8, 133, 137);
+        public static readonly (int, double, double) Sesquiquadrate = (7, 133, 137);
         
-        public static readonly (int, double, double) BiQuintile = (9, 142, 146);
+        public static readonly (int, double, double) BiQuintile = (8, 142, 146);
 
-        public static readonly (int, double, double) Quincunx = (10, 148, 152);
+        public static readonly (int, double, double) Quincunx = (9, 148, 152);
 
-        public static readonly (int, double, double) Opposition = (11, 172, 188);
+        public static readonly (int, double, double) Opposition = (10, 172, 188);
 
-        public static readonly Dictionary<string, (int Id, double lower, double upper)> Aspects = new Dictionary<string, (int, double, double)>()
+        public static readonly Dictionary<string, (int angleType, double lower, double upper)> Aspects = new Dictionary<string, (int, double, double)>()
         {
             {"Conjunction", Conjunction},
             {"SemiSextile", SemiSextile},
@@ -239,15 +240,15 @@ namespace AstroBackEnd.Services.Implement
             _work.Complete();
         }
 
-        public void CalculateAspect(DateTime birthDate, DateTime compareDate)
+        public Dictionary<string, List<HoroscopeItemView>> CalculateAspect(DateTime birthDate, DateTime compareDate)
         {
-            Dictionary<string, Planet> planetDic = new Dictionary<string, Planet>();
+            Dictionary<string, (int id , Planet planet)> planetDic = new Dictionary<string, (int, Planet)>();
 
             IEnumerable<Planet> planets = _work.Planets.GetAll(p => p.Id);
             Console.WriteLine(DateTimeOffset.Now.ToUnixTimeMilliseconds());
             foreach (var planet in planets)
             {
-                planetDic[planet.Tag.Trim().ToLower()] = planet;
+                planetDic[planet.Tag.Trim().ToLower()] = (planet.Id, planet);
             }
             
             using SwissEph swiss = new();
@@ -258,39 +259,59 @@ namespace AstroBackEnd.Services.Implement
             double[] comparePos = new double[6];
             double birthDayJuli = swiss.swe_julday(birthDate.Year, birthDate.Month, birthDate.Day, birthDate.Hour, SwissEph.SE_GREG_CAL);
             double compareJuli = swiss.swe_julday(compareDate.Year, compareDate.Month, compareDate.Day, compareDate.Hour, SwissEph.SE_GREG_CAL);
+            HashSet<int> aspectIds = new HashSet<int>();
 
-            Console.WriteLine("--------------------------------------------------");
             for (int planet = SwissEph.SE_SUN; planet <= SwissEph.SE_PLUTO; planet++)
             {
                 swiss.swe_calc_ut(birthDayJuli, planet, SwissEph.SEFLG_SPEED, birthPos, ref error);
 
                 string planetNameBirth = swiss.swe_get_planet_name(planet).ToLower().Trim();
                 double birthLongtitude = birthPos[0];
+                
                 for (int planetCompare = SwissEph.SE_SUN; planetCompare <= SwissEph.SE_PLUTO; planetCompare++)
                 {
-                    
-
                     swiss.swe_calc_ut(compareJuli, planetCompare, SwissEph.SEFLG_SPEED, comparePos, ref error);
 
                     string planetNameCompare = swiss.swe_get_planet_name(planetCompare).ToLower().Trim();
 
                     double compareLongtitude = comparePos[0];
 
-                    double aspect = Math.Abs(compareLongtitude - birthLongtitude);
+                    double angle = Math.Abs(compareLongtitude - birthLongtitude);
 
                     foreach (var aspectName in Aspects.Keys) 
                     {
-                        (int Id, double lower, double upper) = Aspects[aspectName];
+                        (int angleType, double lower, double upper) = Aspects[aspectName];
 
-                        if(aspect >= lower && aspect <= upper)
+                        if(angle >= lower && angle <= upper)
                         {
-                            Console.WriteLine($"Planet:{planetNameBirth}-{planetNameCompare} aspect: {aspectName}-{aspect}");
+                            int idBase = planetDic[planetNameBirth].id;
+                            int idCompare = planetDic[planetNameCompare].id;
+                            int aspectId = _work.Aspects.Find(a => a.PlanetBaseId == idBase && a.PlanetCompareId == idCompare && a.AngleType == angleType, a => a.Id).Select(a => a.Id).FirstOrDefault();
+
+                            if(aspectId > 0)
+                                aspectIds.Add(aspectId);
                         }
                     }
                 }
             }
 
-            Console.WriteLine(DateTimeOffset.Now.ToUnixTimeMilliseconds());
+            IEnumerable<HoroscopeItem> HoroItem = _work.HoroscopeItems.FindHoroscopeItemWithAllData(h => aspectIds.Contains(h.AspectId), h => h.AspectId, out int total);
+
+            var lifeAttributeHoro = new Dictionary<string, List<HoroscopeItemView>>();
+
+            IEnumerable<LifeAttribute> lifeAttrs = _work.LifeAttributes.GetAll(l => l.Id);
+
+            foreach (var lifeAttr in lifeAttrs)
+            {
+                lifeAttributeHoro[lifeAttr.Name] = new List<HoroscopeItemView>();
+            }
+
+            foreach (var item in HoroItem)
+            {
+                lifeAttributeHoro[item.LifeAttribute.Name].Add(new HoroscopeItemView(item));
+            }
+
+            return lifeAttributeHoro;
         }
     }
 }

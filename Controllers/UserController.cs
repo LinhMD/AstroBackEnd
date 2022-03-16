@@ -26,12 +26,14 @@ namespace AstroBackEnd.Controllers
         private IUserService _userService;
         private IProfileService _profileService;
         private IUnitOfWork _work;
+        private IAspectService _aspectService;
 
-        public UserController(IUserService userService, IUnitOfWork work, IProfileService profileService)
+        public UserController(IUserService userService, IUnitOfWork work, IProfileService profileService, IAspectService aspect)
         {
             this._userService = userService;
             this._work = work;
             this._profileService = profileService;
+            this._aspectService = aspect;
         }
 
         [HttpGet("{id}")]
@@ -173,6 +175,25 @@ namespace AstroBackEnd.Controllers
 
                 profile = _profileService.GetProfile(profileId);
                 return Ok(profile);
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("current/profiles/{profileId}/horoscope")]
+        [Authorize]
+        public IActionResult GetHoroscopeDaily(int profileId, DateTime date)
+        {
+
+            try
+            {
+                int id = GetCurrentUserId();
+                User user = _userService.GetUser(id);
+                Profile profile = user.Profiles.FirstOrDefault(p => p.Id == profileId);
+                if (profile == null) throw new ArgumentException("Profile Id not found");
+                return Ok(_aspectService.CalculateAspect(profile.BirthDate, date));
             }
             catch (ArgumentException e)
             {

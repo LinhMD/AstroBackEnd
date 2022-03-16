@@ -1,5 +1,6 @@
 ﻿using AstroBackEnd.Models;
 using AstroBackEnd.RequestModels.AspectRequest;
+using AstroBackEnd.ViewsModel;
 using System;
 using System.Collections.Generic;
 
@@ -13,6 +14,6 @@ namespace AstroBackEnd.Services.Core
         public Aspect UpdateAspect(int id, UpdateAspectRequest updateAspect);
         public Aspect DeleteAspect(int id);
 
-        public void CalculateAspect(DateTime birthDate, DateTime compareDate);
+        public Dictionary<string, List<HoroscopeItemView>> CalculateAspect(DateTime birthDate, DateTime compareDate);
     }
 }
