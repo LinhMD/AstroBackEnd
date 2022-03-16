@@ -38,9 +38,9 @@ namespace AstroBackEnd.Services.Implement
 
         public static double pointRadius = 240D;
 
-        public static int houseOutter = 240;
+        public static int houseOutterRadius = 240;
 
-        public static int houseInner = 160;
+        public static int houseInnerRadius = 160;
 
 
 
@@ -345,8 +345,8 @@ namespace AstroBackEnd.Services.Implement
 
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             //draw house
-            g.FillEllipse(Brushes.White, (int)(center.X - houseOutter), center.Y - houseOutter, houseOutter * 2, houseOutter * 2);
-            g.DrawEllipse(new Pen(Brushes.Black) { Width = 3, DashCap = System.Drawing.Drawing2D.DashCap.Round }, center.X - houseInner, center.Y - houseInner, houseInner * 2, houseInner * 2);
+            g.FillEllipse(Brushes.White, (int)(center.X - houseOutterRadius), center.Y - houseOutterRadius, houseOutterRadius * 2, houseOutterRadius * 2);
+            g.DrawEllipse(new Pen(Brushes.Black) { Width = 3, DashCap = System.Drawing.Drawing2D.DashCap.Round }, center.X - houseInnerRadius, center.Y - houseInnerRadius, houseInnerRadius * 2, houseInnerRadius * 2);
 
             double angleDiff = diff * Math.PI / 180;
 
@@ -357,19 +357,19 @@ namespace AstroBackEnd.Services.Implement
                     new Pen(Brushes.Black) { Width = 2 },
                     new Point()
                     {
-                        X = (int)((houseInner) * Math.Cos(angleDiff)) + center.X,
-                        Y = (int)((houseInner) * Math.Sin(angleDiff)) + center.Y,
+                        X = (int)((houseInnerRadius) * Math.Cos(angleDiff)) + center.X,
+                        Y = (int)((houseInnerRadius) * Math.Sin(angleDiff)) + center.Y,
                     },
                     new Point()
                     {
-                        X = (int)((houseOutter + 5) * Math.Cos(angleDiff)) + center.X,
-                        Y = (int)((houseOutter + 5) * Math.Sin(angleDiff)) + center.Y,
+                        X = (int)((houseOutterRadius + 5) * Math.Cos(angleDiff)) + center.X,
+                        Y = (int)((houseOutterRadius + 5) * Math.Sin(angleDiff)) + center.Y,
                     });
 
                 g.DrawString(i.ToString(), new Font(FontFamily.GenericSansSerif, 10), Brushes.Black, new PointF()
                 {
-                    X = (float)(((houseInner + 20) * Math.Cos(angleDiff + Math.PI / 12)) + center.X - 15),
-                    Y = (float)(((houseInner + 20) * Math.Sin(angleDiff + Math.PI / 12)) + center.Y - 15),
+                    X = (float)(((houseInnerRadius + 20) * Math.Cos(angleDiff + Math.PI / 12)) + center.X - 15),
+                    Y = (float)(((houseInnerRadius + 20) * Math.Sin(angleDiff + Math.PI / 12)) + center.Y - 15),
                 });
 
             }
@@ -405,8 +405,8 @@ namespace AstroBackEnd.Services.Implement
 
                 point = new PointF()
                 {
-                    X = (float)(((houseInner) * Math.Cos(angle)) + center.X),
-                    Y = (float)(((houseInner) * Math.Sin(angle)) + center.Y),
+                    X = (float)(((houseInnerRadius) * Math.Cos(angle)) + center.X),
+                    Y = (float)(((houseInnerRadius) * Math.Sin(angle)) + center.Y),
                 };
                 g.FillRectangle(Brushes.Crimson, (float)point.X, (float)point.Y, 2, 2);
 
@@ -432,12 +432,12 @@ namespace AstroBackEnd.Services.Implement
                     {
                         g.DrawLine(BluePen, new PointF()
                         {
-                            X = (float)(((houseInner) * Math.Cos(angle1)) + center.X),
-                            Y = (float)(((houseInner) * Math.Sin(angle1)) + center.Y),
+                            X = (float)(((houseInnerRadius) * Math.Cos(angle1)) + center.X),
+                            Y = (float)(((houseInnerRadius) * Math.Sin(angle1)) + center.Y),
                         }, new PointF()
                         {
-                            X = (float)(((houseInner) * Math.Cos(angle2)) + center.X),
-                            Y = (float)(((houseInner) * Math.Sin(angle2)) + center.Y),
+                            X = (float)(((houseInnerRadius) * Math.Cos(angle2)) + center.X),
+                            Y = (float)(((houseInnerRadius) * Math.Sin(angle2)) + center.Y),
                         });
                     }
                     else if ((degree >= RedSpecialScope1.Item1 && degree <= RedSpecialScope1.Item2) ||
@@ -446,12 +446,12 @@ namespace AstroBackEnd.Services.Implement
                     {
                         g.DrawLine(RedPen, new PointF()
                         {
-                            X = (float)(((houseInner) * Math.Cos(angle1)) + center.X),
-                            Y = (float)(((houseInner) * Math.Sin(angle1)) + center.Y),
+                            X = (float)(((houseInnerRadius) * Math.Cos(angle1)) + center.X),
+                            Y = (float)(((houseInnerRadius) * Math.Sin(angle1)) + center.Y),
                         }, new PointF()
                         {
-                            X = (float)(((houseInner) * Math.Cos(angle2)) + center.X),
-                            Y = (float)(((houseInner) * Math.Sin(angle2)) + center.Y),
+                            X = (float)(((houseInnerRadius) * Math.Cos(angle2)) + center.X),
+                            Y = (float)(((houseInnerRadius) * Math.Sin(angle2)) + center.Y),
                         });
                     }
                     else if ((degree >= GraySpecialScope1.Item1 && degree <= GraySpecialScope1.Item2)
@@ -459,12 +459,12 @@ namespace AstroBackEnd.Services.Implement
                     {
                         g.DrawLine(GrayPen, new PointF()
                         {
-                            X = (float)(((houseInner) * Math.Cos(angle1)) + center.X),
-                            Y = (float)(((houseInner) * Math.Sin(angle1)) + center.Y),
+                            X = (float)(((houseInnerRadius) * Math.Cos(angle1)) + center.X),
+                            Y = (float)(((houseInnerRadius) * Math.Sin(angle1)) + center.Y),
                         }, new PointF()
                         {
-                            X = (float)(((houseInner) * Math.Cos(angle2)) + center.X),
-                            Y = (float)(((houseInner) * Math.Sin(angle2)) + center.Y),
+                            X = (float)(((houseInnerRadius) * Math.Cos(angle2)) + center.X),
+                            Y = (float)(((houseInnerRadius) * Math.Sin(angle2)) + center.Y),
                         });
                     }
                 }

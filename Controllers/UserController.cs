@@ -55,7 +55,9 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
+                
                 return Ok(_userService.CreateUser(request));
+                
             }
             catch (Exception e)
             {
