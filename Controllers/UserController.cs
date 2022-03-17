@@ -41,6 +41,7 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
+
                 return Ok(_userService.GetUser(id));
             }
             catch (Exception e)
