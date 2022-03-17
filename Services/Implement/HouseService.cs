@@ -103,6 +103,7 @@ namespace AstroBackEnd.Services.Implement
                         }
                     }
 
+
                     return checkId && checkNameHouse && checkIcon && checkTag && checkTitleHouse;
 
                 };
