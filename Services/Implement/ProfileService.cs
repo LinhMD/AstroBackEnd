@@ -251,6 +251,11 @@ namespace AstroBackEnd.Services.Implement
             if (checkZodiacChange)
             {
                 profile.Zodiac = _astro.GetZodiac(profile.BirthDate, profile.Longitude, profile.Latitude);
+
+                profile.BirthChart.ImgLink = _astro.GetChartLinkFirebase(profile.BirthDate, profile.Longitude, profile.Latitude);
+
+                profile.BirthChart.Content = JsonConvert.SerializeObject(_astro.GetPlanetPosition(profile.BirthDate, profile.Longitude, profile.Latitude));
+
             }
 
             return profile;
