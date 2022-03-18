@@ -4,6 +4,7 @@ using AstroBackEnd.RequestModels;
 using AstroBackEnd.RequestModels.ZodiacHouseRequest;
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.ViewsModel;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
@@ -94,7 +95,9 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
-                return Ok(iZodiacHouseService.DeleteZodiacHouse(id));
+                Response.Headers.Add("Allow", "GET, POST, PUT");
+                return StatusCode(StatusCodes.Status405MethodNotAllowed);
+                /*return Ok(iZodiacHouseService.DeleteZodiacHouse(id));*/
             }
             catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }

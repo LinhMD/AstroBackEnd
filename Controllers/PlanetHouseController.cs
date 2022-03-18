@@ -82,7 +82,9 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
-                return Ok(planetHouseService.DeletePlanetHouse(id));
+                Response.Headers.Add("Allow", "GET, POST, PUT");
+                return StatusCode(StatusCodes.Status405MethodNotAllowed);
+                /*return Ok(planetHouseService.DeletePlanetHouse(id));*/
             }
             catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }

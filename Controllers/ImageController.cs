@@ -96,7 +96,9 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
-                return Ok(_Service.DeleteImage(id));
+                Response.Headers.Add("Allow", "GET, POST, PUT");
+                return StatusCode(StatusCodes.Status405MethodNotAllowed);
+                /*return Ok(_Service.DeleteImage(id));*/
             }
             catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }

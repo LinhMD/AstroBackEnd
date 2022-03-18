@@ -4,6 +4,8 @@ using AstroBackEnd.RequestModels;
 using AstroBackEnd.RequestModels.AspectRequest;
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.ViewsModel;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
@@ -23,6 +25,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult CreateAspect([FromBody] CreateAspectRequest request)
         {
             try
@@ -36,6 +39,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult GetAspect(int id)
         {
             try
@@ -82,6 +86,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "admin")]
         public IActionResult UpdateAspect(int id, [FromBody] UpdateAspectRequest request)
         {
             try
@@ -92,16 +97,20 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult DeleteAspect(int id)
         {
             try
             {
-                return Ok(aspectService.DeleteAspect(id));
+                Response.Headers.Add("Allow", "GET, POST, PUT");
+                return StatusCode(StatusCodes.Status405MethodNotAllowed);
+                /*return Ok(aspectService.DeleteAspect(id));*/
             }
             catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 
         [HttpGet("calculate")]
+        [Authorize(Roles = "admin")]
         public IActionResult CalulateAspect(DateTime birthDate, DateTime compareDate)
         {
 

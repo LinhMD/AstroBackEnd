@@ -25,6 +25,8 @@ namespace AstroBackEnd.Models
 
         public Category Category { get; set; }
 
+        public int CategoryId { get; set; }
+
         public IList<Product> ProductVariation { get; set; }
 
 

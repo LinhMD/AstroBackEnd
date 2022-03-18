@@ -98,7 +98,9 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
-                return Ok(_zodiacService.RemoveZodiac(id));
+                Response.Headers.Add("Allow", "GET, POST, PUT");
+                return StatusCode(StatusCodes.Status405MethodNotAllowed);
+                /*return Ok(_zodiacService.RemoveZodiac(id));*/
             }
             catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }

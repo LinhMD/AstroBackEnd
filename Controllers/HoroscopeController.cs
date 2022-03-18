@@ -5,6 +5,7 @@ using AstroBackEnd.RequestModels.HoroscopeRequest;
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.Utilities;
 using AstroBackEnd.ViewsModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -26,6 +27,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult GetHoroscope(int id)
         {
             try
@@ -70,6 +72,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult CreateHoroscope(CreateHoroscopeRequest request)
         {
             try
@@ -83,6 +86,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "admin")]
         public IActionResult UpdateHoroscope(int id, UpdateHoroscopeRequest request)
         {
             try
@@ -99,11 +103,14 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult DeleteHoroscope(int id)
         {
             try
             {
-                return Ok(horoscopeService.DeleteHoroscope(id));
+                Response.Headers.Add("Allow", "GET, POST, PUT");
+                return StatusCode(StatusCodes.Status405MethodNotAllowed);
+                /*return Ok(horoscopeService.DeleteHoroscope(id));*/
             }
             catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }

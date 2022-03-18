@@ -5,6 +5,7 @@ using AstroBackEnd.RequestModels;
 using AstroBackEnd.RequestModels.HouseRequest;
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.ViewsModel;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
@@ -85,7 +86,9 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
-                return Ok(houseService.DeleteHouse(id));
+                Response.Headers.Add("Allow", "GET, POST, PUT");
+                return StatusCode(StatusCodes.Status405MethodNotAllowed);
+                /*return Ok(houseService.DeleteHouse(id));*/
             }
             catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }

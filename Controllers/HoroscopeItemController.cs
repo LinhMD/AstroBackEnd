@@ -90,7 +90,9 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
-                return Ok(horoscopeItemService.DeleteHoroscopeItem(id));
+                /*return Ok(horoscopeItemService.DeleteHoroscopeItem(id));*/
+                Response.Headers.Add("Allow", "GET, POST, PUT");
+                return StatusCode(StatusCodes.Status405MethodNotAllowed);
             }
             catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }

@@ -34,6 +34,8 @@ namespace AstroBackEnd.Controllers
         {
             _Service.DeleteProduct(id);
             return Ok();
+            /*Response.Headers.Add("Allow", "GET, POST, PUT");
+            return StatusCode(StatusCodes.Status405MethodNotAllowed);*/
         }
 
         [HttpGet("master/{id}")]

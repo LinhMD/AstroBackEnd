@@ -43,9 +43,13 @@ namespace AstroBackEnd.Services.Implement
         {
             Validation.ValidNumberThanZero(id, "Id must be than zero");
             Category category = _work.Categories.Get(id);
+            
             if (category != null)
             {
+                if (_work.Products.Find(p => p.CategoryId == category.Id, p => p.Id).Any())
+                    throw new ArgumentException("This category have product depend on it!!");
                 _work.Categories.Remove(GetCategory(id));
+                
                 return category;
             }
             else
