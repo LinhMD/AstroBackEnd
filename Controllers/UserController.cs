@@ -37,6 +37,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult GetUser(int id)
         {
             try
@@ -52,6 +53,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult CreateUser([FromBody] UserCreateRequest request)
         {
             try
@@ -68,7 +70,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPut]
-
+        [Authorize(Roles = "admin")]
         public IActionResult UpdateUser(int id, [FromBody] UserUpdateRequest request)
         {
             try
@@ -86,6 +88,7 @@ namespace AstroBackEnd.Controllers
         /// there is no summary
         /// </summary>
         [HttpGet]
+        [Authorize(Roles = "admin")]
         public IActionResult FindUsers(string? name, string? phone, string? sortBy, int? status,  int page = 1, int pageSize = 20)
         {
             try
