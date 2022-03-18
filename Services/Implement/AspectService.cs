@@ -129,7 +129,7 @@ namespace AstroBackEnd.Services.Implement
                     {
                         checkPlanetCompareId = p.PlanetCompareId == request.PlanetCompareId;
                     }
-                    if (request.AngleType > 0)
+                    if (request.AngleType >= 0)
                     {
                         checkAngleType = p.AngleType == request.AngleType;
                     }

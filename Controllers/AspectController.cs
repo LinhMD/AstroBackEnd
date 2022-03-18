@@ -51,7 +51,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet]
-        public IActionResult FindAspect(int id, int planetBaseId, int planetCompareId, int angleType, string sortBy, int page = 1, int pageSize = 20)
+        public IActionResult FindAspect(int id, int planetBaseId, int planetCompareId, string sortBy, int angleType = -1,  int page = 1, int pageSize = 20)
         {
             try
             {
