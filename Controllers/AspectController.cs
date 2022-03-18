@@ -30,7 +30,7 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
-                return Ok(aspectService.CreateAspect(request));
+                return Ok(new AspectView(aspectService.CreateAspect(request)));
             }
             catch (ArgumentException ex)
             {
@@ -74,7 +74,7 @@ namespace AstroBackEnd.Controllers
                     AngleType = angleType,
                     PagingRequest = pagingRequest
                 };
-                var findResult = aspectService.FindAspect(request, out total).Select(aspect => new AspectView(aspect));
+                var findResult = aspectService.FindAspect(request, out total).Select(aspect => new AspectSimpleView(aspect));
                 PagingView pagingView = new PagingView()
                 {
                     Payload = findResult,
@@ -91,7 +91,7 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
-                return Ok(aspectService.UpdateAspect(id, request));
+                return Ok(new AspectView(aspectService.UpdateAspect(id, request)));
             }
             catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }

@@ -1,16 +1,18 @@
 ﻿using AstroBackEnd.Models;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace AstroBackEnd.ViewsModel
 {
-    public class AspectView
+    public class AspectSimpleView
     {
+
         public static readonly Dictionary<int, (string angleName, int angle)> AngleNames = new()
         {
             { 0, ("Conjunction", 0) },
-            {1, ("SemiSextile", 30)},
+            { 1, ("SemiSextile", 30) },
             { 2, ("SemiSquare", 45) },
             { 3, ("Sextile", 60) },
             { 4, ("Quintile", 72) },
@@ -22,7 +24,7 @@ namespace AstroBackEnd.ViewsModel
             { 10, ("Opposition", 180) },
         };
 
-        public AspectView(Aspect aspect)
+        public AspectSimpleView(Aspect aspect)
         {
             Id = aspect.Id;
             PlanetBaseId = aspect.PlanetBaseId;
@@ -31,13 +33,10 @@ namespace AstroBackEnd.ViewsModel
             PlanetCompareName = aspect.PlanetCompare.Name;
 
             (string angleName, int angle) = AngleNames[aspect.AngleType];
-            AngleName  = angleName;
+            AngleName = angleName;
             Angle = angle;
 
-            Description = aspect.Description;
-            MainContent = aspect.MainContent;
         }
-
         public int Id { get; set; }
 
         public string PlanetBaseName { get; set; }
@@ -52,9 +51,5 @@ namespace AstroBackEnd.ViewsModel
         public string AngleName { get; set; }
 
         public int Angle { get; set; }
-
-        public string Description { get; set; }
-
-        public string MainContent { get; set; }
     }
 }
