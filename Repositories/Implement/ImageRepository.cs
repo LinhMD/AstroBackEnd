@@ -17,10 +17,15 @@ namespace AstroBackEnd.Repositories.Implement
         }
         private AstroDataContext AstroData { get { return base._context as AstroDataContext; } }
 
-        public Product GetAllImageData(int id)
+        public ImgLink GetAllImageData(int id)
         {
-            return AstroData.Products.Include("Link").Include("ProductId")
+            return AstroData.ImgLinks
                 .First(p => p.Id == id);
+        }
+
+        public override IQueryable<ImgLink> WithAllData()
+        {
+            return AstroData.ImgLinks.AsQueryable();
         }
     }
 }

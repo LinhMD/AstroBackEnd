@@ -56,5 +56,15 @@ namespace AstroBackEnd.Repositories.Implement
                 .Include(horoscopeItem => horoscopeItem.LifeAttribute)
                 .FirstOrDefault(obj => obj.Id == id);
         }
+
+        public override IQueryable<HoroscopeItem> WithAllData()
+        {
+            return AstroDataContext.HoroscopeItems.AsQueryable()
+                .Include(horoscopeItem => horoscopeItem.Aspect)
+                    .ThenInclude(aspect => aspect.PlanetBase)
+                 .Include(horoscopeItem => horoscopeItem.Aspect)
+                    .ThenInclude(aspect => aspect.PlanetCompare)
+                .Include(horoscopeItem => horoscopeItem.LifeAttribute);
+        }
     }
 }

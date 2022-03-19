@@ -47,5 +47,12 @@ namespace AstroBackEnd.Repositories.Implement
             total = planeZodiacs.Count();
             return planeZodiacs.Skip((page - 1) * pageSize).Take(pageSize + 1);
         }
+
+        public override IQueryable<PlanetZodiac> WithAllData()
+        {
+            return AstroDataContext.PlanetZodiacs.AsQueryable()
+                .Include(planetZodiac => planetZodiac.Planet)
+                .Include(planetZodiac => planetZodiac.Zodiac);
+        }
     }
 }

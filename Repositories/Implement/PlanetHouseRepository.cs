@@ -46,5 +46,12 @@ namespace AstroBackEnd.Repositories.Implement
                 .Include(planetHouse => planetHouse.House)
                 .FirstOrDefault(planetHouse => planetHouse.Id == id);
         }
+
+        public override IQueryable<PlanetHouse> WithAllData()
+        {
+            return AstroData.PlanetHouses.AsQueryable()
+                 .Include(planetHouse => planetHouse.Planet)
+                 .Include(planetHouse => planetHouse.House);
+        }
     }
 }

@@ -16,5 +16,10 @@ namespace AstroBackEnd.Repositories.Implement
         }
 
         private AstroDataContext AstroData { get { return base._context as AstroDataContext; } }
+
+        public override IQueryable<Role> WithAllData()
+        {
+            return AstroData.Roles.AsQueryable();
+        }
     }
 }

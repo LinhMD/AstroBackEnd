@@ -11,7 +11,6 @@ namespace AstroBackEnd.Repositories.Core
 
         public User GetAllUserData(int id);
 
-        public IQueryable WithAllData();
         
     }
 }

@@ -44,5 +44,12 @@ namespace AstroBackEnd.Repositories.Implement
                 .Include(aspect => aspect.PlanetCompare)
                 .FirstOrDefault(obj => obj.Id == id);
         }
+
+        public override IQueryable<Aspect> WithAllData()
+        {
+            return AstroDataContext.Aspects.AsQueryable()
+                   .Include(aspect => aspect.PlanetBase)
+                   .Include(aspect => aspect.PlanetCompare);
+        }
     }
 }

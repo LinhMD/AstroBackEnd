@@ -62,5 +62,10 @@ namespace AstroBackEnd.Repositories.Implement
             return products.Skip((page - 1) * pageSize)
                             .Take(pageSize);
         }
+
+        public override IQueryable<Product> WithAllData()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

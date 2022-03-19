@@ -1,6 +1,7 @@
 ﻿using AstroBackEnd.Data;
 using AstroBackEnd.Models;
 using AstroBackEnd.Repositories.Core;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,9 @@ namespace AstroBackEnd.Repositories.Implement
 
         private AstroDataContext AstroData { get { return base._context as AstroDataContext; } }
 
-        
+        public override IQueryable<News> WithAllData()
+        {
+            return AstroData.News.AsQueryable();
+        }
     }
 }

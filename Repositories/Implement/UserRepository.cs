@@ -28,7 +28,7 @@ namespace AstroBackEnd.Repositories.Implement
                 .FirstOrDefault(u => u.Id == id);
         }
 
-        public IQueryable WithAllData()
+        public override IQueryable<User> WithAllData()
         {
             return AstroData.Users
                 .Include(u => u.Role)

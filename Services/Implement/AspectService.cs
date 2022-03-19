@@ -9,6 +9,7 @@ using SwissEphNet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace AstroBackEnd.Services.Implement
 {
@@ -111,7 +112,7 @@ namespace AstroBackEnd.Services.Implement
             if (request.Id < 0) { throw new ArgumentException("Id must be equal or than zero"); }
             try
             {
-                Func<Aspect, bool> filter = p =>
+                /*Func<Aspect, bool> filter = p =>
                 {
                     bool checkId = true;
                     bool checkPlanetBaseId = true;
@@ -134,7 +135,12 @@ namespace AstroBackEnd.Services.Implement
                         checkAngleType = p.AngleType == request.AngleType;
                     }
                     return checkId && checkPlanetBaseId && checkPlanetCompareId && checkAngleType;
-                };
+                };*/
+
+                Expression<Func<Aspect, bool>> filter = a => (request.Id <= 0 || a.Id == request.Id) &&
+                                                            (request.PlanetBaseId <= 0 || a.PlanetBaseId == request.PlanetBaseId) &&
+                                                            (request.PlanetCompareId <= 0 || a.PlanetCompareId == request.PlanetCompareId) &&
+                                                            (request.AngleType <= 0 || a.AngleType == request.AngleType);
                 PagingRequest pagingRequest = request.PagingRequest;
                 Validation.ValidNumberThanZero(pagingRequest.Page, "Page must be than zero");
                 Validation.ValidNumberThanZero(pagingRequest.PageSize, "PageSize must be than zero");
@@ -143,18 +149,18 @@ namespace AstroBackEnd.Services.Implement
                     switch (pagingRequest.SortBy)
                     {
                         case "PlanetBaseId":
-                            return _work.Aspects.FindAspectWithAllData(filter, p => p.PlanetBaseId, out total, pagingRequest.Page, pagingRequest.PageSize);
+                            return _work.Aspects.FindAtDBPaging(filter, p => p.PlanetBaseId, out total, pagingRequest.Page, pagingRequest.PageSize);
                         case "PlanetCompareId":
-                            return _work.Aspects.FindAspectWithAllData(filter, p => p.PlanetCompareId, out total, pagingRequest.Page, pagingRequest.PageSize);
+                            return _work.Aspects.FindAtDBPaging(filter, p => p.PlanetCompareId, out total, pagingRequest.Page, pagingRequest.PageSize);
                         case "AngleType":
-                            return _work.Aspects.FindAspectWithAllData(filter, p => p.AngleType, out total, pagingRequest.Page, pagingRequest.PageSize);
+                            return _work.Aspects.FindAtDBPaging(filter, p => p.AngleType, out total, pagingRequest.Page, pagingRequest.PageSize);
                         default:
-                            return _work.Aspects.FindAspectWithAllData(filter, p => p.Id, out total, pagingRequest.Page, pagingRequest.PageSize);
+                            return _work.Aspects.FindAtDBPaging(filter, p => p.Id, out total, pagingRequest.Page, pagingRequest.PageSize);
                     }
                 }
                 else
                 {
-                    IEnumerable<Aspect> result = _work.Aspects.FindAspectWithAllData(filter, p => p.Id, out total);
+                    IEnumerable<Aspect> result = _work.Aspects.FindAtDBPaging(filter, p => p.Id, out total);
                     total = result.Count();
                     return result;
                 }

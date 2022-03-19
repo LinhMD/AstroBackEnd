@@ -30,6 +30,11 @@ namespace AstroBackEnd.Repositories.Implement
                 .Take(pageSize + 1);
         }
 
+        public override IQueryable<Order> WithAllData()
+        {
+            return AstroData.Orders.AsQueryable().Include("OrderDetails");
+        }
+
         private AstroDataContext AstroData { get { return base._context as AstroDataContext; } }
 
     }

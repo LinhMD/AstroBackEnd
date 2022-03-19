@@ -21,5 +21,10 @@ namespace AstroBackEnd.Repositories.Implement
         {
             return AstroData.Profiles.Include(p => p.Zodiac).Include(p => p.BirthChart).FirstOrDefault(p => p.Id == id);
         }
+
+        public override IQueryable<Profile> WithAllData()
+        {
+            return AstroData.Profiles.AsQueryable().Include(p => p.Zodiac).Include(p => p.BirthChart);
+        }
     }
 }

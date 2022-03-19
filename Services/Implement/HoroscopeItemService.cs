@@ -7,6 +7,7 @@ using AstroBackEnd.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace AstroBackEnd.Services.Implement
 {
@@ -68,7 +69,7 @@ namespace AstroBackEnd.Services.Implement
             if (request.Id < 0) { throw new ArgumentException("Id must be equal or than zero"); }
             try
             {
-                Func<HoroscopeItem, bool> filter = p =>
+                /*Func<HoroscopeItem, bool> filter = p =>
                 {
                     bool checkId = true;
                     bool checkAspectId = true;
@@ -91,7 +92,11 @@ namespace AstroBackEnd.Services.Implement
                         checkValue = p.LifeAttributeId == request.LifeAttributeId;
                     }
                     return checkId && checkLifeAttributeId && checkAspectId && checkValue;
-                };
+                };*/
+                Expression<Func<HoroscopeItem, bool>> filter = a => (request.Id <= 0 || a.Id == request.Id) &&
+                                                                    (request.AspectId <= 0 || a.AspectId == request.AspectId) &&
+                                                                    (request.LifeAttributeId <= 0 || a.LifeAttributeId == request.LifeAttributeId) &&
+                                                                    (request.Value <= 0 || a.Value == request.Value);
                 PagingRequest pagingRequest = request.PagingRequest;
                 Validation.ValidNumberThanZero(pagingRequest.Page, "Page must be than zero");
                 Validation.ValidNumberThanZero(pagingRequest.PageSize, "PageSize must be than zero");
@@ -100,18 +105,18 @@ namespace AstroBackEnd.Services.Implement
                     switch (pagingRequest.SortBy)
                     {
                         case "AspectId":
-                            return _work.HoroscopeItems.FindHoroscopeItemWithAllDataPaging(filter, p => p.AspectId, out total, pagingRequest.Page, pagingRequest.PageSize);
+                            return _work.HoroscopeItems.FindAtDBPaging(filter, p => p.AspectId, out total, pagingRequest.Page, pagingRequest.PageSize);
                         case "LifeAttributeId":
-                            return _work.HoroscopeItems.FindHoroscopeItemWithAllDataPaging(filter, p => p.LifeAttributeId, out total, pagingRequest.Page, pagingRequest.PageSize);
+                            return _work.HoroscopeItems.FindAtDBPaging(filter, p => p.LifeAttributeId, out total, pagingRequest.Page, pagingRequest.PageSize);
                         case "Value":
-                            return _work.HoroscopeItems.FindHoroscopeItemWithAllDataPaging(filter, p => p.Value, out total, pagingRequest.Page, pagingRequest.PageSize);
+                            return _work.HoroscopeItems.FindAtDBPaging(filter, p => p.Value, out total, pagingRequest.Page, pagingRequest.PageSize);
                         default:
-                            return _work.HoroscopeItems.FindHoroscopeItemWithAllDataPaging(filter, p => p.Id, out total, pagingRequest.Page, pagingRequest.PageSize);
+                            return _work.HoroscopeItems.FindAtDBPaging(filter, p => p.Id, out total, pagingRequest.Page, pagingRequest.PageSize);
                     }
                 }
                 else
                 {
-                    IEnumerable<HoroscopeItem> result = _work.HoroscopeItems.FindHoroscopeItemWithAllData(filter, p => p.Id, out total);
+                    IEnumerable<HoroscopeItem> result = _work.HoroscopeItems.FindAtDBPaging(filter, p => p.Id, out total);
                     total = result.Count();
                     return result;
                 }
