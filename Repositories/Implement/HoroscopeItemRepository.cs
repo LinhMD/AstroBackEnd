@@ -32,6 +32,9 @@ namespace AstroBackEnd.Repositories.Implement
         {
             var horoscopeItem = AstroDataContext.HoroscopeItems
                 .Include(horoscopeItem => horoscopeItem.Aspect)
+                    .ThenInclude(aspect => aspect.PlanetBase)
+                 .Include(horoscopeItem => horoscopeItem.Aspect)
+                    .ThenInclude(aspect => aspect.PlanetCompare)
                 .Include(horoscopeItem => horoscopeItem.LifeAttribute)
                                         .Where(filter)
                                         .OrderBy(sortBy);
