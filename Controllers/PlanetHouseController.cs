@@ -4,6 +4,7 @@ using AstroBackEnd.RequestModels;
 using AstroBackEnd.RequestModels.PlanetHouseRequest;
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.ViewsModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -34,6 +35,7 @@ namespace AstroBackEnd.Controllers
             catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public IActionResult FindPlanetZodiac(int id, int planetId, int HouseId, string sortBy, int page = 1, int pageSize = 20)
         {
@@ -64,6 +66,7 @@ namespace AstroBackEnd.Controllers
             }catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public IActionResult CreatePlanetZodiac(CreatePlanetHouseRequest request)
         {
@@ -77,6 +80,7 @@ namespace AstroBackEnd.Controllers
             }
         }
 
+        [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public IActionResult DeletePlanetZodiac(int id)
         {

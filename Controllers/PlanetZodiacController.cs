@@ -5,6 +5,7 @@ using AstroBackEnd.RequestModels.PlanetZodiacRequest;
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.Utilities;
 using AstroBackEnd.ViewsModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -74,6 +75,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult CreatePlanetZodiac(CreatePlanetZodiacRequest request)
         {
             try
@@ -85,6 +87,7 @@ namespace AstroBackEnd.Controllers
             }
         }
 
+        [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public IActionResult DeletePlanetZodiac(int id)
         {
@@ -98,6 +101,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "admin")]
         public IActionResult UpdatePlanet(int id, UpdatePlanetZodiacRequest request)
         {
             try

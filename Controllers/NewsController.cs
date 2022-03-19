@@ -12,6 +12,7 @@ using AstroBackEnd.RequestModels.NewRequest;
 using AstroBackEnd.RequestModels;
 using AstroBackEnd.Repositories;
 using AstroBackEnd.ViewsModel;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AstroBackEnd.Controllers
 {
@@ -39,6 +40,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult CreateNew([FromBody] NewsCreateRequest request)
         {
             try
@@ -49,6 +51,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "admin")]
         public IActionResult UpdateNew(int id, [FromBody] NewsUpdateRequest request)
         {
 
@@ -88,6 +91,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult DeleteNews(int id)
         {
             try

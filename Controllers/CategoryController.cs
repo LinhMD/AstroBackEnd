@@ -32,7 +32,6 @@ namespace AstroBackEnd.Controllers
 
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "admin")]
         public IActionResult GetCategory(int id)
         {
             try
@@ -44,7 +43,7 @@ namespace AstroBackEnd.Controllers
 
         [HttpPost]
         [Authorize(Roles = "admin")]
-        public IActionResult CreateProduct([FromBody] CategoryCreateRequest request)
+        public IActionResult CreateCategory([FromBody] CategoryCreateRequest request)
         {
             try
             {

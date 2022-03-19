@@ -16,6 +16,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AstroBackEnd.Controllers
 {
@@ -82,6 +83,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult CreateZodiac(CreateZodiacRequest request)
         {
             try
@@ -94,6 +96,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult ReomoveZodiac(int id)
         {
             try
@@ -106,6 +109,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "admin")]
         public IActionResult UpdateZodiac(int id, UpdateZodiacRequest updateZodiac)
         {
             try
@@ -115,6 +119,7 @@ namespace AstroBackEnd.Controllers
             catch (ArgumentException ex) { return BadRequest(ex.Message); }
         }
         [HttpGet("natal")]
+        [Authorize(Roles = "admin")]
         public IActionResult getBirthChart(DateTime date, double longtitude, double latitude)
         {
             try
@@ -140,6 +145,7 @@ namespace AstroBackEnd.Controllers
             }
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet("chart")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
         public async Task<IActionResult> GetChartAsync(DateTime date, double longtitude, double latitude)

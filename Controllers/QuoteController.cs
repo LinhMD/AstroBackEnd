@@ -4,6 +4,7 @@ using AstroBackEnd.Repositories.Core;
 using AstroBackEnd.RequestModels;
 using AstroBackEnd.RequestModels.QuoteRequest;
 using AstroBackEnd.ViewsModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -65,6 +66,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult CreateQuote(CreateQuoteRequest request)
         {
             try
@@ -76,7 +78,7 @@ namespace AstroBackEnd.Controllers
                 return BadRequest(e.Message);
             }
         }
-
+        [Authorize(Roles = "admin")]
         [HttpPut]
         public IActionResult UpdateQuote(int id, UpdateQuoteRequest request)
         {
@@ -88,6 +90,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult DeleteQuote(int id)
         {
             try

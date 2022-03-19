@@ -4,6 +4,7 @@ using AstroBackEnd.RequestModels;
 using AstroBackEnd.RequestModels.PlanetRequest;
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.ViewsModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -65,6 +66,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult CreatePlanet(CreatePlanetRequest request)
         {
             try
@@ -75,6 +77,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult DeletePlanet(int id)
         {
             try
@@ -87,6 +90,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "admin")]
         public IActionResult UpdatePlanet(int id, UpdatePlanetRequest request)
         {
             try

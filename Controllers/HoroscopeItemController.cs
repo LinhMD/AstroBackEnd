@@ -4,6 +4,7 @@ using AstroBackEnd.RequestModels.HoroscopeItemRequest;
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.Utilities;
 using AstroBackEnd.ViewsModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -24,6 +25,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult CreateHoroscope(CreateHoroscopeItemRequest request)
         {
             try 

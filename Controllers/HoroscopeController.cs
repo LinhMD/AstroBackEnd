@@ -27,7 +27,6 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "admin")]
         public IActionResult GetHoroscope(int id)
         {
             try

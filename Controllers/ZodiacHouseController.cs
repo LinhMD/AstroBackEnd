@@ -4,6 +4,7 @@ using AstroBackEnd.RequestModels;
 using AstroBackEnd.RequestModels.ZodiacHouseRequest;
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.ViewsModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -37,6 +38,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult CreateZodiacHouse(CreateZodiacHouseRequest request)
         {
             try
@@ -81,6 +83,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "admin")]
         public IActionResult UpdateZodiacHouse(int id, UpdateZodiacHouseRequest request)
         {
             try
@@ -91,6 +94,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult DeleteZodiacHouse(int id)
         {
             try

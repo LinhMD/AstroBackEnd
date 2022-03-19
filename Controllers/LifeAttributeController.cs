@@ -3,6 +3,7 @@ using AstroBackEnd.RequestModels;
 using AstroBackEnd.RequestModels.LifeAttributeRequest;
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.ViewsModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -66,6 +67,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult CreateLifeAttribute(CreateLifeAttributeRequest request)
         {
             try
@@ -79,6 +81,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult ReomoveLifeAttribute(int id)
         {
             try

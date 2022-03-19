@@ -3,6 +3,7 @@ using AstroBackEnd.RequestModels;
 using AstroBackEnd.RequestModels.TopicRequest;
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.ViewsModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
@@ -18,6 +19,7 @@ namespace AstroBackEnd.Controllers
             this.topicService = topicService;
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public IActionResult CreateTopic([FromBody] CreateTopicRequest request)
         {
@@ -46,7 +48,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet]
-        public IActionResult FindAspect(int id, string name, int houseId, string sortBy, int page = 1, int pageSize = 20)
+        public IActionResult FindTopic(int id, string name, int houseId, string sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
@@ -76,7 +78,8 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPut]
-        public IActionResult UpdateAspect(int id, [FromBody] UpdateTopicRequest request)
+        [Authorize(Roles = "admin")]
+        public IActionResult UpdateTopic(int id, [FromBody] UpdateTopicRequest request)
         {
             try
             {
@@ -86,7 +89,8 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteAspect(int id)
+        [Authorize(Roles = "admin")]
+        public IActionResult DeleteTopic(int id)
         {
             try
             {

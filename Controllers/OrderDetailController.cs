@@ -2,6 +2,7 @@
 using AstroBackEnd.RequestModels.OrderDetailRequest;
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.ViewsModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -23,7 +24,7 @@ namespace AstroBackEnd.Controllers
             this._detailService = detailService;
         }
 
-
+        [Authorize]
         [HttpGet]
         public IActionResult FindOrderDetail(   int? orderId, 
                                                 string? productName, 
@@ -67,6 +68,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public IActionResult GetOrderDetail(int id)
         {
             try
@@ -79,7 +81,7 @@ namespace AstroBackEnd.Controllers
                 return BadRequest(e.Message);
             }
         }
-
+        [Authorize]
         [HttpPost]
         public IActionResult CreateOrderDetail(OrderDetailCreateRequest request)
         {
@@ -87,6 +89,7 @@ namespace AstroBackEnd.Controllers
             return Ok(detail);
         }
 
+        [Authorize]
         [HttpPut]
         public IActionResult UpdateOrderDetail(int id, OrderDetailUpdateRequest request)
         {
@@ -101,6 +104,7 @@ namespace AstroBackEnd.Controllers
             }
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public IActionResult DeleteOrderDetail(int id)
         {

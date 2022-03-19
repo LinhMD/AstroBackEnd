@@ -43,6 +43,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult CreateImage([FromBody] ImageCreateRequest request)
         {
             try
@@ -80,6 +81,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "admin")]
         public IActionResult UpdateImage(int id, ImageUpdateRequest request)
         {
             try

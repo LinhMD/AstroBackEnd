@@ -1,6 +1,7 @@
 ﻿using AstroBackEnd.RequestModels.OrderRequest;
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.ViewsModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -23,6 +24,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult CreateOrder(CreateOrderRequest request)
         {
             try
@@ -36,6 +38,7 @@ namespace AstroBackEnd.Controllers
             }
         }
         [HttpPut]
+        [Authorize(Roles = "admin")]
         public IActionResult UpdateOrder(int id, CreateOrderRequest request)
         {
             try
@@ -50,6 +53,7 @@ namespace AstroBackEnd.Controllers
 
         }
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult DeleteOrder(int id)
         {
             try
@@ -64,6 +68,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult GetOrder(int id)
         {
 
@@ -78,6 +83,7 @@ namespace AstroBackEnd.Controllers
             }
         }
         [HttpGet]
+        [Authorize(Roles = "admin")]
         public IActionResult FindOrder( int? status, 
                                         DateTime? orderTimeStart, DateTime? orderTimeEnd,
                                         double? totalCostStart, double? totalCostEnd, 

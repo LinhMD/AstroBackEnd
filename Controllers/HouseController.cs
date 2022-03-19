@@ -5,6 +5,7 @@ using AstroBackEnd.RequestModels;
 using AstroBackEnd.RequestModels.HouseRequest;
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.ViewsModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -69,6 +70,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult CreateHouse(CreateHouseRequest request)
         {
             try
@@ -82,6 +84,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult DeleteHouse(int id)
         {
             try
@@ -94,6 +97,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "admin")]
         public IActionResult UpdateHouse(int id, UpdateHouseRequest request)
         {
             try

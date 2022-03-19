@@ -39,7 +39,6 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "admin")]
         public IActionResult GetAspect(int id)
         {
             try

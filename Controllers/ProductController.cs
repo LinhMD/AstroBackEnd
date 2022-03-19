@@ -30,6 +30,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult DeleteProduct(int id)
         {
             _Service.DeleteProduct(id);
@@ -39,6 +40,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet("master/{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult GetProduct(int id)
         {
             var product = _Service.GetMasterProduct(id);
@@ -76,6 +78,7 @@ namespace AstroBackEnd.Controllers
 
         [HttpPost]
         [Route("master")]
+        [Authorize(Roles = "admin")]
         public IActionResult CreateMasterProduct([FromBody] MasterProductCreateRequest request)
         {
             try
@@ -90,6 +93,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPut("master")]
+        [Authorize(Roles = "admin")]
         public IActionResult UpdateProduct(int id, MasterProductsUpdateRequest request)
         {
             try
@@ -106,6 +110,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet("variant/{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult GetMasterProduct(int id)
         {
             var product = _Service.GetProductVariant(id);
@@ -113,6 +118,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpGet("variant")]
+        [Authorize(Roles = "admin")]
         public IActionResult GetAllProductVariant(string? Size, double? Price, int? Gender, string? Color, int? status, string? SortBy, int Page = 1, int pageSize = 20)
         {
             try
@@ -143,6 +149,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPost("variant")]
+        [Authorize(Roles = "admin")]
         public IActionResult CreateProduct([FromBody] ProductVariantCreateRequest request)
         {
             try
@@ -157,6 +164,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPut("variant")]
+        [Authorize(Roles = "admin")]
         public IActionResult UpdateProductVariant(int id, ProductVariantUpdateRequest request)
         {
             try
