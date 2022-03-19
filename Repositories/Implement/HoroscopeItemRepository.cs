@@ -18,10 +18,13 @@ namespace AstroBackEnd.Repositories.Implement
         public IEnumerable<HoroscopeItem> FindHoroscopeItemWithAllDataPaging<TSortBy>(Func<HoroscopeItem, bool> filter, Func<HoroscopeItem, TSortBy> sortBy, out int total, int page = 1, int pageSize = 20)
         {
             var horoscopeItem = AstroDataContext.HoroscopeItems
-                   .Include(horoscopeItem => horoscopeItem.Aspect)
-                   .Include(horoscopeItem => horoscopeItem.LifeAttribute)
-                                           .Where(filter)
-                                           .OrderBy(sortBy);
+                .Include(horoscopeItem => horoscopeItem.Aspect)
+                    .ThenInclude(aspect => aspect.PlanetBase)
+                 .Include(horoscopeItem => horoscopeItem.Aspect)
+                    .ThenInclude(aspect => aspect.PlanetCompare)
+                .Include(horoscopeItem => horoscopeItem.LifeAttribute)
+                                        .Where(filter)
+                                        .OrderBy(sortBy);
 
             total = horoscopeItem.Count();
             return horoscopeItem.Skip((page - 1) * pageSize).Take(pageSize + 1);

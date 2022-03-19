@@ -66,7 +66,7 @@ namespace AstroBackEnd.Controllers
                     Value = value,
                     PagingRequest = pagingRequest
                 };
-                var findResult = horoscopeItemService.FindHoroscopeItem(findHoroscopeItemRequest, out total).Select(hororscopeItem => new HoroscopeItemView(hororscopeItem));
+                var findResult = horoscopeItemService.FindHoroscopeItem(findHoroscopeItemRequest, out total).Select(hororscopeItem => new HoroscopeItemSimpleView(hororscopeItem));
                 PagingView pagingView = new PagingView()
                 {
                     Payload = findResult,

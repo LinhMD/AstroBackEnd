@@ -28,9 +28,12 @@ namespace AstroBackEnd.ViewsModel
         {
             Id = aspect.Id;
             PlanetBaseId = aspect.PlanetBaseId;
-            PlanetBaseName = aspect.PlanetBase.Name;
+            if (aspect.PlanetBase != null)
+                PlanetBaseName = aspect.PlanetBase.Name;
+
             PlanetCompareId = aspect.PlanetCompareId;
-            PlanetCompareName = aspect.PlanetCompare.Name;
+            if (aspect.PlanetCompare != null)
+                PlanetCompareName = aspect.PlanetCompare.Name;
 
             (string angleName, int angle) = AngleNames[aspect.AngleType];
             AngleName = angleName;
