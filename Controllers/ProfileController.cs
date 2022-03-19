@@ -3,6 +3,7 @@ using AstroBackEnd.RequestModels;
 using AstroBackEnd.RequestModels.ProfileRequest;
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.ViewsModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -23,7 +24,7 @@ namespace AstroBackEnd.Controllers
         {
             _profileService = profileService;
         }
-
+        [Authorize(Roles = "admin")]
         [HttpGet("{id}")]
         public IActionResult GetProfile(int id)
         {
@@ -39,7 +40,7 @@ namespace AstroBackEnd.Controllers
                 return BadRequest(e.Message);
             }
         }
-
+        [Authorize(Roles = "admin")]
         [HttpGet("{id}/chart")]
         public IActionResult GetBirthChart(int id)
         {
@@ -53,6 +54,7 @@ namespace AstroBackEnd.Controllers
             }
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public IActionResult CreateProfile(CreateProfileRequest request)
         {
@@ -66,9 +68,9 @@ namespace AstroBackEnd.Controllers
             }
             
         }
-
+        [Authorize(Roles = "admin")]
         [HttpGet]
-        public IActionResult FindProfile(string? name, DateTime? birthDateStart, DateTime? birthDateEnd, string? birthPlace, int? zodiacId, string? sortBy, int page = 1, int pageSize = 20)
+        public IActionResult FindProfile(string? name, int? userId,DateTime? birthDateStart, DateTime? birthDateEnd, string? birthPlace, int? zodiacId, string? sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
@@ -79,6 +81,8 @@ namespace AstroBackEnd.Controllers
                     BirthDateEnd = birthDateEnd,
                     BirthPlace = birthPlace,
                     ZodiacId = zodiacId,
+                    UserId = userId,
+
                     PagingRequest = new PagingRequest()
                     {
                         Page = page,
@@ -95,7 +99,7 @@ namespace AstroBackEnd.Controllers
                 return BadRequest(e.Message);
             }
         }
-
+        [Authorize(Roles = "admin")]
         [HttpPut]
         public IActionResult UpdateProfile(int id, UpdateProfileRequest request)
         {
@@ -110,7 +114,7 @@ namespace AstroBackEnd.Controllers
                 return BadRequest(e.Message);
             }
         }
-
+        [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public IActionResult DeleteProfile(int id)
         {

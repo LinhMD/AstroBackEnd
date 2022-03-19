@@ -94,7 +94,12 @@ namespace AstroBackEnd.Services.Implement
                 {
                     checkBirthDate = p.BirthDate <= request.BirthDateEnd && p.BirthDate >= request.BirthDateStart;
                 }
-                return checkName && checkBirthDate && checkZodiac && checkBirthPlace;
+                bool checkUserId = true;
+                if(request.UserId != null )
+                {
+                    checkUserId = request.UserId == p.UserId;
+                }
+                return checkName && checkBirthDate && checkZodiac && checkBirthPlace && checkUserId;
             };
 
             IEnumerable<Profile> result = null;
@@ -140,7 +145,13 @@ namespace AstroBackEnd.Services.Implement
                 {
                     checkBirthDate = p.BirthDate <= request.BirthDateEnd && p.BirthDate >= request.BirthDateStart;
                 }
-                return checkName && checkBirthDate && checkZodiac && checkBirthPlace;
+
+                bool checkUserId = true;
+                if (request.UserId != null)
+                {
+                    checkUserId = request.UserId == p.UserId;
+                }
+                return checkName && checkBirthDate && checkZodiac && checkBirthPlace && checkUserId;
             };
 
             IEnumerable<Profile> result = null;
