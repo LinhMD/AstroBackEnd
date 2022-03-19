@@ -267,6 +267,8 @@ namespace AstroBackEnd.Services.Implement
 
                 if (houseNum <= 0) houseNum += 12;
 
+                if (houseNum > 12) houseNum %= 12;
+
                 Console.WriteLine($"planet {planetName} house {houseNum}");
 
                 House house = houseDic[houseNum];
