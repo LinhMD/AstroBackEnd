@@ -49,7 +49,10 @@ namespace AstroBackEnd.Repositories.Implement
         public HoroscopeItem GetHoroscopeItemWithAllData(int id)
         {
             return AstroDataContext.HoroscopeItems
-                .Include(horoscopeItem => horoscopeItem.Aspect)
+                .Include(horoscopeItem => horoscopeItem.Aspect) 
+                    .ThenInclude(aspect => aspect.PlanetBase)
+                 .Include(horoscopeItem => horoscopeItem.Aspect)
+                    .ThenInclude(aspect => aspect.PlanetCompare)
                 .Include(horoscopeItem => horoscopeItem.LifeAttribute)
                 .FirstOrDefault(obj => obj.Id == id);
         }
