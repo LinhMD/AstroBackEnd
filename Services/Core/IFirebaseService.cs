@@ -8,6 +8,7 @@ namespace AstroBackEnd.Services.Core
 {
     public interface IFirebaseService
     {
+        public Task<string> UploadChart(Stream image, string name);
         public Task<string> UploadImage(Stream image, string name);
     }
 }

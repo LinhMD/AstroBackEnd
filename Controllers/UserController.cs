@@ -15,6 +15,7 @@ using AstroBackEnd.Utilities;
 using AstroBackEnd.RequestModels.UserRequest;
 using AstroBackEnd.ViewsModel;
 using AstroBackEnd.RequestModels.ProfileRequest;
+using System.IO;
 
 namespace AstroBackEnd.Controllers
 {
@@ -27,13 +28,15 @@ namespace AstroBackEnd.Controllers
         private IProfileService _profileService;
         private IUnitOfWork _work;
         private IAspectService _aspectService;
+        private IFirebaseService _firebase;
 
-        public UserController(IUserService userService, IUnitOfWork work, IProfileService profileService, IAspectService aspect)
+        public UserController(IUserService userService, IUnitOfWork work, IProfileService profileService, IAspectService aspect, IFirebaseService firebase)
         {
             this._userService = userService;
             this._work = work;
             this._profileService = profileService;
             this._aspectService = aspect;
+            this._firebase = firebase;
         }
 
         [HttpGet("{id}")]
@@ -358,6 +361,27 @@ namespace AstroBackEnd.Controllers
                     return NotFound(ex.Message);
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpPost("image")]
+        public IActionResult UploadImage(IFormFile file)
+        {
+            using Stream stream = file.OpenReadStream();
+            Console.WriteLine(file.Name);
+            Console.WriteLine(file.ContentType);
+            Console.WriteLine(file.FileName);
+            string fileFormat = file.FileName.Split('.').Last();
+            Console.WriteLine(fileFormat);
+            
+            if (fileFormat == "png" || fileFormat == "jpg" || fileFormat == "svg")
+            {
+                string fileName = Guid.NewGuid().ToString() + "." + fileFormat;
+
+                Task<string> task = _firebase.UploadImage(stream, fileName);
+                return Ok(task.Result);
+            }
+
+            return BadRequest("File must be a image!!");
         }
     }
 }

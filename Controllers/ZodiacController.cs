@@ -182,7 +182,7 @@ namespace AstroBackEnd.Controllers
 
                 var file = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.ReadWrite);
 
-                string link = await _firebase.UploadImage(file, fileName.Split('\\').Last());
+                string link = await _firebase.UploadChart(file, fileName.Split('\\').Last());
                 file.Close();
                 System.IO.File.Delete(fileName);
 

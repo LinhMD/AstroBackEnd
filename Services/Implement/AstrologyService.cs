@@ -502,7 +502,7 @@ namespace AstroBackEnd.Services.Implement
 
             var file = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.ReadWrite);
 
-            string link =  _firebase.UploadImage(file, fileName.Split('\\').Last()).Result;
+            string link =  _firebase.UploadChart(file, fileName.Split('\\').Last()).Result;
             file.Close();
 
             System.IO.File.Delete(fileName);
