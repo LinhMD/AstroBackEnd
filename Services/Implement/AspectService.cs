@@ -140,7 +140,7 @@ namespace AstroBackEnd.Services.Implement
                 Expression<Func<Aspect, bool>> filter = a => (request.Id <= 0 || a.Id == request.Id) &&
                                                             (request.PlanetBaseId <= 0 || a.PlanetBaseId == request.PlanetBaseId) &&
                                                             (request.PlanetCompareId <= 0 || a.PlanetCompareId == request.PlanetCompareId) &&
-                                                            (request.AngleType <= 0 || a.AngleType == request.AngleType);
+                                                            (request.AngleType < 0 || a.AngleType == request.AngleType);
                 PagingRequest pagingRequest = request.PagingRequest;
                 Validation.ValidNumberThanZero(pagingRequest.Page, "Page must be than zero");
                 Validation.ValidNumberThanZero(pagingRequest.PageSize, "PageSize must be than zero");
