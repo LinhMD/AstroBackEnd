@@ -110,12 +110,12 @@ namespace AstroBackEnd.Services.Implement
         public Topic UpdateTopic(int id, UpdateTopicRequest request)
         {
             Validation.ValidNumberThanZero(id, "Id must be than zero");
-            House checkHouse = _work.Houses.Get(request.HouseId);            
-            if (checkHouse == null)
+            IEnumerable<Topic> result = _work.Topics.FindPaging(t => t.Name == request.Name && t.HouseId == request.HouseId, p => p.Id);
+            if (result.Any())
             {
-                throw new ArgumentException("House not exist ");
+                throw new ArgumentException("Topic already exist");
             }
-            
+
             Topic topic = _work.Topics.Get(id);
             if (topic != null)
             {
