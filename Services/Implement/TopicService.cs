@@ -28,19 +28,10 @@ namespace AstroBackEnd.Services.Implement
                 {
                     throw new ArgumentException("House not exist");
                 }
-                Func<Topic, bool> filter = p =>
-                {
-                    bool checkHouseId = true;
-                    if (request.HouseId > 0)
-                    {
-                        checkHouseId = p.HouseId == request.HouseId;
-                    }
-                    return checkHouseId ;
-                };
-                IEnumerable<Topic> result = _work.Topics.FindPaging(filter, p => p.Id);
+                IEnumerable<Topic> result = _work.Topics.FindPaging(t => t.Name == request.Name && t.HouseId == request.HouseId, p => p.Id);
                 if (result.Count() > 0)
                 {
-                    throw new ArgumentException("PlanetZodiac exist");
+                    throw new ArgumentException("Topic already exist");
                 }
                 Topic topic = new Topic()
                 {
