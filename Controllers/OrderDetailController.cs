@@ -60,9 +60,11 @@ namespace AstroBackEnd.Controllers
                 }, out total);
                 return Ok(new PagingView() { Payload = details, Total = total });
             }
-            catch 
+            catch (ArgumentException ex)
             {
-                return BadRequest();
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
 
         }
@@ -76,9 +78,11 @@ namespace AstroBackEnd.Controllers
                 var detail = _detailService.GetOrderDetail(id);
                 return Ok(detail);
             }
-            catch (Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
         [Authorize]
@@ -98,9 +102,11 @@ namespace AstroBackEnd.Controllers
                 var detail = _detailService.UpdateOrderDetail(id, request);
                 return Ok(detail);
             }
-            catch (Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -113,9 +119,11 @@ namespace AstroBackEnd.Controllers
                 _detailService.DeleteOrderDetail(id);
                 return Ok();
             }
-            catch (Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 

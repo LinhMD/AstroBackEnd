@@ -30,7 +30,12 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(quoteService.GetQuote(id));
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet]
@@ -61,6 +66,8 @@ namespace AstroBackEnd.Controllers
             }
             catch (ArgumentException ex)
             {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
                 return BadRequest(ex.Message);
             }
         }
@@ -73,9 +80,11 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(quoteService.CreateQuote(request));
             }
-            catch (ArgumentException e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
         [Authorize(Roles = "admin")]
@@ -86,7 +95,12 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(quoteService.UpdateQuote(id, request));
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
@@ -97,7 +111,12 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(quoteService.DeleteQuote(id));
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

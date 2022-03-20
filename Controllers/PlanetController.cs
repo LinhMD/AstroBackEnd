@@ -32,7 +32,12 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(planetService.GetPlanet(id));
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet]
@@ -62,7 +67,13 @@ namespace AstroBackEnd.Controllers
                     Total = total
                 };
                 return Ok(pagingView);
-            }catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost]
@@ -73,7 +84,12 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(planetService.CreatePlanet(request));
             }
-            catch (ArgumentException e){ return BadRequest(e.Message); }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
@@ -86,7 +102,12 @@ namespace AstroBackEnd.Controllers
                 return StatusCode(StatusCodes.Status405MethodNotAllowed);
                 /*return Ok(planetService.DeletePlanet(id));*/
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut]
@@ -97,7 +118,12 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(planetService.UpdatePlanet(id, request));
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

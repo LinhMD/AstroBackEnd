@@ -70,9 +70,11 @@ namespace AstroBackEnd.Controllers
 
                 return Ok(new PagingView() { Payload = products, Total = total });
             }
-            catch(Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -85,9 +87,11 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(new MasterProductView(_Service.CreateMasterProduct(request)));
             }
-            catch (Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
 
         }
@@ -102,10 +106,11 @@ namespace AstroBackEnd.Controllers
 
                 return Ok(new MasterProductView(updateProduct));
             }
-            catch(Exception e)
+            catch (ArgumentException ex)
             {
-                
-                return BadRequest(e.StackTrace);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -114,7 +119,7 @@ namespace AstroBackEnd.Controllers
         public IActionResult GetMasterProduct(int id)
         {
             var product = _Service.GetProductVariant(id);
-            return product == null ? NotFound("Product variant id {" + id + "} not found!!") : Ok(new ProductVariationView(product));
+            return product == null ? NotFound("Product variant id {" + id + "} not found") : Ok(new ProductVariationView(product));
         }
 
         [HttpGet("variant")]
@@ -142,9 +147,11 @@ namespace AstroBackEnd.Controllers
 
                 return Ok(pagingView);
             }
-            catch (Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -157,9 +164,11 @@ namespace AstroBackEnd.Controllers
 
                 return Ok(new ProductVariationView(_Service.CreateProductVariant(request)));
             }
-            catch (Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -172,9 +181,11 @@ namespace AstroBackEnd.Controllers
                 Product updateProduct = _Service.UpdateProductVariant(id, request);
                 return Ok(new ProductVariationView(updateProduct));
             }
-            catch (Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 

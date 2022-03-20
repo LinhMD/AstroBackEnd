@@ -32,7 +32,12 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(new PlanetHouseView(planetHouseService.GetPlanetHouse(id)));
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
         [Authorize(Roles = "admin")]
@@ -63,7 +68,13 @@ namespace AstroBackEnd.Controllers
                     Total = total
                 };
                 return Ok(pagingView);
-            }catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
         [Authorize(Roles = "admin")]
@@ -74,9 +85,11 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(planetHouseService.CreatePlanetHouse(request));
             }
-            catch (ArgumentException e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -90,7 +103,12 @@ namespace AstroBackEnd.Controllers
                 return StatusCode(StatusCodes.Status405MethodNotAllowed);
                 /*return Ok(planetHouseService.DeletePlanetHouse(id));*/
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut]
@@ -100,7 +118,12 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(planetHouseService.UpdatePlanetHouse(id, request));
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

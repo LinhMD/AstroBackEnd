@@ -44,8 +44,12 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(_zodiacService.GetZodiac(id));
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
-            
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet]
@@ -76,9 +80,11 @@ namespace AstroBackEnd.Controllers
                 };
                 return Ok(pagingView);
             }
-            catch (ArgumentException e)
+            catch(ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -89,8 +95,11 @@ namespace AstroBackEnd.Controllers
             try
             {
                 return Ok(_zodiacService.CreateZodiac(request));
-            }catch (ArgumentException ex)
+            }
+            catch (ArgumentException ex)
             {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
                 return BadRequest(ex.Message);
             }
         }
@@ -105,7 +114,12 @@ namespace AstroBackEnd.Controllers
                 return StatusCode(StatusCodes.Status405MethodNotAllowed);
                 /*return Ok(_zodiacService.RemoveZodiac(id));*/
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut]
@@ -116,7 +130,12 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(_zodiacService.UpdateZodiac(id, updateZodiac));
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
         [HttpGet("natal")]
         [Authorize(Roles = "admin")]
@@ -127,9 +146,11 @@ namespace AstroBackEnd.Controllers
                 var result = _astrology.GetHousePosOfPlanets(date, longtitude, latitude);
                 return Ok(result);
             }
-            catch(Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
         [HttpGet("natal2")]
@@ -139,9 +160,11 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(_astrology.GetPlanetPosition(date, longtitude, latitude));
             }
-            catch (Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.StackTrace);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -164,12 +187,12 @@ namespace AstroBackEnd.Controllers
                 System.IO.File.Delete(fileName);
 
                 return Ok(link);
-            } 
-            catch (Exception e)
+            }
+            catch (ArgumentException ex)
             {
-                Console.WriteLine(e.Message);
-                Console.WriteLine(e.GetType());
-                return BadRequest(e.StackTrace);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
     } 

@@ -37,11 +37,11 @@ namespace AstroBackEnd.Services.Implement
                 House checkHouse = _work.Houses.Get(request.HouseId);
                 if (checkPlanet == null)
                 {
-                    throw new ArgumentException("Planet not exist ");
+                    throw new ArgumentException("Planet not found");
                 }
                 if (checkHouse == null)
                 {
-                    throw new ArgumentException("House not exist");
+                    throw new ArgumentException("House not found");
                 }
                 Func<PlanetHouse, bool> filter = p =>
                 {
@@ -65,7 +65,7 @@ namespace AstroBackEnd.Services.Implement
                 IEnumerable<PlanetHouse> result = _work.PlanetHouses.FindPaging(filter, p => p.Id);
                 if(result.Count() > 0)
                 {
-                    throw new ArgumentException("PlanetHouse exist");
+                    throw new ArgumentException("PlanetHouse already exist");
                 }
                 PlanetHouse planetHouse = new PlanetHouse()
                 {
@@ -136,11 +136,11 @@ namespace AstroBackEnd.Services.Implement
             House checkHouse = _work.Houses.Get(request.HouseId);
             if (checkPlanet == null)
             {
-                throw new ArgumentException("Planet not exist ");
+                throw new ArgumentException("Planet not found");
             }
             if (checkHouse == null)
             {
-                throw new ArgumentException("House not exist");
+                throw new ArgumentException("House not found");
             }
             PlanetHouse planetHouse = _work.PlanetHouses.Get(id);
             if (planetHouse != null)

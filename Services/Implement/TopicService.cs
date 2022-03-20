@@ -26,7 +26,7 @@ namespace AstroBackEnd.Services.Implement
                 House checkHouse = _work.Houses.Get(request.HouseId);
                 if (checkHouse == null)
                 {
-                    throw new ArgumentException("House not exist");
+                    throw new ArgumentException("House not found");
                 }
                 IEnumerable<Topic> result = _work.Topics.FindPaging(t => t.Name == request.Name && t.HouseId == request.HouseId, p => p.Id);
                 if (result.Count() > 0)

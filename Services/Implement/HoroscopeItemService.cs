@@ -26,11 +26,11 @@ namespace AstroBackEnd.Services.Implement
                 Aspect checkAspect = _work.Aspects.Get(request.AspectId);
                 if (checkLifeAttribute == null)
                 {
-                    throw new ArgumentException("LifeAttribute not exist ");
+                    throw new ArgumentException("LifeAttribute not found ");
                 }
                 if (checkAspect == null)
                 {
-                    throw new ArgumentException("Aspect not exist");
+                    throw new ArgumentException("Aspect not found");
                 }
                 HoroscopeItem horoscopeItem = new HoroscopeItem()
                 {
@@ -136,11 +136,11 @@ namespace AstroBackEnd.Services.Implement
                 Aspect checkAspect = _work.Aspects.Get(request.AspectId);
                 if (checkLifeAttribute == null)
                 {
-                    throw new ArgumentException("LifeAttribute not exist ");
+                    throw new ArgumentException("LifeAttribute not found ");
                 }
                 if (checkAspect == null)
                 {
-                    throw new ArgumentException("Aspect not exist");
+                    throw new ArgumentException("Aspect not found");
                 }
                 HoroscopeItem horoscopeItem = _work.HoroscopeItems.Get(id);
                 if (horoscopeItem != null)

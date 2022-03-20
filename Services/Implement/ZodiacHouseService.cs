@@ -36,11 +36,11 @@ namespace AstroBackEnd.Services.Implement
                 Zodiac checkZodiac = _work.Zodiacs.Get(request.ZodiacId);
                 if (checkHouse == null)
                 {
-                    throw new ArgumentException("House not exist ");
+                    throw new ArgumentException("House not found");
                 }
                 if (checkZodiac == null)
                 {
-                    throw new ArgumentException("Zodiac not exist");
+                    throw new ArgumentException("Zodiac not found");
                 }
                 Func<ZodiacHouse, bool> filter = p =>
                 {
@@ -59,7 +59,7 @@ namespace AstroBackEnd.Services.Implement
                 IEnumerable<ZodiacHouse> result = _work.ZodiacHouses.FindPaging(filter, p => p.Id);
                 if (result.Count() > 0)
                 {
-                    throw new ArgumentException("ZodiacHouse exist");
+                    throw new ArgumentException("ZodiacHouse already exist");
                 }
                 ZodiacHouse zodiacHouse = new ZodiacHouse()
                 {
@@ -128,11 +128,11 @@ namespace AstroBackEnd.Services.Implement
             Zodiac checkZodiac = _work.Zodiacs.Get(request.ZodiacId);
             if (checkHouse == null)
             {
-                throw new ArgumentException("House not exist ");
+                throw new ArgumentException("House not found");
             }
             if (checkZodiac == null)
             {
-                throw new ArgumentException("Zodiac not exist");
+                throw new ArgumentException("Zodiac not found");
             }
             ZodiacHouse zodiacHouse = _work.ZodiacHouses.Get(id);
             if(zodiacHouse != null)

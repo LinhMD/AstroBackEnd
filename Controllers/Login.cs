@@ -62,9 +62,11 @@ namespace AstroBackEnd.Controllers
                 return Ok(Generate(user));
 
             }
-            catch(Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
 
         }

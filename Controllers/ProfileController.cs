@@ -35,9 +35,11 @@ namespace AstroBackEnd.Controllers
                 var profile = _profileService.GetProfile(id);
                 return Ok(profile);
             }
-            catch (ArgumentException e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
         [Authorize(Roles = "admin")]
@@ -48,9 +50,11 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(_profileService.GetBirthChart(id)); 
             }
-            catch(ArgumentException e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -62,11 +66,13 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(_profileService.CreateProfile(request));
             }
-            catch (ArgumentException e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
-            
+
         }
         [Authorize(Roles = "admin")]
         [HttpGet]
@@ -94,9 +100,11 @@ namespace AstroBackEnd.Controllers
 
                 return Ok(new PagingView() { Payload = profiles, Total = total } );
             }
-            catch (ArgumentException e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
         [Authorize(Roles = "admin")]
@@ -109,9 +117,11 @@ namespace AstroBackEnd.Controllers
 
                 return Ok(updateProfile);
             }
-            catch (ArgumentException e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
         [Authorize(Roles = "admin")]
@@ -123,10 +133,12 @@ namespace AstroBackEnd.Controllers
                 _profileService.DeleteProfile(id);
                 return Ok();
             }
-            catch (ArgumentException e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
-            } 
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

@@ -37,11 +37,11 @@ namespace AstroBackEnd.Services.Implement
                 Zodiac checkZodiac = _work.Zodiacs.Get(request.ZodiacId);
                 if (checkPlanet == null)
                 {
-                    throw new ArgumentException("Planet not exist ");
+                    throw new ArgumentException("Planet not found");
                 }
                 if (checkZodiac == null)
                 {
-                    throw new ArgumentException("Zodiac not exist");
+                    throw new ArgumentException("Zodiac not found");
                 }
                 Func<PlanetZodiac, bool> filter = p =>
                 {
@@ -60,7 +60,7 @@ namespace AstroBackEnd.Services.Implement
                 IEnumerable<PlanetZodiac> result = _work.PlanetZodiacs.FindPaging(filter, p => p.Id);
                 if (result.Count() > 0)
                 {
-                    throw new ArgumentException("PlanetZodiac exist");
+                    throw new ArgumentException("PlanetZodiac already exist");
                 }
                 PlanetZodiac planetZodiac = new PlanetZodiac()
                 {
@@ -131,11 +131,11 @@ namespace AstroBackEnd.Services.Implement
             Zodiac checkZodiac = _work.Zodiacs.Get(request.ZodiacId);
             if (checkPlanet == null)
             {
-                throw new ArgumentException("Planet not exist ");
+                throw new ArgumentException("Planet not found");
             }
             if (checkZodiac == null)
             {
-                throw new ArgumentException("Zodiac not exist");
+                throw new ArgumentException("Zodiac not found");
             }
             PlanetZodiac planetZodiac = _work.PlanetZodiacs.Get(id);
             if (planetZodiac != null)

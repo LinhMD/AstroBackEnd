@@ -68,11 +68,11 @@ namespace AstroBackEnd.Services.Implement
                 Planet checkPlanetCompare = _work.Planets.Get(request.PlanetCompareId);
                 if (checkPlanetBase == null)
                 {
-                    throw new ArgumentException("Planet Base not exist ");
+                    throw new ArgumentException("Planet Base found ");
                 }
                 if (checkPlanetCompare == null)
                 {
-                    throw new ArgumentException("Planet Compare not exist");
+                    throw new ArgumentException("Planet Compare not found");
                 }
                 Aspect aspect = new Aspect()
                 {
@@ -180,11 +180,11 @@ namespace AstroBackEnd.Services.Implement
                 Planet checkPlanetCompare = _work.Planets.Get(request.PlanetCompareId);
                 if (checkPlanetBase == null)
                 {
-                    throw new ArgumentException("Planet Base not exist ");
+                    throw new ArgumentException("Planet Base not found ");
                 }
                 if (checkPlanetCompare == null)
                 {
-                    throw new ArgumentException("Planet Compare not exist");
+                    throw new ArgumentException("Planet Compare not found");
                 }
                 Aspect aspect = _work.Aspects.Get(id);
                 if (aspect != null)

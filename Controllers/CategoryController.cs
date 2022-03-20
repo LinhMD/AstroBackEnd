@@ -38,7 +38,12 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(_Service.GetCategory(id));
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message); 
+            }
         }
 
         [HttpPost]
@@ -50,9 +55,11 @@ namespace AstroBackEnd.Controllers
                 Validation.Validate(request);
                 return Ok(_Service.CreateCategory(request));
             }
-            catch (ArgumentException e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -82,6 +89,8 @@ namespace AstroBackEnd.Controllers
             }
             catch (ArgumentException ex)
             {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
                 return BadRequest(ex.Message);
             }
         }
@@ -96,7 +105,12 @@ namespace AstroBackEnd.Controllers
 
                 return Ok(updateCategory);
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex) 
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message); 
+            }
         }
 
         [HttpDelete("{id}")]
@@ -107,7 +121,12 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(_Service.DeleteCategory(id));
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex) 
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message); 
+            }
         }
     }
 }

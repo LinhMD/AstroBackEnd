@@ -29,8 +29,12 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(lifeAttributeService.GetLifeAttribute(id));
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
-
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet]
@@ -60,9 +64,11 @@ namespace AstroBackEnd.Controllers
                 };
                 return Ok(pagingView);
             }
-            catch (ArgumentException e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -76,6 +82,8 @@ namespace AstroBackEnd.Controllers
             }
             catch (ArgumentException ex)
             {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
                 return BadRequest(ex.Message);
             }
         }
@@ -90,7 +98,12 @@ namespace AstroBackEnd.Controllers
                 return StatusCode(StatusCodes.Status405MethodNotAllowed);
                 /*return Ok(lifeAttributeService.DeleteLifeAttribute(id));*/
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut]
@@ -100,7 +113,12 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(lifeAttributeService.UpdateLifeAttribute(id, request));
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

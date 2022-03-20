@@ -45,11 +45,13 @@ namespace AstroBackEnd.Controllers
 
                 return Ok(_userService.GetUser(id));
             }
-            catch (Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
-            
+
         }
 
         [HttpPost]
@@ -62,11 +64,13 @@ namespace AstroBackEnd.Controllers
                 return Ok(_userService.CreateUser(request));
                 
             }
-            catch (Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
-            
+
         }
 
         [HttpPut]
@@ -78,9 +82,11 @@ namespace AstroBackEnd.Controllers
                 _userService.UpdateUser(id, request);
                 return Ok();
             }
-            catch (Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -136,9 +142,11 @@ namespace AstroBackEnd.Controllers
                 User user = _work.Users.GetAllUserData(id);
                 return Ok(user);
             }
-            catch (Exception e) 
-            { 
-                return BadRequest(e.Message); 
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -161,9 +169,11 @@ namespace AstroBackEnd.Controllers
                 User user = _userService.GetUser(id);
                 return Ok(user.Profiles);
             }
-            catch (ArgumentException e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -182,9 +192,11 @@ namespace AstroBackEnd.Controllers
                 profile = _profileService.GetProfile(profileId);
                 return Ok(profile);
             }
-            catch (ArgumentException e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -201,9 +213,11 @@ namespace AstroBackEnd.Controllers
                 if (profile == null) throw new ArgumentException("Profile Id not found");
                 return Ok(_aspectService.CalculateAspect(profile.BirthDate, date));
             }
-            catch (ArgumentException e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -225,9 +239,11 @@ namespace AstroBackEnd.Controllers
 
                 return Ok(birthChartView);
             }
-            catch (ArgumentException e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -242,9 +258,11 @@ namespace AstroBackEnd.Controllers
                 Profile profile = _profileService.CreateProfile(request);
                 return Ok(profile);
             }
-            catch (ArgumentException e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
         [HttpDelete("current/profiles/{profileId}")]
@@ -262,9 +280,11 @@ namespace AstroBackEnd.Controllers
                 _profileService.DeleteProfile(profile.Id);
                 return Ok();
             }
-            catch (ArgumentException e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
         [HttpPut("current/profiles/{profileId}")]
@@ -283,9 +303,11 @@ namespace AstroBackEnd.Controllers
                 profile = _profileService.UpdateProfile(profileId, request);
                 return Ok(profile);
             }
-            catch (ArgumentException e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -308,9 +330,11 @@ namespace AstroBackEnd.Controllers
 
                 return Ok(cart);
             }
-            catch (Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -328,9 +352,11 @@ namespace AstroBackEnd.Controllers
 
                 return Ok(cart);
             }
-            catch (Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
     }
