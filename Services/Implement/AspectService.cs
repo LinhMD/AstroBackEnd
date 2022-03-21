@@ -177,8 +177,8 @@ namespace AstroBackEnd.Services.Implement
         {
             try
             {
-                if (_work.Aspects.FindAtDBPaging(a => a.PlanetBaseId == request.PlanetBaseId && a.PlanetCompareId == request.PlanetCompareId && a.AngleType == request.AngleType, a => a.Id, out int total).Any())
-                    throw new ArgumentException("Aspect already exist");
+                /*if (_work.Aspects.FindAtDBPaging(a => a.PlanetBaseId == request.PlanetBaseId && a.PlanetCompareId == request.PlanetCompareId && a.AngleType == request.AngleType, a => a.Id, out int total).Any())
+                    throw new ArgumentException("Aspect already exist");*/
                 Validation.ValidNumberThanZero(id, "Id must be than zero");
                 Planet checkPlanetBase = _work.Planets.Get(request.PlanetBaseId);
                 Planet checkPlanetCompare = _work.Planets.Get(request.PlanetCompareId);
