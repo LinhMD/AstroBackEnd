@@ -296,7 +296,7 @@ namespace AstroBackEnd.Services.Implement
                         {
                             int idBase = planetDic[planetNameBirth].id;
                             int idCompare = planetDic[planetNameCompare].id;
-                            int aspectId = _work.Aspects.Find(a => a.PlanetBaseId == idBase && a.PlanetCompareId == idCompare && a.AngleType == angleType, a => a.Id).Select(a => a.Id).FirstOrDefault();
+                            int aspectId = _work.Aspects.FindAtDBPaging(a => a.PlanetBaseId == idBase && a.PlanetCompareId == idCompare && a.AngleType == angleType, a => a.Id, out int total).Select(a => a.Id).FirstOrDefault();
 
                             if(aspectId > 0)
                                 aspectIds.Add(aspectId);
@@ -305,7 +305,7 @@ namespace AstroBackEnd.Services.Implement
                 }
             }
 
-            IEnumerable<HoroscopeItem> HoroItem = _work.HoroscopeItems.FindHoroscopeItemWithAllData(h => aspectIds.Contains(h.AspectId), h => h.AspectId, out int total);
+            IEnumerable<HoroscopeItem> HoroItem = _work.HoroscopeItems.FindAtDBPaging(h => aspectIds.Contains(h.AspectId), h => h.AspectId, out int t);
 
             var lifeAttributeHoro = new Dictionary<string, List<HoroscopeItemView>>();
 

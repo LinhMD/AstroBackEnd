@@ -29,11 +29,19 @@ namespace AstroBackEnd.ViewsModel
             Id = aspect.Id;
             PlanetBaseId = aspect.PlanetBaseId;
             if (aspect.PlanetBase != null)
+            {
                 PlanetBaseName = aspect.PlanetBase.Name;
+                PlanetBaseIcon = aspect.PlanetBase.Icon;
+            }
+                
 
             PlanetCompareId = aspect.PlanetCompareId;
             if (aspect.PlanetCompare != null)
+            {
                 PlanetCompareName = aspect.PlanetCompare.Name;
+                PlanetCompareIcon = aspect.PlanetCompare.Icon;
+            }
+                
 
             (string angleName, int angle) = AngleNames[aspect.AngleType];
             AngleName = angleName;
@@ -46,10 +54,13 @@ namespace AstroBackEnd.ViewsModel
 
         public int PlanetBaseId { get; set; }
 
+        public string PlanetBaseIcon { get; set; }
+
         public string PlanetCompareName { get; set; }
 
         public int PlanetCompareId { get; set; }
 
+        public string PlanetCompareIcon { get; set; }
 
         public string AngleName { get; set; }
 
