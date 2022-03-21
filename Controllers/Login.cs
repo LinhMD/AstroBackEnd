@@ -51,7 +51,7 @@ namespace AstroBackEnd.Controllers
             {
                 UserRecord userRecord = await _fbUtil.getFireBaseUserByToken(request.Token);
                 string uid = userRecord.Uid;
-                User user = _work.Users.Find(u => u.UID == uid, u => u.Id).FirstOrDefault();
+                User user = _work.Users.FindAtDBPaging(u => u.UID == uid && u.Status > 0, u => u.Id, out int total).FirstOrDefault();
 
                 if(user == null)
                 {
