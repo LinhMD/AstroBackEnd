@@ -123,7 +123,8 @@ namespace AstroBackEnd.Controllers
         private User Authenticate(UserLogin userLogin)
         {
             User user = _work.Users.Find(u => u.UserName == userLogin.UserName, u => u.UserName).FirstOrDefault();
-            user = _work.Users.GetAllUserData(user.Id);
+            if(user != null)
+                user = _work.Users.GetAllUserData(user.Id);
             return user;
         }
     }
