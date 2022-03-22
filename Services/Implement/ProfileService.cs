@@ -210,7 +210,7 @@ namespace AstroBackEnd.Services.Implement
                         var chartItem = new ChartItemView(planetZodiac, planetHouse, planet);
                         birthChart.Items[key] = chartItem;
                     }
-                    catch (ArgumentException e)
+                    catch (Exception e)
                     {
                         Console.WriteLine(e.Message);
                     }
