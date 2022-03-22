@@ -45,13 +45,8 @@ namespace AstroBackEnd.Services.Implement
                 }
                 Func<PlanetHouse, bool> filter = p =>
                 {
-                    bool checkId = true;
                     bool checkHouseId = true;
                     bool checkPlanetId = true;
-                    if (request.Id > 0)
-                    {
-                        checkId = p.Id == request.Id;
-                    }
                     if (request.HouseId > 0)
                     {
                         checkHouseId = p.HouseId == request.HouseId;
@@ -60,7 +55,7 @@ namespace AstroBackEnd.Services.Implement
                     {
                         checkPlanetId = p.PlanetId == request.PlanetId;
                     }
-                    return checkId && checkPlanetId && checkHouseId;
+                    return  checkPlanetId && checkHouseId;
                 };
                 IEnumerable<PlanetHouse> result = _work.PlanetHouses.FindPaging(filter, p => p.Id);
                 if(result.Count() > 0)
