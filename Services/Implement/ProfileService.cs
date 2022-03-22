@@ -201,8 +201,8 @@ namespace AstroBackEnd.Services.Implement
                 foreach (var key in planetPositions.Keys)
                 {
                     var planetPos = planetPositions[key];
-                    PlanetHouse planetHouse = _work.PlanetHouses.FindPlanetHouseWithAllData(p => p.PlanetId == planetPos.PlanetId && p.HouseId == planetPos.HouseId, p => p.Id, out int total).FirstOrDefault();
-                    PlanetZodiac planetZodiac = _work.PlanetZodiacs.FindPlanetZodiacWithAllData(pz => pz.PlanetId == planetPos.PlanetId && pz.ZodiacId == planetPos.ZodiacId, pz => pz.Id, out total).FirstOrDefault();
+                    PlanetHouse planetHouse = _work.PlanetHouses.FindAtDBPaging(p => p.PlanetId == planetPos.PlanetId && p.HouseId == planetPos.HouseId, p => p.Id, out int total).FirstOrDefault();
+                    PlanetZodiac planetZodiac = _work.PlanetZodiacs.FindAtDBPaging(pz => pz.PlanetId == planetPos.PlanetId && pz.ZodiacId == planetPos.ZodiacId, pz => pz.Id, out total).FirstOrDefault();
                     Planet planet = _work.Planets.Get(planetPos.PlanetId);
 
                     try
