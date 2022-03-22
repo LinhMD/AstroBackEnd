@@ -24,11 +24,11 @@ namespace AstroBackEnd.ViewsModel
             HouseName = pHouse.House.Name;
             HouseIcon = pHouse.House.Icon;
 
-            Content += $"{PlanetName} ở {ZodiacName}:\n";
+            
             Content += pZodiac.Content;
 
             Content += "\n";
-            Content += $"{PlanetName} ở {HouseName}:\n";
+            
             Content += pHouse.Content;
         }
         public int PlanetId { get; set; }
