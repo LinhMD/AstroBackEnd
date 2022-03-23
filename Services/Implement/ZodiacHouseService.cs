@@ -6,6 +6,7 @@ using AstroBackEnd.Services.Core;
 using AstroBackEnd.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AstroBackEnd.Services.Implement
 {
@@ -20,10 +21,10 @@ namespace AstroBackEnd.Services.Implement
         public ZodiacHouse GetZodiacHouse(int id)
         {
             Validation.ValidNumberThanZero(id, "Id must be than zero");
-            ZodiacHouse zodiacHouse = _work.ZodiacHouses.Get(id);
-            if (zodiacHouse != null)
+            ZodiacHouse checkZodiacHouse = _work.ZodiacHouses.Get(id);
+            if (checkZodiacHouse != null)
             {
-                return zodiacHouse;
+                return _work.ZodiacHouses.GetZodiacHouseWithAllData(id);
             }
             else { throw new ArgumentException("This ZodiacHouse not found"); }
         }
@@ -31,6 +32,35 @@ namespace AstroBackEnd.Services.Implement
         {
             try
             {
+                House checkHouse = _work.Houses.Get(request.HouseId);
+                Zodiac checkZodiac = _work.Zodiacs.Get(request.ZodiacId);
+                if (checkHouse == null)
+                {
+                    throw new ArgumentException("House not found");
+                }
+                if (checkZodiac == null)
+                {
+                    throw new ArgumentException("Zodiac not found");
+                }
+                Func<ZodiacHouse, bool> filter = p =>
+                {
+                    bool checkZodiacId = true;
+                    bool checkHouseId = true;
+                    if (request.ZodiacId > 0)
+                    {
+                        checkZodiacId = p.ZodiacId == request.ZodiacId;
+                    }
+                    if (request.HouseId > 0)
+                    {
+                        checkHouseId = p.HouseId == request.HouseId;
+                    }
+                    return checkHouseId && checkZodiacId;
+                };
+                IEnumerable<ZodiacHouse> result = _work.ZodiacHouses.FindPaging(filter, p => p.Id);
+                if (result.Count() > 0)
+                {
+                    throw new ArgumentException("ZodiacHouse already exist");
+                }
                 ZodiacHouse zodiacHouse = new ZodiacHouse()
                 {
                     HouseId = request.HouseId,
@@ -45,7 +75,7 @@ namespace AstroBackEnd.Services.Implement
             }
         }
 
-        public IEnumerable<ZodiacHouse>  FindZodiacHouse(FindZodiacHouse request)
+        public IEnumerable<ZodiacHouse>  FindZodiacHouse(FindZodiacHouse request, out int total)
         {
             if (request.Id < 0) { throw new ArgumentException("Id must be equal or than zero"); }
             try
@@ -55,8 +85,6 @@ namespace AstroBackEnd.Services.Implement
                     bool checkId = true;
                     bool checkZodiacId = true;
                     bool checkHouseId = true;
-                    bool checkContent = true;
-
                     if (request.Id > 0)
                     {
                         checkId = request.Id == p.Id;
@@ -69,43 +97,43 @@ namespace AstroBackEnd.Services.Implement
                     {
                         checkZodiacId = request.ZodiacId == p.ZodiacId;
                     }
-                    if (!string.IsNullOrWhiteSpace(request.Content))
-                    {
-                        if (!string.IsNullOrWhiteSpace(p.Content))
-                        {
-                            checkContent = p.Content.Contains(request.Content);
-                        }
-                        else
-                        {
-                            checkContent = false;
-                        }
-                    }
-                    return checkId && checkHouseId && checkZodiacId && checkContent;
+                    return checkId && checkHouseId && checkZodiacId;
                 };
                 PagingRequest pagingRequest = request.PagingRequest;
                 Validation.ValidNumberThanZero(pagingRequest.Page, "Page must be than zero");
                 Validation.ValidNumberThanZero(pagingRequest.PageSize, "PageSize must be than zero");
-                if (pagingRequest == null || pagingRequest.SortBy == null)
-                {
-                    return _work.ZodiacHouses.Find(filter, p => p.Id);
-                }
-                else
+                if (pagingRequest != null)
                 {
                     switch (pagingRequest.SortBy)
                     {
                         case "ZodiacId":
-                            return _work.ZodiacHouses.FindPaging(filter, p => p.ZodiacId, pagingRequest.Page, pagingRequest.PageSize);
+                            return _work.ZodiacHouses.FindPPagingZodiacHouseWithAllData(filter, p => p.ZodiacId, out total, pagingRequest.Page, pagingRequest.PageSize);
                         case "HouseId":
-                            return _work.ZodiacHouses.FindPaging(filter, p => p.HouseId, pagingRequest.Page, pagingRequest.PageSize);
+                            return _work.ZodiacHouses.FindPPagingZodiacHouseWithAllData(filter, p => p.HouseId, out total, pagingRequest.Page, pagingRequest.PageSize);
                         default:
-                            return _work.ZodiacHouses.FindPaging(filter, p => p.Id, pagingRequest.Page, pagingRequest.PageSize);
+                            return _work.ZodiacHouses.FindPPagingZodiacHouseWithAllData(filter, p => p.Id, out total, pagingRequest.Page, pagingRequest.PageSize);
                     }
+                }
+                else
+                {
+                    IEnumerable<ZodiacHouse> result = _work.ZodiacHouses.FindZodiacHouseWithAllData(filter, p => p.Id, out total);
+                    return result;
                 }
             } catch (Exception ex) { throw new ArgumentException("ZodiacHouseService : " + ex.Message); }
         }
         public ZodiacHouse UpdateZodiacHouse(int id, UpdateZodiacHouseRequest request)
         {
             Validation.ValidNumberThanZero(id, "Id must be than zero");
+            House checkHouse = _work.Houses.Get(request.HouseId);
+            Zodiac checkZodiac = _work.Zodiacs.Get(request.ZodiacId);
+            if (checkHouse == null)
+            {
+                throw new ArgumentException("House not found");
+            }
+            if (checkZodiac == null)
+            {
+                throw new ArgumentException("Zodiac not found");
+            }
             ZodiacHouse zodiacHouse = _work.ZodiacHouses.Get(id);
             if(zodiacHouse != null)
             {

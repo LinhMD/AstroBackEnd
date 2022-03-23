@@ -19,6 +19,37 @@ namespace AstroBackEnd.Migrations
                 .HasAnnotation("ProductVersion", "5.0.12")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("AstroBackEnd.Models.Aspect", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AngleType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MainContent")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PlanetBaseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PlanetCompareId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlanetBaseId");
+
+                    b.HasIndex("PlanetCompareId");
+
+                    b.ToTable("Aspects");
+                });
+
             modelBuilder.Entity("AstroBackEnd.Models.BirthChart", b =>
                 {
                     b.Property<int>("Id")
@@ -27,6 +58,9 @@ namespace AstroBackEnd.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImgLink")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ProfileId")
@@ -82,6 +116,34 @@ namespace AstroBackEnd.Migrations
                     b.ToTable("Horoscopes");
                 });
 
+            modelBuilder.Entity("AstroBackEnd.Models.HoroscopeItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AspectId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LifeAttributeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Value")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AspectId");
+
+                    b.HasIndex("LifeAttributeId");
+
+                    b.ToTable("HoroscopeItems");
+                });
+
             modelBuilder.Entity("AstroBackEnd.Models.House", b =>
                 {
                     b.Property<int>("Id")
@@ -132,12 +194,30 @@ namespace AstroBackEnd.Migrations
                     b.ToTable("ImgLinks");
                 });
 
+            modelBuilder.Entity("AstroBackEnd.Models.LifeAttribute", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LifeAttributes");
+                });
+
             modelBuilder.Entity("AstroBackEnd.Models.News", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Banner")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
@@ -160,6 +240,38 @@ namespace AstroBackEnd.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("News");
+                });
+
+            modelBuilder.Entity("AstroBackEnd.Models.NewsTags", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("HouseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NewsId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PlanetId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ZodiacId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HouseId");
+
+                    b.HasIndex("NewsId");
+
+                    b.HasIndex("PlanetId");
+
+                    b.HasIndex("ZodiacId");
+
+                    b.ToTable("NewsTags");
                 });
 
             modelBuilder.Entity("AstroBackEnd.Models.Order", b =>
@@ -349,6 +461,9 @@ namespace AstroBackEnd.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
+                    b.Property<string>("Tag")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
@@ -371,6 +486,9 @@ namespace AstroBackEnd.Migrations
                     b.Property<string>("BirthPlace")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("Gender")
+                        .HasColumnType("bit");
+
                     b.Property<double>("Latitude")
                         .HasColumnType("float");
 
@@ -384,7 +502,7 @@ namespace AstroBackEnd.Migrations
                     b.Property<string>("ProfilePhoto")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.Property<int?>("ZodiacId")
@@ -409,12 +527,12 @@ namespace AstroBackEnd.Migrations
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("HoroscopeId")
+                    b.Property<int>("ZodiacId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("HoroscopeId");
+                    b.HasIndex("ZodiacId");
 
                     b.ToTable("Quotes");
                 });
@@ -434,12 +552,35 @@ namespace AstroBackEnd.Migrations
                     b.ToTable("Roles");
                 });
 
+            modelBuilder.Entity("AstroBackEnd.Models.Topic", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("HouseId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HouseId");
+
+                    b.ToTable("Topics");
+                });
+
             modelBuilder.Entity("AstroBackEnd.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AvatarLink")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
@@ -535,45 +676,51 @@ namespace AstroBackEnd.Migrations
                     b.ToTable("ZodiacHouses");
                 });
 
-            modelBuilder.Entity("HoroscopeZodiac", b =>
+            modelBuilder.Entity("AstroBackEnd.Models.Aspect", b =>
                 {
-                    b.Property<int>("HoroscopesId")
-                        .HasColumnType("int");
+                    b.HasOne("AstroBackEnd.Models.Planet", "PlanetBase")
+                        .WithMany()
+                        .HasForeignKey("PlanetBaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<int>("ZodiacsId")
-                        .HasColumnType("int");
+                    b.HasOne("AstroBackEnd.Models.Planet", "PlanetCompare")
+                        .WithMany()
+                        .HasForeignKey("PlanetCompareId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasKey("HoroscopesId", "ZodiacsId");
+                    b.Navigation("PlanetBase");
 
-                    b.HasIndex("ZodiacsId");
-
-                    b.ToTable("HoroscopeZodiac");
-                });
-
-            modelBuilder.Entity("ProductZodiac", b =>
-                {
-                    b.Property<int>("ProductsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ZodiacsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProductsId", "ZodiacsId");
-
-                    b.HasIndex("ZodiacsId");
-
-                    b.ToTable("ProductZodiac");
+                    b.Navigation("PlanetCompare");
                 });
 
             modelBuilder.Entity("AstroBackEnd.Models.BirthChart", b =>
                 {
-                    b.HasOne("AstroBackEnd.Models.Profile", "Profile")
+                    b.HasOne("AstroBackEnd.Models.Profile", null)
                         .WithOne("BirthChart")
                         .HasForeignKey("AstroBackEnd.Models.BirthChart", "ProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
 
-                    b.Navigation("Profile");
+            modelBuilder.Entity("AstroBackEnd.Models.HoroscopeItem", b =>
+                {
+                    b.HasOne("AstroBackEnd.Models.Aspect", "Aspect")
+                        .WithMany()
+                        .HasForeignKey("AspectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AstroBackEnd.Models.LifeAttribute", "LifeAttribute")
+                        .WithMany()
+                        .HasForeignKey("LifeAttributeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Aspect");
+
+                    b.Navigation("LifeAttribute");
                 });
 
             modelBuilder.Entity("AstroBackEnd.Models.ImgLink", b =>
@@ -583,6 +730,35 @@ namespace AstroBackEnd.Migrations
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("AstroBackEnd.Models.NewsTags", b =>
+                {
+                    b.HasOne("AstroBackEnd.Models.House", "House")
+                        .WithMany()
+                        .HasForeignKey("HouseId");
+
+                    b.HasOne("AstroBackEnd.Models.News", "News")
+                        .WithMany()
+                        .HasForeignKey("NewsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AstroBackEnd.Models.Planet", "Planet")
+                        .WithMany()
+                        .HasForeignKey("PlanetId");
+
+                    b.HasOne("AstroBackEnd.Models.Zodiac", "Zodiac")
+                        .WithMany()
+                        .HasForeignKey("ZodiacId");
+
+                    b.Navigation("House");
+
+                    b.Navigation("News");
+
+                    b.Navigation("Planet");
+
+                    b.Navigation("Zodiac");
                 });
 
             modelBuilder.Entity("AstroBackEnd.Models.Order", b =>
@@ -660,7 +836,9 @@ namespace AstroBackEnd.Migrations
                 {
                     b.HasOne("AstroBackEnd.Models.User", null)
                         .WithMany("Profiles")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("AstroBackEnd.Models.Zodiac", "Zodiac")
                         .WithMany()
@@ -671,9 +849,18 @@ namespace AstroBackEnd.Migrations
 
             modelBuilder.Entity("AstroBackEnd.Models.Quote", b =>
                 {
-                    b.HasOne("AstroBackEnd.Models.Horoscope", null)
+                    b.HasOne("AstroBackEnd.Models.Zodiac", null)
                         .WithMany("Quotes")
-                        .HasForeignKey("HoroscopeId")
+                        .HasForeignKey("ZodiacId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AstroBackEnd.Models.Topic", b =>
+                {
+                    b.HasOne("AstroBackEnd.Models.House", null)
+                        .WithMany("Topics")
+                        .HasForeignKey("HouseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -708,39 +895,9 @@ namespace AstroBackEnd.Migrations
                     b.Navigation("Zodiac");
                 });
 
-            modelBuilder.Entity("HoroscopeZodiac", b =>
+            modelBuilder.Entity("AstroBackEnd.Models.House", b =>
                 {
-                    b.HasOne("AstroBackEnd.Models.Horoscope", null)
-                        .WithMany()
-                        .HasForeignKey("HoroscopesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AstroBackEnd.Models.Zodiac", null)
-                        .WithMany()
-                        .HasForeignKey("ZodiacsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ProductZodiac", b =>
-                {
-                    b.HasOne("AstroBackEnd.Models.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AstroBackEnd.Models.Zodiac", null)
-                        .WithMany()
-                        .HasForeignKey("ZodiacsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("AstroBackEnd.Models.Horoscope", b =>
-                {
-                    b.Navigation("Quotes");
+                    b.Navigation("Topics");
                 });
 
             modelBuilder.Entity("AstroBackEnd.Models.Order", b =>
@@ -765,6 +922,11 @@ namespace AstroBackEnd.Migrations
                     b.Navigation("Orders");
 
                     b.Navigation("Profiles");
+                });
+
+            modelBuilder.Entity("AstroBackEnd.Models.Zodiac", b =>
+                {
+                    b.Navigation("Quotes");
                 });
 #pragma warning restore 612, 618
         }

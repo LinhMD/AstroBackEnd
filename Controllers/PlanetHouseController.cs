@@ -3,13 +3,16 @@ using AstroBackEnd.Repositories;
 using AstroBackEnd.RequestModels;
 using AstroBackEnd.RequestModels.PlanetHouseRequest;
 using AstroBackEnd.Services.Core;
+using AstroBackEnd.ViewsModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/v1/planethouse")]
+    [Route("api/v1/planets/{planetName}-{planetId}/houses")]
     [ApiController]
     public class PlanetHouseController : ControllerBase
     {
@@ -27,16 +30,23 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
-                return Ok(planetHouseService.GetPlanetHouse(id));
+                return Ok(new PlanetHouseView(planetHouseService.GetPlanetHouse(id)));
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet]
-        public IActionResult FindPlanetZodiac(int id, int planetId, int HouseId, string content, string sortBy, int page = 1, int pageSize = 20)
+        public IActionResult FindPlanetZodiac(int id, int planetId, int HouseId, string sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
+                int total = 0;
                 PagingRequest pagingRequest = new PagingRequest()
                 {
                     SortBy = sortBy,
@@ -47,15 +57,27 @@ namespace AstroBackEnd.Controllers
                 FindPlanetHouseRequest findPlanetZodiacRequest = new FindPlanetHouseRequest()
                 {
                     Id = id,
-                    Content = content,
                     PlanetId = planetId,
                     HouseId = HouseId,
                     PagingRequest = pagingRequest
                 };
-                return Ok(planetHouseService.FindPlanetHouse(findPlanetZodiacRequest));
-            }catch (ArgumentException ex) { return BadRequest(ex.Message); }
+                var findResult = planetHouseService.FindPlanetHouse(findPlanetZodiacRequest, out total).Select(ph => new PlanetHouseView(ph));
+                PagingView pagingView = new PagingView()
+                {
+                    Payload = findResult,
+                    Total = total
+                };
+                return Ok(pagingView);
+            }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public IActionResult CreatePlanetZodiac(CreatePlanetHouseRequest request)
         {
@@ -63,30 +85,45 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(planetHouseService.CreatePlanetHouse(request));
             }
-            catch (ArgumentException e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
+        [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public IActionResult DeletePlanetZodiac(int id)
         {
             try
             {
-                return Ok(planetHouseService.DeletePlanetHouse(id));
+                Response.Headers.Add("Allow", "GET, POST, PUT");
+                return StatusCode(StatusCodes.Status405MethodNotAllowed);
+                /*return Ok(planetHouseService.DeletePlanetHouse(id));*/
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut]
-        public IActionResult UpdatePlanet(int id, UpdatePlanetHouseRequest request)
+        public IActionResult UpdatePlanetHouse(int id, UpdatePlanetHouseRequest request)
         {
             try
             {
                 return Ok(planetHouseService.UpdatePlanetHouse(id, request));
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

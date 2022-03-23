@@ -14,10 +14,10 @@ namespace AstroBackEnd.ViewsModel
             this.Name = product.Name;
             this.Description = product.Description;
             this.Detail = product.Detail;
+            this.Tag = product.Tag;
             this.CategoryId = product.Category.Id;
             this.CategoryName = product.Category.Name;
             this.ImgLinks = product.ImgLinks.Select(i => i.Link).ToArray();
-            this.ZodiacNames = product.Zodiacs.Select(z => z.Name).ToArray();
             this.ProductVariation = product.ProductVariation.Select(p => new ProductVariationView(p)).ToArray();
             this.Status = product.Status;
         }
@@ -28,6 +28,8 @@ namespace AstroBackEnd.ViewsModel
         public string Description { get; set; }
 
         public string Detail { get; set; }
+
+        public string Tag { get; set; }
 
         public int CategoryId { get; set; }
 

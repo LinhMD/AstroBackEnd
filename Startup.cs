@@ -42,6 +42,7 @@ namespace AstroBackEnd
                         ValidateIssuer = true,
                         ValidateAudience = true,
                         ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero,
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = Configuration["JwtSetting:Issuer"],
                         ValidAudience = Configuration["JwtSetting:Audience"],
@@ -84,11 +85,21 @@ namespace AstroBackEnd
 
             services.AddScoped<IPlanetHouseService, PlanetHouseService>();
 
-            services.AddScoped<ICategorysService,CategoryService >();
+            services.AddScoped<ICategoriesService,CategoryService >();
 
             services.AddScoped <IImageService,ImageService> ();
 
-            services.AddScoped<AstrologyUtil>();
+            services.AddScoped<IHoroscopeItemService,HoroscopeItemService>();
+
+            services.AddScoped<IAspectService, AspectService>();
+
+            services.AddScoped<ILifeAttributeService, LifeAttributeService>();
+
+            services.AddScoped<IAstrologyService, AstrologyService>();
+
+            services.AddScoped<IFirebaseService, FirebaseService>();
+
+            services.AddScoped<ITopicService, TopicService>();
 
             services.AddSingleton<FireabaseUtility>();
 

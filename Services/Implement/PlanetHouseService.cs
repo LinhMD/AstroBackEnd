@@ -6,6 +6,7 @@ using AstroBackEnd.Services.Core;
 using AstroBackEnd.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AstroBackEnd.Services.Implement
 {
@@ -19,10 +20,10 @@ namespace AstroBackEnd.Services.Implement
         public PlanetHouse GetPlanetHouse(int id)
         {
             Validation.ValidNumberThanZero(id, "Id must be than zero");
-            PlanetHouse planetHouse = _work.PlanetHouses.Get(id);
-            if (planetHouse != null)
+            PlanetHouse checkPlanetHouse = _work.PlanetHouses.Get(id);
+            if (checkPlanetHouse != null)
             {
-                return planetHouse;
+                return _work.PlanetHouses.GetPlanetHouseWithAllData(id);
             }
             else { throw new ArgumentException("This PlanetHouse not found"); }
             
@@ -32,6 +33,35 @@ namespace AstroBackEnd.Services.Implement
         {
             try
             {
+                Planet checkPlanet = _work.Planets.Get(request.PlanetId);
+                House checkHouse = _work.Houses.Get(request.HouseId);
+                if (checkPlanet == null)
+                {
+                    throw new ArgumentException("Planet not found");
+                }
+                if (checkHouse == null)
+                {
+                    throw new ArgumentException("House not found");
+                }
+                Func<PlanetHouse, bool> filter = p =>
+                {
+                    bool checkHouseId = true;
+                    bool checkPlanetId = true;
+                    if (request.HouseId > 0)
+                    {
+                        checkHouseId = p.HouseId == request.HouseId;
+                    }
+                    if (request.PlanetId > 0)
+                    {
+                        checkPlanetId = p.PlanetId == request.PlanetId;
+                    }
+                    return  checkPlanetId && checkHouseId;
+                };
+                IEnumerable<PlanetHouse> result = _work.PlanetHouses.FindPaging(filter, p => p.Id);
+                if(result.Count() > 0)
+                {
+                    throw new ArgumentException("PlanetHouse already exist");
+                }
                 PlanetHouse planetHouse = new PlanetHouse()
                 {
                     PlanetId = request.PlanetId,
@@ -46,7 +76,7 @@ namespace AstroBackEnd.Services.Implement
             }
         }
 
-        public IEnumerable<PlanetHouse> FindPlanetHouse(FindPlanetHouseRequest request)
+        public IEnumerable<PlanetHouse> FindPlanetHouse(FindPlanetHouseRequest request, out int total)
         {
             if (request.Id < 0) { throw new ArgumentException("Id must be equal or than zero"); }
             try
@@ -56,7 +86,6 @@ namespace AstroBackEnd.Services.Implement
                     bool checkId = true;
                     bool checkHouseId = true;
                     bool checkPlanetId = true;
-                    bool checkContent = true;
                     if (request.Id > 0)
                     {
                         checkId = p.Id == request.Id;
@@ -69,30 +98,27 @@ namespace AstroBackEnd.Services.Implement
                     {
                         checkPlanetId = p.PlanetId == request.PlanetId;
                     }
-                    if (!string.IsNullOrWhiteSpace(request.Content))
-                    {
-                        checkContent = !string.IsNullOrWhiteSpace(p.Content) ? p.Content.Contains(request.Content) : false;
-                    }
-                    return checkId && checkContent && checkPlanetId && checkHouseId;
+                    return checkId && checkPlanetId && checkHouseId;
                 };
-                PagingRequest paging = request.PagingRequest;
-                Validation.ValidNumberThanZero(paging.Page, "Page must be than zero");
-                Validation.ValidNumberThanZero(paging.PageSize, "PageSize must be than zero");
-                if (paging == null || paging.SortBy == null)
+                PagingRequest pagingRequest = request.PagingRequest;
+                Validation.ValidNumberThanZero(pagingRequest.Page, "Page must be than zero");
+                Validation.ValidNumberThanZero(pagingRequest.PageSize, "PageSize must be than zero");
+                if (pagingRequest != null)
                 {
-                    return _work.PlanetHouses.Find(filter, p => p.Id);
+                    switch (pagingRequest.SortBy)
+                    {
+                        case "PlanetId":
+                            return _work.PlanetHouses.FindPPaginglanetHouseWithAllData(filter, p => p.PlanetId, out total, pagingRequest.Page, pagingRequest.PageSize);
+                        case "HouseId":
+                            return _work.PlanetHouses.FindPPaginglanetHouseWithAllData(filter, p => p.HouseId, out total, pagingRequest.Page, pagingRequest.PageSize);
+                        default:
+                            return _work.PlanetHouses.FindPPaginglanetHouseWithAllData(filter, p => p.Id, out total, pagingRequest.Page, pagingRequest.PageSize);
+                    }
                 }
                 else
                 {
-                    switch (paging.SortBy)
-                    {
-                        case "PlanetId":
-                            return _work.PlanetHouses.FindPaging(filter, p => p.PlanetId, paging.Page, paging.PageSize);
-                        case "HouseId":
-                            return _work.PlanetHouses.FindPaging(filter, p => p.HouseId, paging.Page, paging.PageSize);
-                        default:
-                            return _work.PlanetHouses.FindPaging(filter, p => p.Id, paging.Page, paging.PageSize);
-                    }
+                    IEnumerable<PlanetHouse> result = _work.PlanetHouses.FindPlanetHouseWithAllData(filter, p => p.Id, out total);
+                    return result;
                 }
             }
             catch (Exception ex) { throw new ArgumentException("PlanetHouseService : " + ex.Message); }
@@ -101,6 +127,16 @@ namespace AstroBackEnd.Services.Implement
         public PlanetHouse UpdatePlanetHouse(int id, UpdatePlanetHouseRequest request)
         {
             Validation.ValidNumberThanZero(id, "Id must be than zero");
+            Planet checkPlanet = _work.Planets.Get(request.PlanetId);
+            House checkHouse = _work.Houses.Get(request.HouseId);
+            if (checkPlanet == null)
+            {
+                throw new ArgumentException("Planet not found");
+            }
+            if (checkHouse == null)
+            {
+                throw new ArgumentException("House not found");
+            }
             PlanetHouse planetHouse = _work.PlanetHouses.Get(id);
             if (planetHouse != null)
             {
@@ -112,6 +148,11 @@ namespace AstroBackEnd.Services.Implement
                 {
                     planetHouse.HouseId = request.HouseId;
                 }
+                if (!string.IsNullOrWhiteSpace(request.Content))
+                {
+                    planetHouse.Content = request.Content;
+                }
+
                 return planetHouse;
             }
             else

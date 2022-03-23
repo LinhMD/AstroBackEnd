@@ -51,7 +51,7 @@ namespace AstroBackEnd.Controllers
             {
                 UserRecord userRecord = await _fbUtil.getFireBaseUserByToken(request.Token);
                 string uid = userRecord.Uid;
-                User user = _work.Users.Find(u => u.UID == uid, u => u.Id).FirstOrDefault();
+                User user = _work.Users.FindAtDBPaging(u => u.UID == uid && u.Status > 0, u => u.Id, out int total).FirstOrDefault();
 
                 if(user == null)
                 {
@@ -62,9 +62,11 @@ namespace AstroBackEnd.Controllers
                 return Ok(Generate(user));
 
             }
-            catch(Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
 
         }
@@ -74,7 +76,7 @@ namespace AstroBackEnd.Controllers
             var user = new User()
             {
                 UID = userRecord.Uid,
-                UserName = userRecord.DisplayName,
+                UserName = userRecord.DisplayName == null? userRecord.Email: userRecord.DisplayName,
                 Email = userRecord.Email,
                 Role = _work.Roles.Get(2),
                 PhoneNumber = userRecord.PhoneNumber,
@@ -103,7 +105,7 @@ namespace AstroBackEnd.Controllers
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSetting:SecurityKey"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            Console.WriteLine(user);
+            
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
@@ -121,7 +123,8 @@ namespace AstroBackEnd.Controllers
         private User Authenticate(UserLogin userLogin)
         {
             User user = _work.Users.Find(u => u.UserName == userLogin.UserName, u => u.UserName).FirstOrDefault();
-            user = _work.Users.GetAllUserData(user.Id);
+            if(user != null)
+                user = _work.Users.GetAllUserData(user.Id);
             return user;
         }
     }

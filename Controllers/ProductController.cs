@@ -16,7 +16,7 @@ using AstroBackEnd.ViewsModel;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/v1/product")]
+    [Route("api/v1/products")]
     [ApiController]
     public class ProductController : ControllerBase
     {
@@ -30,13 +30,17 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult DeleteProduct(int id)
         {
             _Service.DeleteProduct(id);
             return Ok();
+            /*Response.Headers.Add("Allow", "GET, POST, PUT");
+            return StatusCode(StatusCodes.Status405MethodNotAllowed);*/
         }
 
         [HttpGet("master/{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult GetProduct(int id)
         {
             var product = _Service.GetMasterProduct(id);
@@ -45,7 +49,7 @@ namespace AstroBackEnd.Controllers
 
         
         [HttpGet("master")]
-        public IActionResult GetAllProductMaster(int? id, string? name, string? description, string? detail, int? categoryId, int? zodiacsId, int? productVariationId, int? status, string? sortBy, int page = 1, int pageSize = 20)
+        public IActionResult GetAllProductMaster(int? id, string? name, string? description, string? tag,string? detail, int? categoryId, int? zodiacsId, int? productVariationId, int? status, string? sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
@@ -56,9 +60,9 @@ namespace AstroBackEnd.Controllers
                     CategoryId = categoryId,
                     Description = description,
                     Detail = detail,
+                    Tag = tag,
                     Name = name,
                     ProductVariationId = productVariationId,
-                    ZodiacsId = zodiacsId,
                     Status = status,
                     PagingRequest = new PagingRequest() { Page = page, PageSize = pageSize, SortBy = sortBy }
 
@@ -66,28 +70,34 @@ namespace AstroBackEnd.Controllers
 
                 return Ok(new PagingView() { Payload = products, Total = total });
             }
-            catch(Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.StackTrace);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpPost]
         [Route("master")]
+        [Authorize(Roles = "admin")]
         public IActionResult CreateMasterProduct([FromBody] MasterProductCreateRequest request)
         {
             try
             {
                 return Ok(new MasterProductView(_Service.CreateMasterProduct(request)));
             }
-            catch (Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
 
         }
 
         [HttpPut("master")]
+        [Authorize(Roles = "admin")]
         public IActionResult UpdateProduct(int id, MasterProductsUpdateRequest request)
         {
             try
@@ -96,21 +106,24 @@ namespace AstroBackEnd.Controllers
 
                 return Ok(new MasterProductView(updateProduct));
             }
-            catch(Exception e)
+            catch (ArgumentException ex)
             {
-                
-                return BadRequest(e.StackTrace);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpGet("variant/{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult GetMasterProduct(int id)
         {
             var product = _Service.GetProductVariant(id);
-            return product == null ? NotFound("Product variant id {" + id + "} not found!!") : Ok(new ProductVariationView(product));
+            return product == null ? NotFound("Product variant id {" + id + "} not found") : Ok(new ProductVariationView(product));
         }
 
         [HttpGet("variant")]
+        [Authorize(Roles = "admin")]
         public IActionResult GetAllProductVariant(string? Size, double? Price, int? Gender, string? Color, int? status, string? SortBy, int Page = 1, int pageSize = 20)
         {
             try
@@ -124,7 +137,6 @@ namespace AstroBackEnd.Controllers
                     Size = Size,
                     Status = status,
                     PagingRequest =  new PagingRequest() { Page = Page, PageSize = pageSize, SortBy = SortBy }
-
                 }, out total).Select(p => new ProductVariationView(p));
 
                 PagingView pagingView = new PagingView()
@@ -135,13 +147,16 @@ namespace AstroBackEnd.Controllers
 
                 return Ok(pagingView);
             }
-            catch (Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpPost("variant")]
+        [Authorize(Roles = "admin")]
         public IActionResult CreateProduct([FromBody] ProductVariantCreateRequest request)
         {
             try
@@ -149,13 +164,16 @@ namespace AstroBackEnd.Controllers
 
                 return Ok(new ProductVariationView(_Service.CreateProductVariant(request)));
             }
-            catch (Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpPut("variant")]
+        [Authorize(Roles = "admin")]
         public IActionResult UpdateProductVariant(int id, ProductVariantUpdateRequest request)
         {
             try
@@ -163,9 +181,11 @@ namespace AstroBackEnd.Controllers
                 Product updateProduct = _Service.UpdateProductVariant(id, request);
                 return Ok(new ProductVariationView(updateProduct));
             }
-            catch (Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 

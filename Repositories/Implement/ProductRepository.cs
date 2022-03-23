@@ -20,7 +20,7 @@ namespace AstroBackEnd.Repositories.Implement
         public Product GetAllProductData(int id)
         {
             return AstroData.Products.Include("MasterProduct")
-                .Include("Category").Include("ImgLinks").Include("Zodiacs")
+                .Include("Category").Include("ImgLinks")
                 .Include("ProductVariation").FirstOrDefault(p => p.Id == id);
         }
 
@@ -39,7 +39,6 @@ namespace AstroBackEnd.Repositories.Implement
             var products = AstroData.Products
                                         .Include("Category")
                                         .Include("ImgLinks")
-                                        .Include("Zodiacs")
                                         .Include("ProductVariation")
                                         .Where(filter)
                                         .OrderBy(sortBy);
@@ -62,6 +61,11 @@ namespace AstroBackEnd.Repositories.Implement
 
             return products.Skip((page - 1) * pageSize)
                             .Take(pageSize);
+        }
+
+        public override IQueryable<Product> WithAllData()
+        {
+            throw new NotImplementedException();
         }
     }
 }

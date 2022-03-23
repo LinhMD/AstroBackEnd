@@ -8,7 +8,7 @@ namespace AstroBackEnd.Services.Core
     {
         public PlanetZodiac GetPlanetZodiac(int id);
         public PlanetZodiac CreatePlanetZodiac(CreatePlanetZodiacRequest request);
-        public IEnumerable<PlanetZodiac> FindPlanetZodiac(FindPlanetZodiacRequest request);
+        public IEnumerable<PlanetZodiac> FindPlanetZodiac(FindPlanetZodiacRequest request, out int total);
         public PlanetZodiac DeletePlanetZodiac(int id);
         public PlanetZodiac UpdatePlanetZodiac(int id, UpdatePlanetZodiacRequest request);
     }

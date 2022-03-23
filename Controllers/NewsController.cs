@@ -12,6 +12,7 @@ using AstroBackEnd.RequestModels.NewRequest;
 using AstroBackEnd.RequestModels;
 using AstroBackEnd.Repositories;
 using AstroBackEnd.ViewsModel;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AstroBackEnd.Controllers
 {
@@ -34,21 +35,32 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(_Service.GetNews(id));
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
-
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult CreateNew([FromBody] NewsCreateRequest request)
         {
             try
             {
                 return Ok(_Service.CreateNew(request));
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut]
+        [Authorize(Roles = "admin")]
         public IActionResult UpdateNew(int id, [FromBody] NewsUpdateRequest request)
         {
 
@@ -56,7 +68,12 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(_Service.UpdateNew(id, request));
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet]
@@ -83,18 +100,26 @@ namespace AstroBackEnd.Controllers
             }
             catch (ArgumentException ex)
             {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
                 return BadRequest(ex.Message);
             }
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult DeleteNews(int id)
         {
             try
             {
                 return Ok(_Service.DeleteNew(id));
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
     }

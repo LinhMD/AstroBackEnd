@@ -3,13 +3,15 @@ using AstroBackEnd.Repositories;
 using AstroBackEnd.Repositories.Core;
 using AstroBackEnd.RequestModels;
 using AstroBackEnd.RequestModels.QuoteRequest;
+using AstroBackEnd.ViewsModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/v1/quote")]
+    [Route("api/v1/quotes")]
     [ApiController]
     public class QuoteController : ControllerBase
     {
@@ -28,14 +30,20 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(quoteService.GetQuote(id));
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet]
-        public IActionResult FindQuote(int id, string content, int horoscopeId, string sortBy, int page = 1, int pageSize = 20)
+        public IActionResult FindQuote(int id, int zodiacId, string sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
+                int total = 0;
                 PagingRequest pagingRequest = new PagingRequest()
                 {
                     SortBy = sortBy,
@@ -45,31 +53,41 @@ namespace AstroBackEnd.Controllers
                 FindQuoteRequest findQuoteRequest = new FindQuoteRequest()
                 {
                     Id = id,
-                    Content = content,
-                    HoroscopeId = horoscopeId,
+                    ZodiacId = zodiacId,
                     PagingRequest = pagingRequest
                 };
-                return Ok(quoteService.FindQuote(findQuoteRequest));
+                var findResult = quoteService.FindQuote(findQuoteRequest, out total);
+                PagingView pagingView = new PagingView()
+                {
+                    Payload = findResult,
+                    Total = total
+                };
+                return Ok(pagingView);
             }
             catch (ArgumentException ex)
             {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
                 return BadRequest(ex.Message);
             }
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult CreateQuote(CreateQuoteRequest request)
         {
             try
             {
                 return Ok(quoteService.CreateQuote(request));
             }
-            catch (ArgumentException e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
-
+        [Authorize(Roles = "admin")]
         [HttpPut]
         public IActionResult UpdateQuote(int id, UpdateQuoteRequest request)
         {
@@ -77,17 +95,28 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(quoteService.UpdateQuote(id, request));
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult DeleteQuote(int id)
         {
             try
             {
                 return Ok(quoteService.DeleteQuote(id));
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

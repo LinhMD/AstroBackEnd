@@ -22,7 +22,7 @@ namespace AstroBackEnd.Repositories
 
         IProductRepository Products { get; }
 
-        ICategoryRepository Categorys { get; }
+        ICategoryRepository Categories { get; }
 
         IZodiacRepository Zodiacs { get; }
 
@@ -43,10 +43,13 @@ namespace AstroBackEnd.Repositories
 
         IPlanetHouseRepository PlanetHouses { get; }
 
+        IHoroscopeItemRepository HoroscopeItems { get; }
 
+        IAspectRepository Aspects { get; }
 
+        ILifeAttributeRepository LifeAttributes { get; }
+
+        ITopicRepository Topics { get; }
         int Complete();
-
-        
     }
 }

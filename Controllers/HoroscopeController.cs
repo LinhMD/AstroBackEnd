@@ -4,6 +4,8 @@ using AstroBackEnd.RequestModels;
 using AstroBackEnd.RequestModels.HoroscopeRequest;
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.Utilities;
+using AstroBackEnd.ViewsModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,7 +13,7 @@ using System.Collections.Generic;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/v1/horoscope")]
+    [Route("api/v1/horoscopes")]
     [ApiController]
     public class HoroscopeController : ControllerBase
     {
@@ -31,7 +33,12 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(horoscopeService.GetHoroscope(id));
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex) 
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message); 
+            }
         }
 
         [HttpGet]
@@ -39,6 +46,7 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
+                int total = 0;
                 PagingRequest pagingRequest = new PagingRequest()
                 {
                     SortBy = sortBy,
@@ -54,27 +62,40 @@ namespace AstroBackEnd.Controllers
                     NumberLuck = numberLuck,
                     PagingRequest = pagingRequest
                 };
-                return Ok(horoscopeService.FindHoroscope(findHoroscopeRequest));
-            }catch (ArgumentException ex)
+                var findResult = horoscopeService.FindHoroscope(findHoroscopeRequest, out total);
+                PagingView pagingView = new PagingView()
+                {
+                    Payload = findResult,
+                    Total = total
+                };
+                return Ok(pagingView);
+            }
+            catch (ArgumentException ex)
             {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
                 return BadRequest(ex.Message);
             }
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult CreateHoroscope(CreateHoroscopeRequest request)
         {
             try
             {
                 return Ok(horoscopeService.CreateHoroscope(request));
             }
-            catch(ArgumentException e)
+            catch(ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpPut]
+        [Authorize(Roles = "admin")]
         public IActionResult UpdateHoroscope(int id, UpdateHoroscopeRequest request)
         {
             try
@@ -87,17 +108,30 @@ namespace AstroBackEnd.Controllers
                 Validation.Validate(horoscope);
                 return Ok(horoscope);
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex) 
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message); 
+            }
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult DeleteHoroscope(int id)
         {
             try
             {
-                return Ok(horoscopeService.DeleteHoroscope(id));
+                Response.Headers.Add("Allow", "GET, POST, PUT");
+                return StatusCode(StatusCodes.Status405MethodNotAllowed);
+                /*return Ok(horoscopeService.DeleteHoroscope(id));*/
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex) 
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message); 
+            }
         }
 
     }

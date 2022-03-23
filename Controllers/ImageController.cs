@@ -20,7 +20,7 @@ using AstroBackEnd.ViewsModel;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/v1/image")]
+    [Route("api/v1/images")]
     [ApiController]
     public class ImageController : ControllerBase
     {
@@ -39,10 +39,16 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(_Service.GetImage(id));
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult CreateImage([FromBody] ImageCreateRequest request)
         {
             try
@@ -75,11 +81,14 @@ namespace AstroBackEnd.Controllers
             }
             catch (ArgumentException ex)
             {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
                 return BadRequest(ex.Message);
             }
         }
 
         [HttpPut]
+        [Authorize(Roles = "admin")]
         public IActionResult UpdateImage(int id, ImageUpdateRequest request)
         {
             try
@@ -88,7 +97,12 @@ namespace AstroBackEnd.Controllers
 
                 return Ok(updateImage);
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
@@ -96,9 +110,16 @@ namespace AstroBackEnd.Controllers
         {
             try
             {
-                return Ok(_Service.DeleteImage(id));
+                Response.Headers.Add("Allow", "GET, POST, PUT");
+                return StatusCode(StatusCodes.Status405MethodNotAllowed);
+                /*return Ok(_Service.DeleteImage(id));*/
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
         private readonly IImageService _imageService;
 

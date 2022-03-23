@@ -18,5 +18,10 @@ namespace AstroBackEnd.Repositories.Implement
         }
 
         private AstroDataContext AstroData { get { return base._context as AstroDataContext; } }
+
+        public override IQueryable<Zodiac> WithAllData()
+        {
+            return AstroData.Zodiacs.AsQueryable().Include(z => z.Quotes);
+        }
     }
 }

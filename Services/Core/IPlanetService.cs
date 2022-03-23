@@ -8,7 +8,7 @@ namespace AstroBackEnd.Services.Core
     {
         public Planet GetPlanet(int id);
         public Planet CreatePlanet(CreatePlanetRequest request);
-        public IEnumerable<Planet> FindPlanet(FindPlanetRequest request);
+        public IEnumerable<Planet> FindPlanet(FindPlanetRequest request, out int total);
         public Planet DeletePlanet(int id);
         public Planet UpdatePlanet(int id, UpdatePlanetRequest request);
     }

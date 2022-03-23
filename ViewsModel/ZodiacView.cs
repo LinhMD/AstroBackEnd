@@ -1,7 +1,19 @@
-﻿namespace AstroBackEnd.ViewsModel
+﻿using AstroBackEnd.Models;
+
+namespace AstroBackEnd.ViewsModel
 {
     public class ZodiacView
     {
+        public ZodiacView(Zodiac zodiac)
+        {
+            Id = zodiac.Id;
+            Name = zodiac.Name;
+            ZodiacDayStart = zodiac.ZodiacDayStart;
+            ZodiacMonthStart = zodiac.ZodiacMonthStart;
+            ZodiacDayEnd = zodiac.ZodiacDayEnd;
+            ZodiacMonthEnd = zodiac.ZodiacMonthEnd;
+            Icon = zodiac.Icon;
+        }
         public int Id { get; set; }
 
         public string Name { get; set; }
@@ -16,8 +28,5 @@
 
         public string Icon { get; set; }
 
-        public string Descreiption { get; set; }
-
-        public string MainContent { get; set; }
     }
 }

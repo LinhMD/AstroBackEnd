@@ -1,7 +1,9 @@
 ﻿using AstroBackEnd.Models;
 using AstroBackEnd.RequestModels;
+using AstroBackEnd.RequestModels.ProfileRequest;
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.ViewsModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/v1/profile")]
+    [Route("api/v1/profiles")]
     [ApiController]
     public class ProfileController : ControllerBase
     {
@@ -22,21 +24,41 @@ namespace AstroBackEnd.Controllers
         {
             _profileService = profileService;
         }
-
+        [Authorize(Roles = "admin")]
         [HttpGet("{id}")]
         public IActionResult GetProfile(int id)
         {
-            var profile = _profileService.GetProfile(id);
-            if(profile != null)
+            
+            try
             {
+
+                var profile = _profileService.GetProfile(id);
                 return Ok(profile);
             }
-            else
+            catch (ArgumentException ex)
             {
-                return NotFound();
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+        [Authorize(Roles = "admin")]
+        [HttpGet("{id}/chart")]
+        public IActionResult GetBirthChart(int id)
+        {
+            try
+            {
+                return Ok(_profileService.GetBirthChart(id)); 
+            }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public IActionResult CreateProfile(CreateProfileRequest request)
         {
@@ -44,19 +66,20 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(_profileService.CreateProfile(request));
             }
-            catch (Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
-            
-        }
 
+        }
+        [Authorize(Roles = "admin")]
         [HttpGet]
-        public IActionResult FindProfile(string? name, DateTime? birthDateStart, DateTime? birthDateEnd, string? birthPlace, int? zodiacId, string? sortBy, int page = 1, int pageSize = 20)
+        public IActionResult FindProfile(string? name, int? userId,DateTime? birthDateStart, DateTime? birthDateEnd, string? birthPlace, int? zodiacId, string? sortBy, int page = 1, int pageSize = 20)
         {
             try
             {
-                int total = 0;
                 IEnumerable<Profile> profiles = _profileService.FindProfile(new FindProfileRequest()
                 {
                     Name = name,
@@ -64,25 +87,29 @@ namespace AstroBackEnd.Controllers
                     BirthDateEnd = birthDateEnd,
                     BirthPlace = birthPlace,
                     ZodiacId = zodiacId,
+                    UserId = userId,
+
                     PagingRequest = new PagingRequest()
                     {
                         Page = page,
                         PageSize = pageSize,
                         SortBy = sortBy
                     }
-                }, out total);
+                }, out int total);
 
 
                 return Ok(new PagingView() { Payload = profiles, Total = total } );
             }
-            catch (Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
-
+        [Authorize(Roles = "admin")]
         [HttpPut]
-        public IActionResult UpdateProfile(int id, CreateProfileRequest request)
+        public IActionResult UpdateProfile(int id, UpdateProfileRequest request)
         {
             try
             {
@@ -90,12 +117,14 @@ namespace AstroBackEnd.Controllers
 
                 return Ok(updateProfile);
             }
-            catch (Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
-
+        [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public IActionResult DeleteProfile(int id)
         {
@@ -104,10 +133,12 @@ namespace AstroBackEnd.Controllers
                 _profileService.DeleteProfile(id);
                 return Ok();
             }
-            catch (Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
-            } 
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

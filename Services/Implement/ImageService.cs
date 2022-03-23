@@ -160,12 +160,19 @@ namespace AstroBackEnd.Services.Implement
                     bool checkLink = true;
                     if (!string.IsNullOrWhiteSpace(Request.Link))
                     {
-                        checkLink = p.Link.Contains(Request.Link);
+                        if (!string.IsNullOrWhiteSpace(p.Link))
+                        {
+                            checkLink = p.Link.ToLower().Contains(Request.Link.ToLower());
+                        }
+                        else
+                        {
+                            checkLink = false;
+                        }
                     }
-                    bool checkProId = true;
-                    checkProId = Request.ProductId == null ? true : p.ProductId == Request.ProductId;
 
-                    return checkLink && checkProId;
+                    bool checkProductId = Request.ProductId == null || Request.ProductId == p.ProductId;
+                    bool checkId = Request.Id == null || Request.Id == p.Id;
+                    return checkId && checkLink && checkProductId;
                 };
                 IEnumerable<ImgLink> result = null;
                 if (Request.PagingRequest != null)

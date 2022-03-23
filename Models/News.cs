@@ -13,6 +13,8 @@ namespace AstroBackEnd.Models
 
         public string Description { get; set; }
 
+        public string Banner { get; set; }
+
         public DateTime GeneratDate { get; set; }
 
         public string Content { get; set; }

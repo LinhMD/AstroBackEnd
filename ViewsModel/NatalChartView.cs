@@ -12,7 +12,9 @@ namespace AstroBackEnd.ViewsModel
         public Dictionary<string, int> PlanetInHouse { get; set; }
         public Dictionary<string, string> PlanetInZodiac { get; set; }
         public Dictionary<string, int> ZodiacInHouse  { get; set; }
+        public Dictionary<string,double> PlanetPositon { get; set; }
 
-        public Zodiac zodiac { get; set; }
+        public double Diff { get; set; }
+        public Zodiac Zodiac { get; set; }
     }
 }

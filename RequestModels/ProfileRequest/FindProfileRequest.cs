@@ -14,7 +14,8 @@ namespace AstroBackEnd.RequestModels
         public string? BirthPlace { get; set; }
 
         public int? ZodiacId { get; set; }
-
+        
+        public int? UserId { get; set; }
         public PagingRequest? PagingRequest { get; set; }
     }
 }

@@ -21,9 +21,13 @@ namespace AstroBackEnd.Models
 
         public double Latitude { get; set; }
 
+        public bool Gender { get; set; }
+
         public Zodiac Zodiac { get; set; }
 
         public BirthChart BirthChart { get; set; }
+
+        public int UserId { get; set; }
 
     }
 }

@@ -2,10 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace AstroBackEnd.Repositories
 {
-    public class Repository<TModel> : IRepository<TModel> where TModel : class
+    public abstract class Repository<TModel> : IRepository<TModel> where TModel : class
     {
 
         protected readonly DbContext _context;
@@ -83,6 +84,16 @@ namespace AstroBackEnd.Repositories
             _context.Set<TModel>().RemoveRange(models);
         }
 
-        
+        public IQueryable<TModel> FindAtDBPaging<TOrderBy>(Expression<Func<TModel, bool>> predicate, Expression<Func<TModel, TOrderBy>> orderBy, out int total, int page = 1, int pageSize = 20)
+        {
+            IOrderedQueryable<TModel> models = this.WithAllData().Where(predicate).OrderBy(orderBy);
+
+            total = models.Count();
+
+            return models.Skip((page -1) * pageSize).Take(pageSize);
+        }
+
+        public abstract IQueryable<TModel> WithAllData();
+
     }
 }

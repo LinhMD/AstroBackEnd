@@ -10,7 +10,14 @@ namespace AstroBackEnd.RequestModels
         public string Name { get; set; }
 
         public DateTime BirthDate { get; set; }
+
         public string BirthPlace { get; set; }
+
+        public double Latitude { get; set; }
+
+        public bool Gender { get; set; }
+
+        public double Longtitude { get; set; }
 
         public string ProfilePhoto { get; set; }
 

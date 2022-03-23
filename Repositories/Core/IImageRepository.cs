@@ -8,6 +8,6 @@ namespace AstroBackEnd.Repositories.Core
 {
     public interface IImageRepository : IRepository<ImgLink>
     {
-        public Product GetAllImageData(int id);
+        public ImgLink GetAllImageData(int id);
     }
 }

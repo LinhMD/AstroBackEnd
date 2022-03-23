@@ -15,7 +15,7 @@ namespace AstroBackEnd.ViewsModel
         public ProductVariationView(Product p)
         {
             Id = p.Id;
-            MasterId = p.Id;
+            MasterId = (int)p.MasterProductId;
             Color = p.Color;
             Gender = p.Gender;
             Inventory = p.Inventory;

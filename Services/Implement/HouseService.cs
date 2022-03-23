@@ -6,6 +6,7 @@ using AstroBackEnd.Services.Core;
 using AstroBackEnd.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AstroBackEnd.Services.Implement
 {
@@ -50,7 +51,7 @@ namespace AstroBackEnd.Services.Implement
             } 
         }
 
-        public IEnumerable<House> FindHouse(FindHouseRequest request)
+        public IEnumerable<House> FindHouse(FindHouseRequest request, out int total)
         {
             if (request.Id < 0) { throw new ArgumentException("Id must be equal or than zero"); }
             try
@@ -59,10 +60,11 @@ namespace AstroBackEnd.Services.Implement
                 {
                     bool checkId = true;
                     bool checkNameHouse = true;
-                    bool checkDescriptionHouse = true;
                     bool checkTitleHouse = true;
+                    bool checkIcon = true;
                     bool checkTag = true;
-                    bool checkMainContent = true;
+
+
                     if (request.Id > 0)
                     {
                         checkId = p.Id == request.Id;
@@ -71,7 +73,7 @@ namespace AstroBackEnd.Services.Implement
                     {
                         if (!string.IsNullOrWhiteSpace(p.Name))
                         {
-                            checkNameHouse = p.Name.Contains(request.Name);
+                            checkNameHouse = p.Name.ToLower().Contains(request.Name.ToLower());
                         }
                         else
                         {
@@ -82,66 +84,48 @@ namespace AstroBackEnd.Services.Implement
                     {
                         if (!string.IsNullOrWhiteSpace(p.Title))
                         {
-                            checkTitleHouse = p.Title.Contains(request.Title);
+                            checkTitleHouse = p.Title.ToLower().Contains(request.Title.ToLower());
                         }
                         else
                         {
                             checkTitleHouse = false;
                         }
                     }
-                    if (!string.IsNullOrWhiteSpace(request.Description))
-                    {
-                        if (!string.IsNullOrWhiteSpace(p.Decription))
-                        {
-                            checkDescriptionHouse = p.Decription.Contains(request.Description);
-                        }
-                        else
-                        {
-                            checkDescriptionHouse = false;
-                        }
-                    }
-                    if (!string.IsNullOrWhiteSpace(request.MainContent))
-                    {
-                        if (!string.IsNullOrWhiteSpace(p.MainContent))
-                        {
-                            checkMainContent = p.MainContent.Contains(request.MainContent);
-                        }
-                        else
-                        {
-                            checkMainContent = false;
-                        }
-                    }
-
                     if (!string.IsNullOrWhiteSpace(request.Tag))
                     {
                         if (!string.IsNullOrWhiteSpace(p.Tag))
                         {
-                            checkTag = p.Tag.Contains(request.Tag);
+                            checkTag = Utilities.Utilities.CheckTag(request.Tag, p.Tag);
                         }
                         else
                         {
                             checkTag = false;
                         }
-
                     }
-                    return checkId && checkNameHouse && checkDescriptionHouse && checkMainContent && checkTag && checkTitleHouse;
+
+
+                    return checkId && checkNameHouse && checkIcon && checkTag && checkTitleHouse;
+
                 };
-                PagingRequest paging = request.PagingRequest;
-                Validation.ValidNumberThanZero(paging.Page, "Page must be than zero");
-                Validation.ValidNumberThanZero(paging.PageSize, "PageSize must be than zero");
-                if (paging == null || paging.SortBy == null)
+                PagingRequest pagingRequest = request.PagingRequest;
+                Validation.ValidNumberThanZero(pagingRequest.Page, "Page must be than zero");
+                Validation.ValidNumberThanZero(pagingRequest.PageSize, "PageSize must be than zero");
+
+                if (pagingRequest != null)
                 {
-                    return _work.Houses.Find(filter, p => p.Id);
+                    switch (pagingRequest.SortBy)
+                    {
+                        case "Name":
+                            return _work.Houses.FindPaging(filter, p => p.Name, out total, pagingRequest.Page, pagingRequest.PageSize);
+                        default:
+                            return _work.Houses.FindPaging(filter, p => p.Id, out total, pagingRequest.Page, pagingRequest.PageSize);
+                    }
                 }
                 else
                 {
-                    switch (paging.SortBy)
-                    {
-                        case "Name":
-                            return _work.Houses.FindPaging(filter, p => p.Name, paging.Page, paging.PageSize);
-                        default:
-                            return _work.Houses.FindPaging(filter, p => p.Id, paging.Page, paging.PageSize);
-                    }
+                    IEnumerable<House> result = _work.Houses.Find(filter, p => p.Id);
+                    total = result.Count();
+                    return result;
                 }
             }
             catch (Exception e) { throw new ArgumentException("HouseService : " + e.Message); }

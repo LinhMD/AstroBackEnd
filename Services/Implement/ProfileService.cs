@@ -2,7 +2,11 @@
 using AstroBackEnd.Models;
 using AstroBackEnd.Repositories;
 using AstroBackEnd.RequestModels;
+using AstroBackEnd.RequestModels.ProfileRequest;
 using AstroBackEnd.Services.Core;
+using AstroBackEnd.Utilities;
+using AstroBackEnd.ViewsModel;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +19,13 @@ namespace AstroBackEnd.Services.Implement
         private readonly IUnitOfWork _work;
 
         private readonly AstroDataContext _astroData;
-        public ProfileService(IUnitOfWork work, AstroDataContext astroData) 
+
+        private readonly IAstrologyService _astro;
+        public ProfileService(IUnitOfWork work, AstroDataContext astroData, IAstrologyService astrology) 
         {
             this._work = work;
             this._astroData = astroData;
+            this._astro = astrology;
         }
 
         public Profile CreateProfile(CreateProfileRequest request)
@@ -28,13 +35,26 @@ namespace AstroBackEnd.Services.Implement
                 Name = request.Name,
                 BirthDate = request.BirthDate,
                 BirthPlace = request.BirthPlace,
-                ProfilePhoto = request.ProfilePhoto
+                ProfilePhoto = request.ProfilePhoto,
+                Latitude = request.Latitude,
+                Longitude = request.Longtitude,
+                Gender = request.Gender
             };
+
+            profile.Zodiac = _astro.GetZodiac(profile.BirthDate, profile.Longitude, profile.Latitude);
 
             var user = _work.Users.GetAllUserData(request.UserId);
             if (user == null) throw new ArgumentException("User ID not found");
 
-            user.Profiles.Add(profile);
+            BirthChart birthChart = new BirthChart();
+
+            birthChart.ImgLink = _astro.GetChartLinkFirebase(profile.BirthDate, profile.Longitude, profile.Latitude);
+
+            birthChart.Content = JsonConvert.SerializeObject(_astro.GetPlanetPosition(profile.BirthDate, profile.Longitude, profile.Latitude));
+            
+            profile.UserId = user.Id;
+
+            profile.BirthChart = birthChart;
 
             _work.Profiles.Add(profile);
 
@@ -74,7 +94,12 @@ namespace AstroBackEnd.Services.Implement
                 {
                     checkBirthDate = p.BirthDate <= request.BirthDateEnd && p.BirthDate >= request.BirthDateStart;
                 }
-                return checkName && checkBirthDate && checkZodiac && checkBirthPlace;
+                bool checkUserId = true;
+                if(request.UserId != null )
+                {
+                    checkUserId = request.UserId == p.UserId;
+                }
+                return checkName && checkBirthDate && checkZodiac && checkBirthPlace && checkUserId;
             };
 
             IEnumerable<Profile> result = null;
@@ -120,7 +145,13 @@ namespace AstroBackEnd.Services.Implement
                 {
                     checkBirthDate = p.BirthDate <= request.BirthDateEnd && p.BirthDate >= request.BirthDateStart;
                 }
-                return checkName && checkBirthDate && checkZodiac && checkBirthPlace;
+
+                bool checkUserId = true;
+                if (request.UserId != null)
+                {
+                    checkUserId = request.UserId == p.UserId;
+                }
+                return checkName && checkBirthDate && checkZodiac && checkBirthPlace && checkUserId;
             };
 
             IEnumerable<Profile> result = null;
@@ -152,12 +183,44 @@ namespace AstroBackEnd.Services.Implement
 
         public Profile GetProfile(int id)
         {
-            Profile profile = _work.Profiles.Get(id);
+            Profile profile = _work.Profiles.GetProfileWithAllData(id);
             if (profile == null) throw new ArgumentException("Profile not found");
             return profile;
         }
 
-        public Profile UpdateProfile(int id, CreateProfileRequest request)
+        public BirthChartView GetBirthChart(int id) 
+        {
+            Profile profile = this.GetProfile(id);
+            if (profile.BirthChart == null) throw new ArgumentException("Birth Chart Not found!!");
+
+            var birthChart = new BirthChartView(profile.BirthChart);
+
+            if(!string.IsNullOrWhiteSpace(profile.BirthChart.Content))
+            {
+                var planetPositions = JsonConvert.DeserializeObject<Dictionary<string, PlanetPositionView>>(profile.BirthChart.Content);
+                foreach (var key in planetPositions.Keys)
+                {
+                    var planetPos = planetPositions[key];
+                    PlanetHouse planetHouse = _work.PlanetHouses.FindAtDBPaging(p => p.PlanetId == planetPos.PlanetId && p.HouseId == planetPos.HouseId, p => p.Id, out int total).FirstOrDefault();
+                    PlanetZodiac planetZodiac = _work.PlanetZodiacs.FindAtDBPaging(pz => pz.PlanetId == planetPos.PlanetId && pz.ZodiacId == planetPos.ZodiacId, pz => pz.Id, out total).FirstOrDefault();
+                    Planet planet = _work.Planets.Get(planetPos.PlanetId);
+
+                    try
+                    {
+                        var chartItem = new ChartItemView(planetZodiac, planetHouse, planet);
+                        birthChart.Items[key] = chartItem;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
+                }
+            }
+
+
+            return birthChart;
+        }
+        public Profile UpdateProfile(int id, UpdateProfileRequest request)
         {
             var profile = GetProfile(id);
 
@@ -173,10 +236,39 @@ namespace AstroBackEnd.Services.Implement
             {
                 profile.BirthPlace = request.BirthPlace;
             }
-            if(request.BirthDate != profile.BirthDate)
+            if(request.Gender != null)
             {
-                profile.BirthDate = request.BirthDate;
+                profile.Gender = request.Gender.Value;
             }
+            bool checkZodiacChange = false;
+            if (request.BirthDate != profile.BirthDate)
+            {
+                profile.BirthDate = (DateTime)request.BirthDate;
+                checkZodiacChange = true;
+            }
+
+            if(request.Latitude != null)
+            {
+                profile.Latitude = (double)request.Latitude;
+                checkZodiacChange = true;
+            }
+
+            if(request.Longtitude != null)
+            {
+                profile.Longitude = (double)request.Longtitude;
+                checkZodiacChange = true;
+            }
+
+            if (checkZodiacChange)
+            {
+                profile.Zodiac = _astro.GetZodiac(profile.BirthDate, profile.Longitude, profile.Latitude);
+
+                profile.BirthChart.ImgLink = _astro.GetChartLinkFirebase(profile.BirthDate, profile.Longitude, profile.Latitude);
+
+                profile.BirthChart.Content = JsonConvert.SerializeObject(_astro.GetPlanetPosition(profile.BirthDate, profile.Longitude, profile.Latitude));
+
+            }
+
             return profile;
         }
     }

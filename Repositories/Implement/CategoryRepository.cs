@@ -23,5 +23,10 @@ namespace AstroBackEnd.Repositories.Implement
         {
             return AstroData.Categories.First(u => u.Id == id);
         }
+
+        public override IQueryable<Category> WithAllData()
+        {
+            return AstroData.Categories.AsQueryable();
+        }
     }
 }

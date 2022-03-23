@@ -1,6 +1,7 @@
 ﻿using AstroBackEnd.RequestModels.OrderRequest;
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.ViewsModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/v1/order")]
+    [Route("api/v1/orders")]
     [ApiController]
     public class OrderController : ControllerBase
     {
@@ -23,6 +24,7 @@ namespace AstroBackEnd.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult CreateOrder(CreateOrderRequest request)
         {
             try
@@ -30,12 +32,15 @@ namespace AstroBackEnd.Controllers
                 var order = _orderService.CreateOrder(request);
                 return Ok(order);
             }
-            catch (Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
         [HttpPut]
+        [Authorize(Roles = "admin")]
         public IActionResult UpdateOrder(int id, CreateOrderRequest request)
         {
             try
@@ -43,13 +48,16 @@ namespace AstroBackEnd.Controllers
                 var order = _orderService.UpdateOrder(id, request);
                 return Ok(order);
             }
-            catch (Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
 
         }
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult DeleteOrder(int id)
         {
             try
@@ -57,13 +65,16 @@ namespace AstroBackEnd.Controllers
                 _orderService.DeleteOrder(id);
                 return Ok();
             }
-            catch (Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult GetOrder(int id)
         {
 
@@ -72,12 +83,15 @@ namespace AstroBackEnd.Controllers
                 var order = _orderService.GetOrder(id);
                 return order == null? BadRequest("Order id not found") : Ok(order);
             }
-            catch (Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
         [HttpGet]
+        [Authorize(Roles = "admin")]
         public IActionResult FindOrder( int? status, 
                                         DateTime? orderTimeStart, DateTime? orderTimeEnd,
                                         double? totalCostStart, double? totalCostEnd, 
@@ -108,9 +122,11 @@ namespace AstroBackEnd.Controllers
                 }, out total);
                 return Ok(new PagingView() { Payload = orders, Total = total});
             }
-            catch (Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
     }

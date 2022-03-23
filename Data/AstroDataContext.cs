@@ -51,6 +51,16 @@ namespace AstroBackEnd.Data
 
         public DbSet<OrderDetail> OrderDetails { get; set; }
 
+        public DbSet<HoroscopeItem> HoroscopeItems { get; set; }
+
+        public DbSet<Aspect> Aspects { get; set; }
+
+        public DbSet<LifeAttribute> LifeAttributes { get; set; }
+
+        public DbSet<NewsTags> NewsTags { get; set; }
+
+        public DbSet<Topic> Topics { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(_config["ConnectionStrings:AstroBackEndContext"]);

@@ -6,6 +6,7 @@ using AstroBackEnd.Services.Core;
 using AstroBackEnd.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AstroBackEnd.Services.Implement
 {
@@ -19,9 +20,10 @@ namespace AstroBackEnd.Services.Implement
         public PlanetZodiac GetPlanetZodiac(int id)
         {
             Validation.ValidNumberThanZero(id, "Id must be than zero");
-            PlanetZodiac planetZodiac = _work.PlanetZodiacs.Get(id);
-            if (planetZodiac != null)
+            PlanetZodiac checkPlanetZodiac = _work.PlanetZodiacs.Get(id);
+            if (checkPlanetZodiac != null)
             {
+                var planetZodiac = _work.PlanetZodiacs.GetPlanetZodiacWithAllData(id);
                 return planetZodiac;
             }
             else { throw new ArgumentException("This PlanetZodiac not found"); }
@@ -31,6 +33,35 @@ namespace AstroBackEnd.Services.Implement
         {
             try
             {
+                Planet checkPlanet = _work.Planets.Get(request.PlanetId);
+                Zodiac checkZodiac = _work.Zodiacs.Get(request.ZodiacId);
+                if (checkPlanet == null)
+                {
+                    throw new ArgumentException("Planet not found");
+                }
+                if (checkZodiac == null)
+                {
+                    throw new ArgumentException("Zodiac not found");
+                }
+                Func<PlanetZodiac, bool> filter = p =>
+                {
+                    bool checkZodiacId = true;
+                    bool checkPlanetId = true;
+                    if (request.ZodiacId > 0)
+                    {
+                        checkZodiacId = p.ZodiacId == request.ZodiacId;
+                    }
+                    if (request.PlanetId > 0)
+                    {
+                        checkPlanetId = p.PlanetId == request.PlanetId;
+                    }
+                    return  checkPlanetId && checkZodiacId;
+                };
+                IEnumerable<PlanetZodiac> result = _work.PlanetZodiacs.FindPaging(filter, p => p.Id);
+                if (result.Count() > 0)
+                {
+                    throw new ArgumentException("PlanetZodiac already exist");
+                }
                 PlanetZodiac planetZodiac = new PlanetZodiac()
                 {
                     PlanetId = request.PlanetId,
@@ -45,7 +76,7 @@ namespace AstroBackEnd.Services.Implement
             }      
         }
 
-        public IEnumerable<PlanetZodiac> FindPlanetZodiac(FindPlanetZodiacRequest request)
+        public IEnumerable<PlanetZodiac> FindPlanetZodiac(FindPlanetZodiacRequest request, out int total)
         {
             if (request.Id < 0) { throw new ArgumentException("Id must be equal or than zero"); }
             try
@@ -55,7 +86,6 @@ namespace AstroBackEnd.Services.Implement
                     bool checkId = true;
                     bool checkZodiacId = true;
                     bool checkPlanetId = true;
-                    bool checkContent = true;
                     if (request.Id > 0)
                     {
                         checkId = p.Id == request.Id;
@@ -69,37 +99,27 @@ namespace AstroBackEnd.Services.Implement
                     {
                         checkPlanetId = p.PlanetId == request.PlanetId;
                     }
-                    if (!string.IsNullOrWhiteSpace(request.Content))
-                    {
-                        if (!string.IsNullOrWhiteSpace(p.Content))
-                        {
-                            checkContent = p.Content.Contains(request.Content);
-                        }
-                        else
-                        {
-                            checkContent = false;
-                        }
-                    }
-                    return checkId && checkContent && checkPlanetId && checkZodiacId;
+                    return checkId && checkPlanetId && checkZodiacId;
                 };
-                PagingRequest paging = request.PagingRequest;
-                Validation.ValidNumberThanZero(paging.Page, "Page must be than zero");
-                Validation.ValidNumberThanZero(paging.PageSize, "PageSize must be than zero");
-                if (paging == null || paging.SortBy == null)
+                PagingRequest pagingRequest = request.PagingRequest;
+                Validation.ValidNumberThanZero(pagingRequest.Page, "Page must be than zero");
+                Validation.ValidNumberThanZero(pagingRequest.PageSize, "PageSize must be than zero");
+                if (pagingRequest != null)
                 {
-                    return _work.PlanetZodiacs.Find(filter, p => p.Id);
+                    switch (pagingRequest.SortBy)
+                    {
+                        case "PlanetId":
+                            return _work.PlanetZodiacs.FindPPaginglanetZodiacWithAllData(filter, p => p.PlanetId, out total, pagingRequest.Page, pagingRequest.PageSize);
+                        case "ZodiacId":
+                            return _work.PlanetZodiacs.FindPPaginglanetZodiacWithAllData(filter, p => p.ZodiacId, out total, pagingRequest.Page, pagingRequest.PageSize);
+                        default:
+                            return _work.PlanetZodiacs.FindPPaginglanetZodiacWithAllData(filter, p => p.Id, out total, pagingRequest.Page, pagingRequest.PageSize);
+                    }
                 }
                 else
                 {
-                    switch (paging.SortBy)
-                    {
-                        case "PlanetId":
-                            return _work.PlanetZodiacs.FindPaging(filter, p => p.PlanetId, paging.Page, paging.PageSize);
-                        case "ZodiacId":
-                            return _work.PlanetZodiacs.FindPaging(filter, p => p.ZodiacId, paging.Page, paging.PageSize);
-                        default:
-                            return _work.PlanetZodiacs.FindPaging(filter, p => p.Id, paging.Page, paging.PageSize);
-                    }
+                    IEnumerable<PlanetZodiac> result = _work.PlanetZodiacs.FindPlanetZodiacWithAllData(filter, p => p.Id, out total);
+                    return result;
                 }
             } catch (Exception ex) { throw new ArgumentException("PlanetZodiacService : " + ex.Message); }
         }
@@ -107,6 +127,16 @@ namespace AstroBackEnd.Services.Implement
         public PlanetZodiac UpdatePlanetZodiac(int id, UpdatePlanetZodiacRequest request)
         {
             Validation.ValidNumberThanZero(id, "Id must be than zero");
+            Planet checkPlanet = _work.Planets.Get(request.PlanetId);
+            Zodiac checkZodiac = _work.Zodiacs.Get(request.ZodiacId);
+            if (checkPlanet == null)
+            {
+                throw new ArgumentException("Planet not found");
+            }
+            if (checkZodiac == null)
+            {
+                throw new ArgumentException("Zodiac not found");
+            }
             PlanetZodiac planetZodiac = _work.PlanetZodiacs.Get(id);
             if (planetZodiac != null)
             {

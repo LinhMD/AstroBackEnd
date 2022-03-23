@@ -18,13 +18,13 @@ using AstroBackEnd.Utilities;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/v1/category")]
+    [Route("api/v1/categories")]
     [ApiController]
     public class CategoryController : ControllerBase
     {
-        private ICategorysService _Service;
+        private ICategoriesService _Service;
         private IUnitOfWork _work;
-        public CategoryController(ICategorysService service, IUnitOfWork work)
+        public CategoryController(ICategoriesService service, IUnitOfWork work)
         {
             this._Service = service;
             this._work = work;
@@ -38,20 +38,28 @@ namespace AstroBackEnd.Controllers
             {
                 return Ok(_Service.GetCategory(id));
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex)
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message); 
+            }
         }
 
         [HttpPost]
-        public IActionResult CreateProduct([FromBody] CategoryCreateRequest request)
+        [Authorize(Roles = "admin")]
+        public IActionResult CreateCategory([FromBody] CategoryCreateRequest request)
         {
             try
             {
                 Validation.Validate(request);
                 return Ok(_Service.CreateCategory(request));
             }
-            catch (ArgumentException e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -81,11 +89,14 @@ namespace AstroBackEnd.Controllers
             }
             catch (ArgumentException ex)
             {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
                 return BadRequest(ex.Message);
             }
         }
 
         [HttpPut]
+        [Authorize(Roles = "admin")]
         public IActionResult UpdateCategory(int id, CategoryUpdateRequest request)
         {
             try
@@ -94,17 +105,28 @@ namespace AstroBackEnd.Controllers
 
                 return Ok(updateCategory);
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex) 
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message); 
+            }
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult DeleteCategory(int id)
         {
             try
             {
                 return Ok(_Service.DeleteCategory(id));
             }
-            catch (ArgumentException ex) { return BadRequest(ex.Message); }
+            catch (ArgumentException ex) 
+            {
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message); 
+            }
         }
     }
 }

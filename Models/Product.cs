@@ -21,9 +21,11 @@ namespace AstroBackEnd.Models
 
         public string? Detail { get; set; }
 
+        public string? Tag { get; set; }
+
         public Category Category { get; set; }
 
-        public IList<Zodiac> Zodiacs { get; set; }
+        public int CategoryId { get; set; }
 
         public IList<Product> ProductVariation { get; set; }
 

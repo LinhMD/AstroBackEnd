@@ -8,5 +8,6 @@ namespace AstroBackEnd.Repositories.Core
 {
     public interface IProfileRepository : IRepository<Profile>
     {
+        Profile GetProfileWithAllData(int id);
     }
 }

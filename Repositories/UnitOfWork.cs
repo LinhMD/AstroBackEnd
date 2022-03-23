@@ -23,7 +23,7 @@ namespace AstroBackEnd.Repositories
             Orders = new OrderRepository(dataContext);
             OrderDetails = new OrderDetailRepository(dataContext);
             Products = new ProductRepository(dataContext);
-            Categorys = new CategoryRepository(dataContext);
+            Categories = new CategoryRepository(dataContext);
             Image = new ImageRepository(dataContext);
             Zodiacs = new ZodiacRepository(dataContext);
             Houses = new HouseRepository(dataContext);
@@ -33,7 +33,10 @@ namespace AstroBackEnd.Repositories
             Planets = new PlanetRepository(dataContext);
             PlanetZodiacs = new PlanetZodiacRepository(dataContext);
             PlanetHouses = new PlanetHouseRepository(dataContext);
-
+            HoroscopeItems = new HoroscopeItemRepository(dataContext);
+            Aspects = new AspectRepository(dataContext);
+            LifeAttributes = new LifeAttributeRepository(dataContext);
+            Topics = new TopicRepository(dataContext);
         }
 
         public IUserRepository Users { get; }
@@ -50,7 +53,7 @@ namespace AstroBackEnd.Repositories
 
         public IOrderDetailRepository OrderDetails { get; }
 
-        public ICategoryRepository Categorys { get; }
+        public ICategoryRepository Categories { get; }
 
 
         public IImageRepository Image { get; }
@@ -60,7 +63,6 @@ namespace AstroBackEnd.Repositories
         public IHouseRepository Houses { get; }
 
         public IZodiacHouseRepository ZodiacHouses { get; }
-
 
         public IHoroscopeRepository Horoscopes { get; }
 
@@ -72,12 +74,15 @@ namespace AstroBackEnd.Repositories
 
         public IPlanetHouseRepository PlanetHouses { get; }
 
-
-
         public IZodiacRepository Zodiac { get; }
 
+        public IHoroscopeItemRepository HoroscopeItems { get; }
 
+        public IAspectRepository Aspects { get; }
 
+        public ILifeAttributeRepository LifeAttributes { get; }
+
+        public ITopicRepository Topics { get; }
         public int Complete()
         {
             return _dataContext.SaveChanges();

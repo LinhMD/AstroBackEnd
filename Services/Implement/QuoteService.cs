@@ -6,6 +6,7 @@ using AstroBackEnd.RequestModels.QuoteRequest;
 using AstroBackEnd.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AstroBackEnd.Services.Implement
 {
@@ -21,12 +22,12 @@ namespace AstroBackEnd.Services.Implement
         {
             try
             {
-                if (request.HoroscopeId > 0)
+                if (request.ZodiacId > 0)
                 {
                     Quote quote = new Quote()
                     {
                         Content = request.Content,
-                        HoroscopeId = request.HoroscopeId,
+                        ZodiacId = request.ZodiacId,
                     };
                     return _work.Quotes.Add(quote);
                 }
@@ -41,7 +42,7 @@ namespace AstroBackEnd.Services.Implement
             }
         }
 
-        public IEnumerable<Quote> FindQuote(FindQuoteRequest request)
+        public IEnumerable<Quote> FindQuote(FindQuoteRequest request, out int total)
         {
             if (request.Id < 0) { throw new ArgumentException("Id must be equal or than zero"); }
             try
@@ -49,45 +50,35 @@ namespace AstroBackEnd.Services.Implement
                 Func<Quote, bool> filter = p =>
                 {
                     bool checkId = true;
-                    bool checkContent = true;
                     bool checkHoroscopeId = true;
                     if (request.Id > 0)
                     {
                         checkId = p.Id == request.Id;
                     }
-                    if (!string.IsNullOrWhiteSpace(request.Content))
+                    if (request.ZodiacId > 0)
                     {
-                        if (!string.IsNullOrWhiteSpace(p.Content))
-                        {
-                            checkContent = p.Content.Contains(request.Content);
-                        }
-                        else
-                        {
-                            checkContent = false;
-                        }
+                        checkHoroscopeId = p.ZodiacId == request.ZodiacId;
                     }
-                    if (request.HoroscopeId > 0)
-                    {
-                        checkHoroscopeId = p.HoroscopeId == request.HoroscopeId;
-                    }
-                    return checkId && checkContent && checkHoroscopeId;
+                    return checkId && checkHoroscopeId;
                 };
-                PagingRequest paging = request.PagingRequest;
-                Validation.ValidNumberThanZero(paging.Page, "Page must be than zero");
-                Validation.ValidNumberThanZero(paging.PageSize, "PageSize must be than zero");
-                if (paging == null || paging.SortBy == null)
+                PagingRequest pagingRequest = request.PagingRequest;
+                Validation.ValidNumberThanZero(pagingRequest.Page, "Page must be than zero");
+                Validation.ValidNumberThanZero(pagingRequest.PageSize, "PageSize must be than zero");
+                if (pagingRequest != null)
                 {
-                    return _work.Quotes.Find(filter, p => p.Id);
+                    switch (pagingRequest.SortBy)
+                    {
+                        case "HoroscopeId":
+                            return _work.Quotes.FindPaging(filter, p => p.ZodiacId, out total, pagingRequest.Page, pagingRequest.PageSize);
+                        default:
+                            return _work.Quotes.FindPaging(filter, p => p.Id, out total, pagingRequest.Page, pagingRequest.PageSize);
+                    }
                 }
                 else
                 {
-                    switch (paging.SortBy)
-                    {
-                        case "HoroscopeId":
-                            return _work.Quotes.FindPaging(filter, p => p.HoroscopeId, paging.Page, paging.PageSize);
-                        default:
-                            return _work.Quotes.FindPaging(filter, p => p.Id, paging.Page, paging.PageSize);
-                    }
+                    IEnumerable<Quote> result = _work.Quotes.Find(filter, p => p.Id);
+                    total = result.Count();
+                    return result;
                 }
             } catch (Exception ex) { throw new ArgumentException("QuoteService : " + ex.Message); }
         }
@@ -122,9 +113,9 @@ namespace AstroBackEnd.Services.Implement
             Quote quote = _work.Quotes.Get(id);
             if (quote != null)
             {
-                if (request.HoroscopeId > 0)
+                if (request.ZodiacId > 0)
                 {
-                    quote.HoroscopeId = request.HoroscopeId;
+                    quote.ZodiacId = request.ZodiacId;
                 }
 
                 return quote;

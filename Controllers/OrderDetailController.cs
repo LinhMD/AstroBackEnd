@@ -2,6 +2,7 @@
 using AstroBackEnd.RequestModels.OrderDetailRequest;
 using AstroBackEnd.Services.Core;
 using AstroBackEnd.ViewsModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace AstroBackEnd.Controllers
 {
-    [Route("api/v1/detail")]
+    [Route("api/v1/details")]
     [ApiController]
     public class OrderDetailController : ControllerBase
     {
@@ -23,7 +24,7 @@ namespace AstroBackEnd.Controllers
             this._detailService = detailService;
         }
 
-
+        [Authorize]
         [HttpGet]
         public IActionResult FindOrderDetail(   int? orderId, 
                                                 string? productName, 
@@ -59,14 +60,17 @@ namespace AstroBackEnd.Controllers
                 }, out total);
                 return Ok(new PagingView() { Payload = details, Total = total });
             }
-            catch 
+            catch (ArgumentException ex)
             {
-                return BadRequest();
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
 
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public IActionResult GetOrderDetail(int id)
         {
             try
@@ -74,12 +78,14 @@ namespace AstroBackEnd.Controllers
                 var detail = _detailService.GetOrderDetail(id);
                 return Ok(detail);
             }
-            catch (Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
-
+        [Authorize]
         [HttpPost]
         public IActionResult CreateOrderDetail(OrderDetailCreateRequest request)
         {
@@ -87,6 +93,7 @@ namespace AstroBackEnd.Controllers
             return Ok(detail);
         }
 
+        [Authorize]
         [HttpPut]
         public IActionResult UpdateOrderDetail(int id, OrderDetailUpdateRequest request)
         {
@@ -95,12 +102,15 @@ namespace AstroBackEnd.Controllers
                 var detail = _detailService.UpdateOrderDetail(id, request);
                 return Ok(detail);
             }
-            catch (Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public IActionResult DeleteOrderDetail(int id)
         {
@@ -109,9 +119,11 @@ namespace AstroBackEnd.Controllers
                 _detailService.DeleteOrderDetail(id);
                 return Ok();
             }
-            catch (Exception e)
+            catch (ArgumentException ex)
             {
-                return BadRequest(e.Message);
+                if (ex.Message.ToLower().Contains("not found"))
+                    return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 

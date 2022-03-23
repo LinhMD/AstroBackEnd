@@ -8,8 +8,6 @@ namespace AstroBackEnd.RequestModels
 {
     public class UserUpdateRequest
     {
-        [Required]
-        public int Id { get; set; }
 
         [MaxLength(255)]
         public string? UserName { get; set; }
@@ -17,7 +15,7 @@ namespace AstroBackEnd.RequestModels
         [RegularExpression(@"\(?\d{3}\)?-? *\d{3}-? *-?\d{4}", ErrorMessage = "Must be phone number")]
         public string? PhoneNumber { get; set; }
 
-        
+        public string? AvatarLink { get; set; }
         public int? Status { get; set; }
     }
 }   

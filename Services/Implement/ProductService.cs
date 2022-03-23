@@ -25,16 +25,16 @@ namespace AstroBackEnd.Services.Implement
 
         public Product CreateMasterProduct(MasterProductCreateRequest request)
         {
+            var cata = _work.Categories.Get(request.CategoryId);
+            if (cata == null) throw new ArgumentException($"Category id {request.CategoryId} not found");
 
-
-            var cata = _work.Categorys.Get(request.CategoryId);
             Product product = new Product()
             {
                 Name = request.Name,
                 Description = request.Description,
                 Detail = request.Detail,
                 Category = cata,
-                
+                Tag = request.Tag
             };
 
             _work.Products.Add(product);
@@ -67,7 +67,7 @@ namespace AstroBackEnd.Services.Implement
 
         public void DeleteProduct(int id)
         {
-            _work.Categorys.Remove(_work.Categorys.Get(id));
+            _work.Categories.Remove(_work.Categories.Get(id));
         }
 
         public void Dispose()
@@ -92,13 +92,13 @@ namespace AstroBackEnd.Services.Implement
 
                 bool checkCategory = request.CategoryId == null || p.Category.Id == request.CategoryId;
 
-                bool zodiacIdCheck = request.ZodiacsId == null || p.Zodiacs.Select(z => z.Id).Contains(((int)request.ZodiacsId.Value));
-
                 bool variationCheck = request.ProductVariationId == null || p.ProductVariation.Select(z => z.Id).Contains(((int)request.ProductVariationId.Value));
 
                 bool statusCheck = request.Status == null || p.Status == request.Status;
 
-                return checkName && checkDescription && checkCategory && variationCheck && zodiacIdCheck && statusCheck;
+                bool tagCheck = request.Tag == null || Utilities.Utilities.CheckTag(request.Tag, p.Tag);
+
+                return checkName && checkDescription && checkCategory && variationCheck && statusCheck && tagCheck;
             };
 
 
@@ -146,13 +146,13 @@ namespace AstroBackEnd.Services.Implement
 
                 bool checkCategory = request.CategoryId == null || p.Category.Id == request.CategoryId;
 
-                bool zodiacIdCheck = request.ZodiacsId == null || p.Zodiacs.Select(z => z.Id).Contains(((int)request.ZodiacsId.Value));
-
                 bool variationCheck = request.ProductVariationId == null || p.ProductVariation.Select(z => z.Id).Contains(((int)request.ProductVariationId.Value));
 
                 bool statusCheck = request.Status == null || p.Status == request.Status;
 
-                return checkName && checkDescription && checkCategory && variationCheck && zodiacIdCheck && statusCheck;
+                bool tagCheck = request.Tag == null || Utilities.Utilities.CheckTag(request.Tag, p.Tag);
+
+                return checkName && checkDescription && checkCategory && variationCheck  && statusCheck && tagCheck;
             };
 
 
@@ -207,7 +207,7 @@ namespace AstroBackEnd.Services.Implement
             var product = this.GetProduct(id);
          
 
-            var cata = _work.Categorys.Get(request.CategoryId);
+            var cata = _work.Categories.Get(request.CategoryId);
             if (!string.IsNullOrWhiteSpace(request.Name))
             {
                 product.Name = request.Name;
@@ -219,6 +219,10 @@ namespace AstroBackEnd.Services.Implement
             if (!string.IsNullOrWhiteSpace(request.Detail))
             {
                 product.Detail = request.Detail;
+            }
+            if (!string.IsNullOrWhiteSpace(request.Tag))
+            {
+                product.Tag = request.Tag;
             }
             if (!string.IsNullOrWhiteSpace(Convert.ToString(request.CategoryId)))
             {
@@ -233,6 +237,8 @@ namespace AstroBackEnd.Services.Implement
             {
                 product.Status = (int)request.Status;
             }
+
+
             _work.Complete();
 
             return this.GetProduct(id);
